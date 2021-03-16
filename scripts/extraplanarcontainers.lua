@@ -1,13 +1,15 @@
 --
--- Please see the LICENSE.md file included with this distribution for attribution and copyright information.
+--	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
+--	search terms for finding extraplanar containers
 local tExtraplanarContainers = {
 	'of holding',
 	'portable hole',
 	'efficient quiver',
 	'handy haversack'
 	}
+--	search terms for finding containers to total their contents
 local tContainers = {
 	'backpack',
 	'pouch',
@@ -15,17 +17,19 @@ local tContainers = {
 	'bag'
 	}
 
-function isContainer(sItemName, nItemCarried, tTable)
+--	searches provided tTable for provided sItemName
+function isContainer(sItemName, tTable)
 	if not sItemName or not tTable then return nil; end
 	for _,v in pairs(tTable) do
-		if (not nItemCarried or (nItemCarried ~= 2)) and string.find(sItemName, v) then
+		if string.find(sItemName, v) then
 			return true
 		end
 	end
 end
 
-function isAnyContainer(sItemName, nItemCarried)
-	return isContainer(sItemName, nItemCarried, tExtraplanarContainers) or isContainer(sItemName, nItemCarried, tContainers)
+--	checks both tables for match
+function isAnyContainer(sItemName)
+	return isContainer(sItemName, tExtraplanarContainers) or isContainer(sItemName, tContainers)
 end
 
 local function spairs(t, order)
@@ -51,9 +55,10 @@ local function spairs(t, order)
     end
 end
 
+--	looks through provided charsheet for inventory items that are containers
+--	if found, these are added to table_containers_extraplanar or table_containers_mundane as appropriate
 local function build_containers(node_pc)
-	local table_containers_mundane = {}
-	local table_containers_extraplanar = {}
+	local table_containers_mundane, table_containers_extraplanar
 	for _,node_item in pairs(DB.getChildren(node_pc, 'inventorylist')) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', ''))
 		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0);
@@ -67,7 +72,7 @@ local function build_containers(node_pc)
 			number_maxvolume = number_maxvolume + v
 		end
 
-		if isContainer(string_item_name, nil, tExtraplanarContainers) then -- this creates an array keyed to the names of any detected extraplanar storage containers
+		if isContainer(string_item_name, tExtraplanarContainers) then -- this creates an array keyed to the names of any detected extraplanar storage containers
 			table_containers_extraplanar[string_item_name] = {
 					['nodeItem'] = node_item,
 					['number_totalWeight'] = 0,
@@ -79,7 +84,7 @@ local function build_containers(node_pc)
 					['nMaxDepth'] = table_dimensions['nDepth'],
 					['bTooBig'] = 0,
 				};
-		elseif isContainer(string_item_name, nil, tContainers) then -- this creates an array keyed to the names of any detected mundane storage containers
+		elseif isContainer(string_item_name, tContainers) then -- this creates an array keyed to the names of any detected mundane storage containers
 			table_containers_mundane[string_item_name] = {
 					['nodeItem'] = node_item,
 					['number_totalWeight'] = 0,
@@ -97,6 +102,10 @@ local function build_containers(node_pc)
 	return table_containers_mundane, table_containers_extraplanar
 end
 
+--	look at items in inventory and calculate their weight
+--	items in extraplanar containers will only have weight added to container subtotal
+--	items in mundane containers will have weight added to subtotal and encumbrance total
+--	items in neither will have weight added to encumbrance total
 local function measure_contents(node_pc, table_containers_mundane, table_containers_extraplanar)
 	local number_total_weight = 0
 	for _,node_item in pairs(DB.getChildren(node_pc, 'inventorylist')) do
@@ -116,7 +125,7 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 				number_item_volume = number_item_volume + v
 			end
 
-			if isContainer(string_item_location, state_item_carried, tExtraplanarContainers) then
+			if state_item_carried ~= 2 and isContainer(string_item_location, tExtraplanarContainers) then
 				if table_containers_extraplanar[string_item_location] then
 					table_containers_extraplanar[string_item_location]['number_totalWeight'] = table_containers_extraplanar[string_item_location]['number_totalWeight'] + (number_item_count * number_item_weight)
 					table_containers_extraplanar[string_item_location]['number_totalVolume'] = table_containers_extraplanar[string_item_location]['number_totalVolume'] + (number_item_count * number_item_volume)
@@ -124,7 +133,7 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 					if table_containers_extraplanar[string_item_location]['nMaxWidth'] < table_item_dimensions['nWidth'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 					if table_containers_extraplanar[string_item_location]['nMaxDepth'] < table_item_dimensions['nDepth'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 				end
-			elseif isContainer(string_item_location, state_item_carried, tContainers) then
+			elseif state_item_carried ~= 2 and isContainer(string_item_location, tContainers) then
 				if table_containers_mundane[string_item_location] then
 					table_containers_mundane[string_item_location]['number_totalWeight'] = table_containers_mundane[string_item_location]['number_totalWeight'] + (number_item_count * number_item_weight)
 					table_containers_mundane[string_item_location]['number_totalVolume'] = table_containers_mundane[string_item_location]['number_totalVolume'] + (number_item_count * number_item_volume)
@@ -142,6 +151,8 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 	return number_total_weight
 end
 
+--	writes container subtotals to the relevant container
+--	sends chat messages if containers are overfull
 local function write_contents_to_containers(node_pc, table_containers_mundane, table_containers_extraplanar)
 	local string_player_name = DB.getValue(node_pc, 'name', Interface.getString("char_name_unknown"))
 	for _,table_container in pairs(table_containers_mundane) do
@@ -151,7 +162,6 @@ local function write_contents_to_containers(node_pc, table_containers_mundane, t
 
 		if table_container['nMaxWeight'] > 0 then
 			if (table_container['number_totalWeight'] > table_container['nMaxWeight']) then
-
 				if not table_container['nodeItem'].getChild('announcedW') then
 					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
 					ChatManager.SystemMessage(string.format(Interface.getString("item_overfull"), string_player_name, string_item_name, 'weight'))
@@ -219,13 +229,16 @@ local function write_contents_to_containers(node_pc, table_containers_mundane, t
 end
 
 local function updateEncumbrance_new(node_char)
+	-- assemble a list of containers and their capacities
 	local table_containers_mundane, table_containers_extraplanar = build_containers(node_char)
 
 	-- this will cointain a running total of all items carried by the character
 	local number_total = measure_contents(node_char, table_containers_mundane, table_containers_extraplanar)
 
+	-- writes container subtotals to database and handles chat messages
 	write_contents_to_containers(node_char, table_containers_mundane, table_containers_extraplanar)
 
+	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
 	DB.setValue(node_char, 'encumbrance.load', 'number', number_rounded_total)
 end
