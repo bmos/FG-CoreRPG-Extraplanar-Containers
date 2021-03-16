@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Please see the license.html file included with this distribution for attribution and copyright information. -->
+
+<root>
+	<windowclass name="item_main" merge="join">
+		<sheetdata>
+			<number_columnh name="weight">
+				<tooltip textres="item_tooltip_itemweight" />
+			</number_columnh>
+			<basicnumber name="capacityweight" insertbefore="divider3" >
+				<anchored to="weight" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_capacityweight" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.extraplanarcontents.onValueChanged()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="extraplanarcontents" insertbefore="divider3">
+				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_extraplanarcontents" />
+				<readonly />
+				<script>
+					function onInit()
+						local sItemName = string.lower(DB.getValue(window.getDatabaseNode(), 'name'))
+						if ExtraplanarContainers.isAnyContainer(sItemName) then
+							window.capacityweight.setVisible(true)
+							window.extraplanarcontents.setVisible(true)
+							onValueChanged()
+						else
+							window.capacityweight.setVisible(false)
+							window.extraplanarcontents.setVisible(false)
+						end
+					end
+					function onValueChanged()
+						if window.capacityweight.getValue() ~= 0 then
+							if getValue() &lt; window.capacityweight.getValue() then
+								setColor('FF000000')
+							elseif getValue() == window.capacityweight.getValue() then
+								setColor('FFEB7B00')
+							elseif getValue() &gt; window.capacityweight.getValue() then
+								setColor('FFB22929')
+							end
+						end
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="contentsvolume" insertbefore="divider3" >
+				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_contentsvolume" />
+				<readonly />
+				<script>
+					function onInit()
+						if OptionsManager.isOption('ITEM_VOLUME', 'off') then
+							window.external_dimensions_label.setVisible(false)
+							window.length.setVisible(false)
+							window.width.setVisible(false)
+							window.depth.setVisible(false)
+							window.volume.setVisible(false)
+						else
+							window.external_dimensions_label.setVisible(true)
+							window.length.setVisible(true)
+							window.width.setVisible(true)
+							window.depth.setVisible(true)
+							window.volume.setVisible(true)
+						end
+						local sItemName = string.lower(DB.getValue(window.getDatabaseNode(), 'name'))
+						if OptionsManager.isOption('ITEM_VOLUME', 'on') and ExtraplanarContainers.isAnyContainer(sItemName) then
+							window.contentsvolume.setVisible(true)
+							window.internal_dimensions_label.setVisible(true)
+							window.internal_length.setVisible(true)
+							window.internal_width.setVisible(true)
+							window.internal_depth.setVisible(true)
+							window.internal_volume.setVisible(true)
+							onValueChanged()
+						else
+							window.contentsvolume.setVisible(false)
+							window.internal_dimensions_label.setVisible(false)
+							window.internal_length.setVisible(false)
+							window.internal_width.setVisible(false)
+							window.internal_depth.setVisible(false)
+							window.internal_volume.setVisible(false)
+						end
+					end
+					function onValueChanged()
+						if window.internal_volume.getValue() ~= 0 then
+							if getValue() &lt; window.internal_volume.getValue() then
+								setColor('FF000000')
+							elseif getValue() == window.internal_volume.getValue() then
+								setColor('FFEB7B00')
+							elseif getValue() &gt; window.internal_volume.getValue() then
+								setColor('FFB22929')
+							end
+						end
+					end
+				</script>
+			</basicnumber>
+			
+			<label_column name="external_dimensions_label" insertbefore="divider3" >
+				<static textres="item_label_external_dimensions" />
+			</label_column>
+			<number_columnh name="length" insertbefore="divider3" >
+				<delaykeyupdate />
+				<tooltip textres="item_tooltip_length" />
+				<script>
+					function onValueChanged()
+						window.volume.getVolume()
+					end
+				</script>
+			</number_columnh>
+			<basicnumber name="width" insertbefore="divider3" >
+				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_width" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="depth" insertbefore="divider3" >
+				<anchored to="width" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_depth" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="volume" insertbefore="divider3" >
+				<anchored to="depth" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_exterior_volume" />
+				<readonly />
+				<script>
+					function onInit()
+						getVolume()
+					end
+					function getVolume()
+						local nSum = window.length.getValue() * window.width.getValue() * window.depth.getValue()
+						setValue(nSum)
+						window.contentsvolume.onValueChanged()
+					end
+					function onValueChanged()
+						window.contentsvolume.onValueChanged()
+					end
+				</script>
+			</basicnumber>
+			
+			<label_column name="internal_dimensions_label" insertbefore="divider3" >
+				<static textres="item_label_internal_dimensions" />
+			</label_column>
+			<number_columnh name="internal_length" insertbefore="divider3" >
+				<tooltip textres="item_tooltip_length" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.internal_volume.getVolume()
+					end
+				</script>
+			</number_columnh>
+			<basicnumber name="internal_width" insertbefore="divider3" >
+				<anchored to="internal_length" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_width" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.internal_volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="internal_depth" insertbefore="divider3" >
+				<anchored to="internal_width" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_depth" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.internal_volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="internal_volume" insertbefore="divider3" >
+				<anchored to="internal_depth" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_interior_volume" />
+				<readonly />
+				<script>
+					function onInit()
+						getVolume()
+					end
+					function getVolume()
+						local nSum = window.internal_length.getValue() * window.internal_width.getValue() * window.internal_depth.getValue()
+						setValue(nSum)
+					end
+				</script>
+			</basicnumber>
+		</sheetdata>
+	</windowclass>
+</root>

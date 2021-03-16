@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Please see the LICENSE.md file included with this distribution for attribution and copyright information. -->
+
+<root version='3.3' release='3'>
+	<properties>
+		<name>Extraplanar Containers</name>
+		<version>1.0</version>
+		<author>bmos (Wil Thieme)</author>
+		<description>This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'.</description>
+		<ruleset name="PFRPG" />
+		<ruleset name="3.5E" />
+	</properties>
+
+	<announcement text="https://github.com/bmos/FG-PFRPG-TotalEncumbrance\rExtraplanar Containers v1.0:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'." font="emotefont" />
+
+	<base>
+		<!-- Records -->
+		<includefile source="campaign/record_item.xml" />
+
+		<!-- Strings -->
+		<includefile source="strings/strings_extraplanarcontainers.xml" />
+
+		<!-- Scripts -->
+		<script name="ExtraplanarContainers" file="scripts/extraplanarcontainers.lua" />
+	</base>
+</root>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Please see the LICENSE.md file included with this distribution for attribution and copyright information -->
+
+<root>
+	<!-- options titles -->
+	<string name="opt_lab_item_volume">Encumbrance: Container/Item Volume</string>
+	<!-- Item Sheet -->
+	<string name="item_label_external_dimensions">Exterior Size</string>
+	<string name="item_label_internal_dimensions">Interior Space</string>
+	<!-- Tooltip -->
+	<string name="item_tooltip_itemweight">Weight of Item</string> <!-- Total weight the bag of holding can hold-->
+	<string name="item_tooltip_capacityweight">Maximum Weight Capacity</string> <!-- Total weight the bag of holding can hold-->
+	<string name="item_tooltip_extraplanarcontents">Weight of Contents</string> <!-- The weight of everything in the bag of holding -->
+	<string name="item_tooltip_contentsvolume">Volume of Contents</string> <!-- The volume of everything in the container -->
+	<string name="item_tooltip_length">Length</string>
+	<string name="item_tooltip_width">Width</string>
+	<string name="item_tooltip_depth">Depth</string>
+	<string name="item_tooltip_exterior_volume">Total Exterior Volume</string>
+	<string name="item_tooltip_interior_volume">Total Interior Volume</string>
+	<!-- Chat Messages -->
+	<string name="item_self_destruct">%s's "%s" is overfull (%s). Self destructing in 10.. 9.. 8.. 6.. just kidding!</string>
+	<string name="item_overfull">%s's "%s" is overfull (%s).</string>
+</root>
