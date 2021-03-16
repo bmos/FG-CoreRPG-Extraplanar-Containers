@@ -58,7 +58,8 @@ end
 --	looks through provided charsheet for inventory items that are containers
 --	if found, these are added to table_containers_extraplanar or table_containers_mundane as appropriate
 local function build_containers(node_pc)
-	local table_containers_mundane, table_containers_extraplanar
+	local table_containers_mundane = {}
+	local table_containers_extraplanar = {}
 	for _,node_item in pairs(DB.getChildren(node_pc, 'inventorylist')) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', ''))
 		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0);
