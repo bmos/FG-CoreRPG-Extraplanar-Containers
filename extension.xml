@@ -12,7 +12,7 @@
 		<ruleset name="3.5E" />
 	</properties>
 
-	<announcement text="https://github.com/bmos/FG-PFRPG-TotalEncumbrance\rExtraplanar Containers v1.0:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'." font="emotefont" />
+	<announcement text="https://fantasygrounds.com/forums/showthread.php?58641-Coin-Weight-for-Pathfinder\rExtraplanar Containers v1.0:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'." font="emotefont" />
 
 	<base>
 		<!-- Records -->
