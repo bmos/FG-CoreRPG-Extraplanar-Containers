@@ -197,8 +197,8 @@ local function write_contents_to_containers(node_pc, table_containers_mundane, t
 		if table_container_extraplanar['nMaxWeight'] > 0 then
 			if not DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak') then DB.setValue(table_container_extraplanar['nodeItem'], 'weightbak', 'number', DB.getValue(table_container_extraplanar['nodeItem'], 'weight', 0)) end
 			if (table_container_extraplanar['number_totalWeight'] > table_container_extraplanar['nMaxWeight']) and DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak') then
-				local string_excess_weight = table_container_extraplanar['number_totalWeight'] - table_container_extraplanar['nMaxWeight'] + DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak')
-				DB.setValue(table_container_extraplanar['nodeItem'], 'weight', 'number', string_excess_weight)
+				local number_excess_weight = (table_container_extraplanar['number_totalWeight'] - table_container_extraplanar['nMaxWeight'] + DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak')) or 0
+				DB.setValue(table_container_extraplanar['nodeItem'], 'weight', 'number', number_excess_weight)
 
 				if not table_container_extraplanar['nodeItem'].getChild('announcedW') then
 					DB.setValue(table_container_extraplanar['nodeItem'], 'announcedW', 'number', 1)
@@ -242,6 +242,9 @@ local function updateEncumbrance_new(node_char)
 	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
 	DB.setValue(node_char, 'encumbrance.load', 'number', number_rounded_total)
+
+	-- recalculate total carried weight
+	CharManager.calcItemArmorClass(node_char)
 end
 
 local function onLocationChanged(node)
