@@ -219,9 +219,9 @@ end
 local updateEncumbrance_old = nil
 function onInit()
 	OptionsManager.registerOption2('ITEM_VOLUME', false, 'option_header_game', 'opt_lab_item_volume', 'option_entry_cycler',
-		{ labels = 'enc_opt_on',
+		{ labels = 'option_val_on',
 		values = 'on',
-		baselabel = 'enc_opt_off',
+		baselabel = 'option_val_off',
 		baseval = 'off',
 		default = 'off',
 	})
