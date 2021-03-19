@@ -122,10 +122,13 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 				['nDepth'] = DB.getValue(node_item, 'depth', 0)
 					};
 			local number_item_volume = 0;
-			for _,v in spairs(table_item_dimensions, function(t,a,b) return t[b] < t[a] end) do -- prepare to automatically 'lay flat'/intelligently position items
-				number_item_volume = number_item_volume + v
+			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+				for _,v in spairs(table_item_dimensions, function(t,a,b) return t[b] < t[a] end) do -- prepare to automatically 'lay flat'/intelligently position items
+					number_item_volume = number_item_volume + v
+				end
 			end
 
+			-- add up subtotals of container contents and put them in the table
 			if state_item_carried ~= 2 and isContainer(string_item_location, tExtraplanarContainers) then
 				if table_containers_extraplanar[string_item_location] then
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
@@ -173,6 +176,7 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 				if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
 			end
 		end
+
 		-- check volume of contents and announce if excessive
 		if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 			if table_container['bTooBig'] == 1 then
