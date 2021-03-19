@@ -25,7 +25,7 @@
 				<script>
 					function onInit()
 						local sItemName = string.lower(DB.getValue(window.getDatabaseNode(), 'name'))
-						if ExtraplanarContainers.isAnyContainer(sItemName) then
+						if ExtraplanarContainers.isAnyContainer(sItemName) and window.weight.getValue() ~= 0 then
 							window.capacityweight.setVisible(true)
 							window.extraplanarcontents.setVisible(true)
 							onValueChanged()
