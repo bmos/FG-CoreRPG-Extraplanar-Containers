@@ -76,9 +76,9 @@ local function build_containers(node_pc)
 		if isContainer(string_item_name, tExtraplanarContainers) then -- this creates an array keyed to the names of any detected extraplanar storage containers
 			table_containers_extraplanar[string_item_name] = {
 					['nodeItem'] = node_item,
-					['number_totalWeight'] = 0,
+					['nTotalWeight'] = 0,
 					['nMaxWeight'] = number_maxweight,
-					['number_totalVolume'] = 0,
+					['nTotalVolume'] = 0,
 					['nMaxVolume'] = number_maxvolume,
 					['nMaxLength'] = table_dimensions['nLength'],
 					['nMaxWidth'] = table_dimensions['nWidth'],
@@ -88,9 +88,9 @@ local function build_containers(node_pc)
 		elseif isContainer(string_item_name, tContainers) then -- this creates an array keyed to the names of any detected mundane storage containers
 			table_containers_mundane[string_item_name] = {
 					['nodeItem'] = node_item,
-					['number_totalWeight'] = 0,
+					['nTotalWeight'] = 0,
 					['nMaxWeight'] = number_maxweight,
-					['number_totalVolume'] = 0,
+					['nTotalVolume'] = 0,
 					['nMaxVolume'] = number_maxvolume,
 					['nMaxLength'] = table_dimensions['nLength'],
 					['nMaxWidth'] = table_dimensions['nWidth'],
@@ -128,16 +128,16 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 
 			if state_item_carried ~= 2 and isContainer(string_item_location, tExtraplanarContainers) then
 				if table_containers_extraplanar[string_item_location] then
-					table_containers_extraplanar[string_item_location]['number_totalWeight'] = table_containers_extraplanar[string_item_location]['number_totalWeight'] + (number_item_count * number_item_weight)
-					table_containers_extraplanar[string_item_location]['number_totalVolume'] = table_containers_extraplanar[string_item_location]['number_totalVolume'] + (number_item_count * number_item_volume)
+					table_containers_extraplanar[string_item_location]['nTotalWeight'] = table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+					table_containers_extraplanar[string_item_location]['nTotalVolume'] = table_containers_extraplanar[string_item_location]['nTotalVolume'] + (number_item_count * number_item_volume)
 					if table_containers_extraplanar[string_item_location]['nMaxLength'] < table_item_dimensions['nLength'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 					if table_containers_extraplanar[string_item_location]['nMaxWidth'] < table_item_dimensions['nWidth'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 					if table_containers_extraplanar[string_item_location]['nMaxDepth'] < table_item_dimensions['nDepth'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 				end
 			elseif state_item_carried ~= 2 and isContainer(string_item_location, tContainers) then
 				if table_containers_mundane[string_item_location] then
-					table_containers_mundane[string_item_location]['number_totalWeight'] = table_containers_mundane[string_item_location]['number_totalWeight'] + (number_item_count * number_item_weight)
-					table_containers_mundane[string_item_location]['number_totalVolume'] = table_containers_mundane[string_item_location]['number_totalVolume'] + (number_item_count * number_item_volume)
+					table_containers_mundane[string_item_location]['nTotalWeight'] = table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+					table_containers_mundane[string_item_location]['nTotalVolume'] = table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * number_item_volume)
 					if table_containers_mundane[string_item_location]['nMaxLength'] < table_item_dimensions['nLength'] then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
 					if table_containers_mundane[string_item_location]['nMaxWidth'] < table_item_dimensions['nWidth'] then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
 					if table_containers_mundane[string_item_location]['nMaxDepth'] < table_item_dimensions['nDepth'] then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
@@ -154,76 +154,39 @@ end
 
 --	writes container subtotals to the relevant container
 --	sends chat messages if containers are overfull
-local function write_contents_to_containers(node_pc, table_containers_mundane, table_containers_extraplanar)
+local function write_contents_to_containers(node_pc, table_containers, string_error)
 	local string_player_name = DB.getValue(node_pc, 'name', Interface.getString("char_name_unknown"))
-	for _,table_container in pairs(table_containers_mundane) do
-		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['number_totalWeight'])
-		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['number_totalVolume'])
-		local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'container')
+	for _,table_container in pairs(table_containers) do
+		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
+		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
+		local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
 
+		-- check weight of contents and announce if excessive
 		if table_container['nMaxWeight'] > 0 then
-			if (table_container['number_totalWeight'] > table_container['nMaxWeight']) then
+			if (table_container['nTotalWeight'] > table_container['nMaxWeight'])  then
+
 				if not table_container['nodeItem'].getChild('announcedW') then
 					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString("item_overfull"), string_player_name, string_item_name, 'weight'))
+					ChatManager.SystemMessage(string.format(Interface.getString(string_error), string_player_name, string_item_name, 'weight'))
 				end
 			else
 				if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
-				if table_container['nodeItem'].getChild('announced') then table_container['nodeItem'].getChild('announced').delete() end
 			end
 		end
+		-- check volume of contents and announce if excessive
 		if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 			if table_container['bTooBig'] == 1 then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString("item_overfull"), string_player_name, string_item_name, 'maximum dimension'))
+					ChatManager.SystemMessage(string.format(Interface.getString(string_error), string_player_name, string_item_name, 'maximum dimension'))
 				end
-			elseif table_container['number_totalVolume'] > table_container['nMaxVolume'] then
+			elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString("item_overfull"), string_player_name, string_item_name), 'volume')
+					ChatManager.SystemMessage(string.format(Interface.getString(string_error), string_player_name, string_item_name, 'volume'))
 				end
 			else
 				if table_container['nodeItem'].getChild('announcedV') then table_container['nodeItem'].getChild('announcedV').delete() end
-				if table_container['nodeItem'].getChild('announced') then table_container['nodeItem'].getChild('announced').delete() end
-			end
-		end
-	end
-	for _,table_container_extraplanar in pairs(table_containers_extraplanar) do
-		DB.setValue(table_container_extraplanar['nodeItem'], 'extraplanarcontents', 'number', table_container_extraplanar['number_totalWeight'])
-		DB.setValue(table_container_extraplanar['nodeItem'], 'contentsvolume', 'number', table_container_extraplanar['number_totalVolume'])
-		local string_item_name = DB.getValue(table_container_extraplanar['nodeItem'], 'name', 'extraplanar container')
-
-		if table_container_extraplanar['nMaxWeight'] > 0 then
-			if not DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak') then DB.setValue(table_container_extraplanar['nodeItem'], 'weightbak', 'number', DB.getValue(table_container_extraplanar['nodeItem'], 'weight', 0)) end
-			if (table_container_extraplanar['number_totalWeight'] > table_container_extraplanar['nMaxWeight']) and DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak') then
-				local number_excess_weight = (table_container_extraplanar['number_totalWeight'] - table_container_extraplanar['nMaxWeight'] + DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak')) or 0
-				DB.setValue(table_container_extraplanar['nodeItem'], 'weight', 'number', number_excess_weight)
-
-				if not table_container_extraplanar['nodeItem'].getChild('announcedW') then
-					DB.setValue(table_container_extraplanar['nodeItem'], 'announcedW', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString("item_self_destruct"), string_player_name, string_item_name, 'weight'))
-				end
-			elseif DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak') then
-				DB.setValue(table_container_extraplanar['nodeItem'], 'weight', 'number', DB.getValue(table_container_extraplanar['nodeItem'], 'weightbak', 0))
-				if table_container_extraplanar['nodeItem'].getChild('announcedW') then table_container_extraplanar['nodeItem'].getChild('announcedW').delete() end
-				if table_container_extraplanar['nodeItem'].getChild('announced') then table_container_extraplanar['nodeItem'].getChild('announced').delete() end
-			end
-		end
-		if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container_extraplanar['nMaxVolume'] > 0 then
-			if table_container_extraplanar['bTooBig'] == 1 then
-				if not table_container_extraplanar['nodeItem'].getChild('announcedV') then
-					DB.setValue(table_container_extraplanar['nodeItem'], 'announcedV', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString("item_self_destruct"), string_player_name, string_item_name, 'maximum dimension'))
-				end
-			elseif table_container_extraplanar['number_totalVolume'] > table_container_extraplanar['nMaxVolume'] then
-				if not table_container_extraplanar['nodeItem'].getChild('announcedV') then
-					DB.setValue(table_container_extraplanar['nodeItem'], 'announcedV', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString("item_self_destruct"), string_player_name, string_item_name, 'volume'))
-				end
-			else
-				if table_container_extraplanar['nodeItem'].getChild('announcedV') then table_container_extraplanar['nodeItem'].getChild('announcedV').delete() end
-				if table_container_extraplanar['nodeItem'].getChild('announced') then table_container_extraplanar['nodeItem'].getChild('announced').delete() end
 			end
 		end
 	end
@@ -237,7 +200,8 @@ local function updateEncumbrance_new(node_char)
 	local number_total = measure_contents(node_char, table_containers_mundane, table_containers_extraplanar)
 
 	-- writes container subtotals to database and handles chat messages
-	write_contents_to_containers(node_char, table_containers_mundane, table_containers_extraplanar)
+	write_contents_to_containers(node_char, table_containers_mundane, "item_overfull")
+	write_contents_to_containers(node_char, table_containers_extraplanar, "item_self_destruct")
 
 	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
