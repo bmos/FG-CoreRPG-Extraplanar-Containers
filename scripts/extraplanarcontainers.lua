@@ -210,9 +210,6 @@ local function updateEncumbrance_new(node_char)
 	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
 	DB.setValue(node_char, 'encumbrance.load', 'number', number_rounded_total)
-
-	-- recalculate total carried weight
-	CharManager.calcItemArmorClass(node_char)
 end
 
 local function onLocationChanged(node)
