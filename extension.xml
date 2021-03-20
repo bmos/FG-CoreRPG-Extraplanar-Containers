@@ -5,14 +5,14 @@
 <root version='3.3' release='3'>
 	<properties>
 		<name>Extraplanar Containers</name>
-		<version>1.0</version>
+		<version>1.1</version>
 		<author>bmos (Wil Thieme)</author>
 		<description>This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'.</description>
 		<ruleset name="PFRPG" />
 		<ruleset name="3.5E" />
 	</properties>
 
-	<announcement text="https://fantasygrounds.com/forums/showthread.php?58641-Coin-Weight-for-Pathfinder\rExtraplanar Containers v1.0:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'." font="emotefont" />
+	<announcement text="https://fantasygrounds.com/forums/showthread.php?58641-Coin-Weight-for-Pathfinder\rExtraplanar Containers v1.1:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'." font="emotefont" />
 
 	<base>
 		<!-- Records -->
