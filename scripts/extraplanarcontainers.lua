@@ -217,7 +217,6 @@ local function onLocationChanged(node)
 	CharManager.updateEncumbrance(node_char)
 end
 
-local updateEncumbrance_old = nil
 function onInit()
 	OptionsManager.registerOption2('ITEM_VOLUME', false, 'option_header_game', 'opt_lab_item_volume', 'option_entry_cycler',
 		{ labels = 'option_val_on',
@@ -227,12 +226,7 @@ function onInit()
 		default = 'off',
 	})
 
-	updateEncumbrance_old = CharManager.updateEncumbrance;
 	CharManager.updateEncumbrance = updateEncumbrance_new;
 
 	DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onLocationChanged)
-end
-
-function onClose()
-	CharManager.updateEncumbrance = updateEncumbrance_old;
 end
