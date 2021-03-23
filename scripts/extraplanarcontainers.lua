@@ -13,6 +13,7 @@ local tExtraplanarContainers = {
 	}
 --	search terms for finding containers to total their contents
 local tContainers = {
+	'container',
 	'backpack',
 	'pouch',
 	'quiver',
