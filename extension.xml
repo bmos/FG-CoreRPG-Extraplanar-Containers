@@ -9,8 +9,9 @@
 		<author>bmos (Wil Thieme)</author>
 		<description>This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'.</description>
 		<ruleset name="CoreRPG" />
-		<ruleset name="3.5E" />
 		<ruleset name="PFRPG" />
+		<ruleset name="3.5E" />
+		<ruleset name="3E" />
 		<ruleset name="5E" />
 	</properties>
 
