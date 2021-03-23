@@ -4,6 +4,8 @@
 
 --	search terms for finding extraplanar containers
 local tExtraplanarContainers = {
+	'extraplanar',
+	'weightless',
 	'of holding',
 	'portable hole',
 	'efficient quiver',
