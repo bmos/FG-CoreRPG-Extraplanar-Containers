@@ -11,7 +11,7 @@
 		<ruleset name="CoreRPG" />
 		<ruleset name="PFRPG" />
 		<ruleset name="3.5E" />
-		<ruleset name="3E" />
+		<ruleset name="4E" />
 		<ruleset name="5E" />
 	</properties>
 
