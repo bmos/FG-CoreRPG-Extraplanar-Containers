@@ -3,6 +3,7 @@
 <!-- Please see the license.html file included with this distribution for attribution and copyright information. -->
 
 <root>
+	<!-- this is the item sheet -->
 	<windowclass name="item_main" merge="join">
 		<sheetdata>
 			<number_columnh name="weight">
@@ -53,35 +54,25 @@
 				<readonly />
 				<script>
 					function onInit()
-						if OptionsManager.isOption('ITEM_VOLUME', 'off') then
-							window.external_dimensions_label.setVisible(false)
-							window.length.setVisible(false)
-							window.width.setVisible(false)
-							window.depth.setVisible(false)
-							window.volume.setVisible(false)
-						else
-							window.external_dimensions_label.setVisible(true)
-							window.length.setVisible(true)
-							window.width.setVisible(true)
-							window.depth.setVisible(true)
-							window.volume.setVisible(true)
-						end
+						local bVisible = OptionsManager.isOption('ITEM_VOLUME', 'on')
+
+						window.external_dimensions_label.setVisible(bVisible)
+						window.length.setVisible(bVisible)
+						window.width.setVisible(bVisible)
+						window.depth.setVisible(bVisible)
+						window.volume.setVisible(bVisible)
+
 						local sItemName = string.lower(DB.getValue(window.getDatabaseNode(), 'name'))
-						if OptionsManager.isOption('ITEM_VOLUME', 'on') and ExtraplanarContainers.isAnyContainer(sItemName) then
-							window.contentsvolume.setVisible(true)
-							window.internal_dimensions_label.setVisible(true)
-							window.internal_length.setVisible(true)
-							window.internal_width.setVisible(true)
-							window.internal_depth.setVisible(true)
-							window.internal_volume.setVisible(true)
-							onValueChanged()
-						else
-							window.contentsvolume.setVisible(false)
-							window.internal_dimensions_label.setVisible(false)
-							window.internal_length.setVisible(false)
-							window.internal_width.setVisible(false)
-							window.internal_depth.setVisible(false)
-							window.internal_volume.setVisible(false)
+						bVisible = bVisible and ExtraplanarContainers.isAnyContainer(sItemName)
+
+						window.contentsvolume.setVisible(bVisible)
+						window.internal_dimensions_label.setVisible(bVisible)
+						window.internal_length.setVisible(bVisible)
+						window.internal_width.setVisible(bVisible)
+						window.internal_depth.setVisible(bVisible)
+						window.internal_volume.setVisible(bVisible)
+
+						onValueChanged()
 						end
 					end
 					function onValueChanged()
@@ -139,8 +130,7 @@
 						getVolume()
 					end
 					function getVolume()
-						local nSum = window.length.getValue() * window.width.getValue() * window.depth.getValue()
-						setValue(nSum)
+						setValue(window.length.getValue() * window.width.getValue() * window.depth.getValue())
 						window.contentsvolume.onValueChanged()
 					end
 					function onValueChanged()
@@ -190,8 +180,7 @@
 						getVolume()
 					end
 					function getVolume()
-						local nSum = window.internal_length.getValue() * window.internal_width.getValue() * window.internal_depth.getValue()
-						setValue(nSum)
+						setValue(window.internal_length.getValue() * window.internal_width.getValue() * window.internal_depth.getValue())
 					end
 				</script>
 			</basicnumber>

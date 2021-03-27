@@ -3,6 +3,8 @@
 --
 
 --	search terms for finding extraplanar containers
+--	these containers will have their subtotals calculated
+--	the weight of their contents will not be counted elsewhere
 local tExtraplanarContainers = {
 	'extraplanar',
 	'weightless',
@@ -11,7 +13,8 @@ local tExtraplanarContainers = {
 	'efficient quiver',
 	'handy haversack'
 	}
---	search terms for finding containers to total their contents
+--	search terms for finding mundane containers
+--	these containers will have their subtotals calculated
 local tContainers = {
 	'container',
 	'backpack',
@@ -20,7 +23,8 @@ local tContainers = {
 	'bag'
 	}
 
---	searches provided tTable for provided sItemName
+--	searches for provided sItemName in provided tTable.
+--	the name doesn't have to be an exact match.
 function isContainer(sItemName, tTable)
 	if not sItemName or not tTable then return nil; end
 	for _,v in pairs(tTable) do
@@ -30,7 +34,8 @@ function isContainer(sItemName, tTable)
 	end
 end
 
---	checks both tables for match
+--	checks provided name against contents of two tables
+--	returns true if either is a match
 function isAnyContainer(sItemName)
 	return isContainer(sItemName, tExtraplanarContainers) or isContainer(sItemName, tContainers)
 end
@@ -215,6 +220,7 @@ local function updateEncumbrance_new(node_char)
 	DB.setValue(node_char, 'encumbrance.load', 'number', number_rounded_total)
 end
 
+-- called when items have their locations changed
 local function onLocationChanged(node)
 	local node_char = node.getChild('....')
 	CharManager.updateEncumbrance(node_char)
