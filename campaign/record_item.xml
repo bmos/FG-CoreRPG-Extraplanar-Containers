@@ -73,7 +73,6 @@
 						window.internal_volume.setVisible(bVisible)
 
 						onValueChanged()
-						end
 					end
 					function onValueChanged()
 						if window.internal_volume.getValue() ~= 0 then
