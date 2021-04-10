@@ -37,7 +37,10 @@ end
 --	checks provided name against contents of two tables
 --	returns true if either is a match
 function isAnyContainer(sItemName)
-	return isContainer(sItemName, tExtraplanarContainers) or isContainer(sItemName, tContainers)
+	if sItemName and sItemName ~= '' then
+		local sItemName = string.lower(sItemName)
+		return isContainer(sItemName, tExtraplanarContainers) or isContainer(sItemName, tContainers)
+	end
 end
 
 local function spairs(t, order)
