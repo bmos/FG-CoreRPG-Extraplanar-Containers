@@ -81,7 +81,9 @@ local function build_containers(node_pc)
 			number_maxvolume = number_maxvolume + v
 		end
 
-		if isContainer(string_item_name, tExtraplanarContainers) then -- this creates an array keyed to the names of any detected extraplanar storage containers
+		local bisExtraplanar = isContainer(string_item_name, tExtraplanarContainers)
+		local bisContainer = isContainer(string_item_name, tContainers)
+		if bisExtraplanar then -- this creates an array keyed to the names of any detected extraplanar storage containers
 			table_containers_extraplanar[string_item_name] = {
 					['nodeItem'] = node_item,
 					['nTotalWeight'] = 0,
@@ -93,7 +95,7 @@ local function build_containers(node_pc)
 					['nMaxDepth'] = table_dimensions['nDepth'],
 					['bTooBig'] = 0,
 				};
-		elseif isContainer(string_item_name, tContainers) then -- this creates an array keyed to the names of any detected mundane storage containers
+		elseif (bisContainer and not bisExtraplanar) then -- this creates an array keyed to the names of any detected mundane storage containers
 			table_containers_mundane[string_item_name] = {
 					['nodeItem'] = node_item,
 					['nTotalWeight'] = 0,
@@ -135,9 +137,11 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 					number_item_volume = number_item_volume + v
 				end
 			end
-
+			
+			local bisExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
+			local bisContainer = isContainer(string_item_location, tContainers)
 			-- add up subtotals of container contents and put them in the table
-			if state_item_carried ~= 2 and isContainer(string_item_location, tExtraplanarContainers) then
+			if state_item_carried ~= 2 and bisExtraplanar then
 				if table_containers_extraplanar[string_item_location] then
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 					table_containers_extraplanar[string_item_location]['nTotalVolume'] = table_containers_extraplanar[string_item_location]['nTotalVolume'] + (number_item_count * number_item_volume)
@@ -145,7 +149,7 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 					if table_containers_extraplanar[string_item_location]['nMaxWidth'] < table_item_dimensions['nWidth'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 					if table_containers_extraplanar[string_item_location]['nMaxDepth'] < table_item_dimensions['nDepth'] then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
 				end
-			elseif state_item_carried ~= 2 and isContainer(string_item_location, tContainers) then
+			elseif state_item_carried ~= 2 and (bisContainer and not bisExtraplanar) then
 				if table_containers_mundane[string_item_location] then
 					table_containers_mundane[string_item_location]['nTotalWeight'] = table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 					table_containers_mundane[string_item_location]['nTotalVolume'] = table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * number_item_volume)
