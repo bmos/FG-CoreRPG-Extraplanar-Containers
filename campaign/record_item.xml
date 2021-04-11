@@ -57,8 +57,8 @@
 					function onInit()
 						local bVisible = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
 						window.weight.setVisible(bVisible or window.weight.getValue() ~= 0)
-						window.capacityweight.setVisible(bVisible)
-						window.extraplanarcontents.setVisible(bVisible)
+						window.capacityweight.setVisible(bVisible or window.capacityweight.getValue() ~= 0)
+						window.extraplanarcontents.setVisible(bVisible or window.extraplanarcontents.getValue() ~= 0)
 						onValueChanged()
 					end
 					function onValueChanged()
