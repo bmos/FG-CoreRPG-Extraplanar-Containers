@@ -215,8 +215,8 @@ local function updateEncumbrance_new(node_char)
 	-- assemble a list of containers and their capacities
 	local table_containers_mundane, table_containers_extraplanar = build_containers(node_char)
 
-	-- this will cointain a running total of all items carried by the character
-	local number_total = measure_contents(node_char, table_containers_mundane, table_containers_extraplanar)
+	-- this will contain a running total of all items carried by the character
+	local number_total = measure_contents(node_char, table_containers_mundane, table_containers_extraplanar) or 0
 
 	-- writes container subtotals to database and handles chat messages
 	write_contents_to_containers(node_char, table_containers_mundane, "item_overfull")
