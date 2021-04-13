@@ -11,6 +11,7 @@ local tExtraplanarContainers = {
 	'of holding',
 	'portable hole',
 	'efficient quiver',
+	'quiver of ehlonna',
 	'handy haversack'
 	}
 --	search terms for finding mundane containers
