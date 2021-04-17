@@ -174,7 +174,7 @@ end
 --	writes container subtotals to the relevant container
 --	sends chat messages if containers are overfull
 local function write_contents_to_containers(node_pc, table_containers, string_error)
-	local string_player_name = DB.getValue(node_pc, 'name', Interface.getString("char_name_unknown"))
+	local rActor = ActorManager.resolveActor(node_pc)
 	for _,table_container in pairs(table_containers) do
 		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
 		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
@@ -186,7 +186,7 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 
 				if not table_container['nodeItem'].getChild('announcedW') then
 					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString(string_error), string_player_name, string_item_name, 'weight'))
+					ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'weight'), true, rActor)
 				end
 			else
 				if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
@@ -198,12 +198,12 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 			if table_container['bTooBig'] == 1 then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString(string_error), string_player_name, string_item_name, 'maximum dimension'))
+					ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'maximum dimension'), true, rActor)
 				end
 			elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					ChatManager.SystemMessage(string.format(Interface.getString(string_error), string_player_name, string_item_name, 'volume'))
+					ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'volume'), true, rActor)
 				end
 			else
 				if table_container['nodeItem'].getChild('announcedV') then table_container['nodeItem'].getChild('announcedV').delete() end
