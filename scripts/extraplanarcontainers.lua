@@ -247,5 +247,7 @@ function onInit()
 
 	CharManager.updateEncumbrance = updateEncumbrance_new;
 
-	DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onLocationChanged)
+	if Session.IsHost then
+		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onLocationChanged)
+	end
 end
