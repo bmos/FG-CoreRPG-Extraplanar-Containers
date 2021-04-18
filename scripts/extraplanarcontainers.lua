@@ -2,6 +2,9 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
+OOB_MSGTYPE_WRITEEC = "writeec";
+OOB_MSGTYPE_DELETEEC = "deleteecannounce";
+
 --	search terms for finding extraplanar containers
 --	these containers will have their subtotals calculated
 --	the weight of their contents will not be counted elsewhere
@@ -171,13 +174,31 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 	return number_total_weight
 end
 
+local function write_as_host(node_item, node_name, node_type, value)
+	local msgOOB = {}
+	msgOOB.type = OOB_MSGTYPE_WRITEEC
+	msgOOB.string_node_item = node_item.getNodeName()
+	msgOOB.string_node_name = node_name
+	msgOOB.string_node_type = node_type
+	msgOOB.value = value
+	Comm.deliverOOBMessage(msgOOB, "");
+end
+
+local function delete_as_host(node_item, node_name)
+	local msgOOB = {}
+	msgOOB.type = OOB_MSGTYPE_DELETEEC
+	msgOOB.string_node_item = node_item.getNodeName()
+	msgOOB.string_node_name = node_name
+	Comm.deliverOOBMessage(msgOOB, "");
+end
+
 --	writes container subtotals to the relevant container
 --	sends chat messages if containers are overfull
 local function write_contents_to_containers(node_pc, table_containers, string_error)
 	local rActor = ActorManager.resolveActor(node_pc)
 	for _,table_container in pairs(table_containers) do
-		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
-		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
+		write_as_host(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
+		write_as_host(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
 		local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
 
 		-- check weight of contents and announce if excessive
@@ -185,11 +206,11 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 			if (table_container['nTotalWeight'] > table_container['nMaxWeight'])  then
 
 				if not table_container['nodeItem'].getChild('announcedW') then
-					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
+					write_as_host(table_container['nodeItem'], 'announcedW', 'number', 1)
 					ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'weight'), true, rActor)
 				end
 			else
-				if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
+				if table_container['nodeItem'].getChild('announcedW') then delete_as_host(table_container['nodeItem'], 'announcedW') end
 			end
 		end
 
@@ -197,19 +218,29 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 		if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 			if table_container['bTooBig'] == 1 then
 				if not table_container['nodeItem'].getChild('announcedV') then
-					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
+					write_as_host(table_container['nodeItem'], 'announcedV', 'number', 1)
 					ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'maximum dimension'), true, rActor)
 				end
 			elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
 				if not table_container['nodeItem'].getChild('announcedV') then
-					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
+					write_as_host(table_container['nodeItem'], 'announcedV', 'number', 1)
 					ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'volume'), true, rActor)
 				end
 			else
-				if table_container['nodeItem'].getChild('announcedV') then table_container['nodeItem'].getChild('announcedV').delete() end
+				if table_container['nodeItem'].getChild('announcedV') then delete_as_host(table_container['nodeItem'], 'announcedV') end
 			end
 		end
 	end
+end
+
+local function handle_write_as_host(msgOOB)
+	local node_item = DB.findNode(msgOOB.string_node_item)
+	DB.setValue(node_item, msgOOB.string_node_name, msgOOB.string_node_type, msgOOB.value)
+end
+
+local function handle_delete_as_host(msgOOB)
+	local node_item = DB.findNode(msgOOB.string_node_item)
+	node_item.getChild(msgOOB.string_node_name).delete()
 end
 
 local function updateEncumbrance_new(node_char)
@@ -235,6 +266,9 @@ local function onLocationChanged(node)
 end
 
 function onInit()
+	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_WRITEEC, handle_write_as_host);
+	OOBManager.registerOOBMsgHandler(OOB_MSGTYPE_DELETEEC, handle_delete_as_host);
+
 	OptionsManager.registerOption2('ITEM_VOLUME', false, 'option_header_game', 'opt_lab_item_volume', 'option_entry_cycler',
 		{ labels = 'option_val_on',
 		values = 'on',
