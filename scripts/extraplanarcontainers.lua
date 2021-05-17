@@ -231,9 +231,7 @@ end
 -- called when items have their locations changed
 local function onLocationChanged(node)
 	local node_char = node.getChild('....')
-	if node_char and node_char.getOwner() then
-		CharManager.updateEncumbrance(node_char)
-	end
+	CharManager.updateEncumbrance(node_char)
 end
 
 function onInit()
