@@ -234,6 +234,12 @@ local function onLocationChanged(node)
 	CharManager.updateEncumbrance(node_char)
 end
 
+-- called when items have their dimensions changed
+local function onDimensionsChanged(node)
+	local node_char = node.getChild('....')
+	CharManager.updateEncumbrance(node_char)
+end
+
 function onInit()
 	OptionsManager.registerOption2('ITEM_VOLUME', false, 'option_header_game', 'opt_lab_item_volume', 'option_entry_cycler',
 		{ labels = 'option_val_on',
@@ -247,5 +253,11 @@ function onInit()
 
 	if Session.IsHost then
 		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onLocationChanged)
+		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.length'), 'onUpdate', onDimensionsChanged)
+
+		if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.width'), 'onUpdate', onDimensionsChanged)
+			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.depth'), 'onUpdate', onDimensionsChanged)
+		end
 	end
 end
