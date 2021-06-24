@@ -1,4 +1,4 @@
-# PFRPG Total Encumbrance
+# CoreRPG Extraplanar Containers
 This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners.
 
 # Compatibility and Instructions
