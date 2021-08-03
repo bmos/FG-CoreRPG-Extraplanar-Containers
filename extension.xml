@@ -16,6 +16,7 @@
 		<!-- Records -->
 		<includefile ruleset="CoreRPG" source="campaign/record_item.xml" />
 		<includefile ruleset="PFRPG" source="campaign/record_item.xml" />
+		<includefile ruleset="2E" source="campaign/record_item.xml" />
 		<includefile ruleset="3.5E" source="campaign/record_item.xml" />
 		<includefile ruleset="4E" source="campaign/record_item_4e.xml" />
 		<includefile ruleset="5E" source="campaign/record_item.xml" />
