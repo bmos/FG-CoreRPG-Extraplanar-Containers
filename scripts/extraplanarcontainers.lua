@@ -5,7 +5,7 @@
 --	search terms for finding extraplanar containers
 --	these containers will have their subtotals calculated
 --	the weight of their contents will not be counted elsewhere
-local tExtraplanarContainers = {
+tExtraplanarContainers = {
 	'extraplanar',
 	'weightless',
 	'of holding',
@@ -16,7 +16,7 @@ local tExtraplanarContainers = {
 	}
 --	search terms for finding mundane containers
 --	these containers will have their subtotals calculated
-local tContainers = {
+tContainers = {
 	'container',
 	'backpack',
 	'pouch',
