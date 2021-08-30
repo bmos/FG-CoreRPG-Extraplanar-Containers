@@ -67,11 +67,11 @@
 					function onValueChanged()
 						if window.capacityweight.getValue() ~= 0 then
 							if getValue() &lt; window.capacityweight.getValue() then
-								setColor('FF000000')
+								setColor(ExtraplanarContainers.colorNormal)
 							elseif getValue() == window.capacityweight.getValue() then
-								setColor('FFEB7B00')
+								setColor(ExtraplanarContainers.colorFull)
 							elseif getValue() &gt; window.capacityweight.getValue() then
-								setColor('FFB22929')
+								setColor(ExtraplanarContainers.colorOverfull)
 							end
 						end
 					end
@@ -105,11 +105,11 @@
 					function onValueChanged()
 						if window.internal_volume.getValue() ~= 0 then
 							if getValue() &lt; window.internal_volume.getValue() then
-								setColor('FF000000')
+								setColor(ExtraplanarContainers.colorNormal)
 							elseif getValue() == window.internal_volume.getValue() then
-								setColor('FFEB7B00')
+								setColor(ExtraplanarContainers.colorFull)
 							elseif getValue() &gt; window.internal_volume.getValue() then
-								setColor('FFB22929')
+								setColor(ExtraplanarContainers.colorOverfull)
 							end
 						end
 					end
@@ -274,11 +274,11 @@
 					function onValueChanged()
 						if window.capacityweight.getValue() ~= 0 then
 							if getValue() &lt; window.capacityweight.getValue() then
-								setColor('FF000000')
+								setColor(ExtraplanarContainers.colorNormal)
 							elseif getValue() == window.capacityweight.getValue() then
-								setColor('FFEB7B00')
+								setColor(ExtraplanarContainers.colorFull)
 							elseif getValue() &gt; window.capacityweight.getValue() then
-								setColor('FFB22929')
+								setColor(ExtraplanarContainers.colorOverfull)
 							end
 						end
 					end
@@ -312,11 +312,11 @@
 					function onValueChanged()
 						if window.internal_volume.getValue() ~= 0 then
 							if getValue() &lt; window.internal_volume.getValue() then
-								setColor('FF000000')
+								setColor(ExtraplanarContainers.colorNormal)
 							elseif getValue() == window.internal_volume.getValue() then
-								setColor('FFEB7B00')
+								setColor(ExtraplanarContainers.colorFull)
 							elseif getValue() &gt; window.internal_volume.getValue() then
-								setColor('FFB22929')
+								setColor(ExtraplanarContainers.colorOverfull)
 							end
 						end
 					end
@@ -481,11 +481,11 @@
 					function onValueChanged()
 						if window.capacityweight.getValue() ~= 0 then
 							if getValue() &lt; window.capacityweight.getValue() then
-								setColor('FF000000')
+								setColor(ExtraplanarContainers.colorNormal)
 							elseif getValue() == window.capacityweight.getValue() then
-								setColor('FFEB7B00')
+								setColor(ExtraplanarContainers.colorFull)
 							elseif getValue() &gt; window.capacityweight.getValue() then
-								setColor('FFB22929')
+								setColor(ExtraplanarContainers.colorOverfull)
 							end
 						end
 					end
@@ -519,11 +519,11 @@
 					function onValueChanged()
 						if window.internal_volume.getValue() ~= 0 then
 							if getValue() &lt; window.internal_volume.getValue() then
-								setColor('FF000000')
+								setColor(ExtraplanarContainers.colorNormal)
 							elseif getValue() == window.internal_volume.getValue() then
-								setColor('FFEB7B00')
+								setColor(ExtraplanarContainers.colorFull)
 							elseif getValue() &gt; window.internal_volume.getValue() then
-								setColor('FFB22929')
+								setColor(ExtraplanarContainers.colorOverfull)
 							end
 						end
 					end

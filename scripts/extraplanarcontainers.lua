@@ -2,6 +2,11 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
+--	Set colors for use in themes
+colorNormal = 'FF000000'
+colorFull = 'FFEB7B00'
+colorOverfull = 'FFB22929'
+
 --	search terms for finding extraplanar containers
 --	these containers will have their subtotals calculated
 --	the weight of their contents will not be counted elsewhere
