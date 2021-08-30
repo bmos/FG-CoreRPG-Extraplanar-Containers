@@ -64,11 +64,11 @@
 					function onValueChanged()
 						if window.capacityweight.getValue() ~= 0 then
 							if getValue() &lt; window.capacityweight.getValue() then
-								setColor(ExtraplanarContainers.colorNormal)
+								setColor(ColorManager.COLOR_FULL)
 							elseif getValue() == window.capacityweight.getValue() then
-								setColor(ExtraplanarContainers.colorFull)
+								setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
 							elseif getValue() &gt; window.capacityweight.getValue() then
-								setColor(ExtraplanarContainers.colorOverfull)
+								setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
 							end
 						end
 					end
@@ -102,11 +102,11 @@
 					function onValueChanged()
 						if window.internal_volume.getValue() ~= 0 then
 							if getValue() &lt; window.internal_volume.getValue() then
-								setColor(ExtraplanarContainers.colorNormal)
+								setColor(ColorManager.COLOR_FULL)
 							elseif getValue() == window.internal_volume.getValue() then
-								setColor(ExtraplanarContainers.colorFull)
+								setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
 							elseif getValue() &gt; window.internal_volume.getValue() then
-								setColor(ExtraplanarContainers.colorOverfull)
+								setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
 							end
 						end
 					end
