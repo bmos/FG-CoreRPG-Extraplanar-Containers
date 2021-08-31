@@ -21,6 +21,9 @@ tContainers = {
 	'backpack',
 	'pouch',
 	'quiver',
+	'horse',
+	'donkey',
+	'mule',
 	'bag'
 	}
 
