@@ -91,7 +91,6 @@ local function build_containers(node_pc)
 					['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
 					['nTotalVolume'] = 0,
 					['nTotalWeight'] = 0,
-					['sName'] = DB.getValue(node_item, 'name', ""),
 					['nodeItem'] = node_item
 				};
 		elseif (bisContainer and not bisExtraplanar) then -- this creates an array keyed to the names of any detected mundane storage containers
@@ -104,7 +103,6 @@ local function build_containers(node_pc)
 					['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
 					['nTotalVolume'] = 0,
 					['nTotalWeight'] = 0,
-					['sName'] = DB.getValue(node_item, 'name', ""),
 					['nodeItem'] = node_item
 				};
 		end
