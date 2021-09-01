@@ -12,7 +12,10 @@ tExtraplanarContainers = {
 	'portable hole',
 	'efficient quiver',
 	'quiver of ehlonna',
-	'handy haversack'
+	'handy haversack',
+	'horse',
+	'donkey',
+	'mule'
 	}
 --	search terms for finding mundane containers
 --	these containers will have their subtotals calculated
@@ -21,9 +24,6 @@ tContainers = {
 	'backpack',
 	'pouch',
 	'quiver',
-	'horse',
-	'donkey',
-	'mule',
 	'bag'
 	}
 
