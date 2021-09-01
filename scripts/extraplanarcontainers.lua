@@ -128,6 +128,8 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 				local string_item_location_location = string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
 				if not table_containers_extraplanar[string_item_location_location] then
 					number_total_weight = number_total_weight + (number_item_count * number_item_weight)
+				else
+					table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 				end
 			else
 				number_total_weight = number_total_weight + (number_item_count * number_item_weight)
