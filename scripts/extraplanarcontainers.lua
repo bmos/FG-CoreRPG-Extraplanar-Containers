@@ -47,29 +47,6 @@ function isAnyContainer(sItemName)
 	end
 end
 
-local function spairs(t, order)
-    -- collect the keys
-    local keys = {}
-    for k in pairs(t) do keys[#keys+1] = k end
-
-    -- if order function given, sort by it by passing the table and keys a, b,
-    -- otherwise just sort the keys
-    if order then
-        table.sort(keys, function(a,b) return order(t, a, b) end)
-    else
-        table.sort(keys)
-    end
-
-    -- return the iterator function
-    local i = 0
-    return function()
-        i = i + 1
-        if keys[i] then
-            return keys[i], t[keys[i]]
-        end
-    end
-end
-
 --	looks through provided charsheet for inventory items that are containers
 --	if found, these are added to table_containers_extraplanar or table_containers_mundane as appropriate
 local function build_containers(node_pc)
