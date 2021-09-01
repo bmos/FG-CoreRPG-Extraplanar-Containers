@@ -139,17 +139,17 @@ local function measure_contents(node_pc, table_containers_mundane, table_contain
 					end
 				end
 			elseif state_item_carried ~= 2 and (bIsInContainer and not bIsInExtraplanar) then
+				if table_containers_mundane[string_item_location] then
+					table_containers_mundane[string_item_location]['nTotalWeight'] = table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+						table_containers_mundane[string_item_location]['nTotalVolume'] = table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0))
+						if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
+						if table_containers_mundane[string_item_location]['nMaxWidth'] < DB.getValue(node_item, 'width', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
+						if table_containers_mundane[string_item_location]['nMaxDepth'] < DB.getValue(node_item, 'depth', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
+					end
+				end
 				local string_item_location_location = string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
 				if not table_containers_extraplanar[string_item_location_location] then
-					if table_containers_mundane[string_item_location] then
-						table_containers_mundane[string_item_location]['nTotalWeight'] = table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
-						if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-							table_containers_mundane[string_item_location]['nTotalVolume'] = table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0))
-							if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
-							if table_containers_mundane[string_item_location]['nMaxWidth'] < DB.getValue(node_item, 'width', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
-							if table_containers_mundane[string_item_location]['nMaxDepth'] < DB.getValue(node_item, 'depth', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
-						end
-					end
 					number_total_weight = number_total_weight + (number_item_count * number_item_weight)
 				end
 			else
