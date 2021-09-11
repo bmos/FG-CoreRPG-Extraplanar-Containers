@@ -2,7 +2,7 @@
 This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers.
 
 # Compatibility and Instructions
-This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.1.5 (2020-08-26).
+This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.1.6 (2020-09-08).
 
 This works with CoreRPG, 2E, 3.5E, 5E, PFRPG, and possibly more, although the items it looks for are based on Pathfinder 1e.
 
