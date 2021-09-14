@@ -181,6 +181,33 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 	end
 end
 
+local function coinWeight_2e(nodeChar)
+	if not CoinsWeight and OptionsManager.getOption("OPTIONAL_ENCUMBRANCE_COIN") == "on" then
+		local nCoinWeight = 0;
+		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot1.amount", 0);
+		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot2.amount", 0);
+		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot3.amount", 0);
+		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot4.amount", 0);
+		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot5.amount", 0);
+		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot6.amount", 0);
+
+		nCoinWeight = nCoinWeight * DataCommonADND.nDefaultCoinWeight;
+	end
+
+	if OptionsManager.getOption("OPTIONAL_ENCUMBRANCE") == "on" then
+		if DataCommonADND.coreVersion == "2e" then
+			CharManager.updateMoveFromEncumbrance2e(nodeChar);
+		else
+			CharManager.updateMoveFromEncumbrance1e(nodeChar); 
+		end
+	else
+		DB.setValue(nodeChar, "speed.basemodenc", "number", 0);
+		DB.setValue(nodeChar, "speed.encumbrancerank", "string", "Normal");
+	end
+
+	return nCoinWeight
+end
+
 local function updateEncumbrance_new(node_char)
 	-- assemble a list of containers and their capacities
 	local table_containers_mundane, table_containers_extraplanar = build_containers(node_char)
@@ -191,6 +218,11 @@ local function updateEncumbrance_new(node_char)
 	-- writes container subtotals to database and handles chat messages
 	write_contents_to_containers(node_char, table_containers_mundane, "item_overfull")
 	write_contents_to_containers(node_char, table_containers_extraplanar, "item_self_destruct")
+
+	-- ADND Coin Weight Compatibility
+	if DataCommonADND then
+		number_total = number_total + coinWeight_2e(node_char)
+	end
 
 	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
