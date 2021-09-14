@@ -182,8 +182,8 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 end
 
 local function coinWeight_2e(nodeChar)
+	local nCoinWeight = 0;
 	if not CoinsWeight and OptionsManager.getOption("OPTIONAL_ENCUMBRANCE_COIN") == "on" then
-		local nCoinWeight = 0;
 		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot1.amount", 0);
 		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot2.amount", 0);
 		nCoinWeight = nCoinWeight + DB.getValue(nodeChar, "coins.slot3.amount", 0);
