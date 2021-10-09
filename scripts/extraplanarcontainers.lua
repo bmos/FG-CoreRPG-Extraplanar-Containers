@@ -6,15 +6,15 @@
 --	these containers will have their subtotals calculated
 --	the weight of their contents will not be counted elsewhere
 tExtraplanarContainers = {
+	'quiver of ehlonna',
+	'efficient quiver',
+	'handy haversack',
+	'portable hole',
 	'extraplanar',
 	'weightless',
 	'of holding',
-	'portable hole',
-	'efficient quiver',
-	'quiver of ehlonna',
-	'handy haversack',
-	'horse',
 	'donkey',
+	'horse',
 	'mule'
 	}
 --	search terms for finding mundane containers
@@ -22,9 +22,14 @@ tExtraplanarContainers = {
 tContainers = {
 	'container',
 	'backpack',
-	'pouch',
+	'satchel',
 	'quiver',
-	'bag'
+	'chest',
+	'purse',
+	'pouch',
+	'sack',
+	'bag',
+	'box'
 	}
 
 --	searches for provided sItemName in provided tTable.
