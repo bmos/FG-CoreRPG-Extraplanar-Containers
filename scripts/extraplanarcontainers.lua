@@ -200,7 +200,7 @@ local function coinWeight_2e(nodeChar)
 	end
 
 	if OptionsManager.getOption("OPTIONAL_ENCUMBRANCE") == "on" then
-		if DataCommonADND.coreVersion == "2e" then
+		if DataCommonADND and DataCommonADND.coreVersion == "2e" then
 			CharManager.updateMoveFromEncumbrance2e(nodeChar);
 		else
 			CharManager.updateMoveFromEncumbrance1e(nodeChar); 
