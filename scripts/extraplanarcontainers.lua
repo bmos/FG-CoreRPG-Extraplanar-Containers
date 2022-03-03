@@ -237,13 +237,23 @@ end
 -- called when items have their locations changed
 local function onLocationChanged(node)
 	local node_char = node.getChild('....')
-	CharEncumbranceManager.updateEncumbrance(node_char)
+	local encManager = self.getEncumbranceManager();
+	encManager.updateEncumbrance(node_char)
 end
 
 -- called when items have their dimensions changed
 local function onDimensionsChanged(node)
 	local node_char = node.getChild('....')
-	CharEncumbranceManager.updateEncumbrance(node_char)
+	local encManager = self.getEncumbranceManager();
+	encManager.updateEncumbrance(node_char)
+end
+
+function getEncumbranceManager()
+	if CharEncumbranceManager then
+		return CharEncumbranceManager;
+	else
+		return CharManager;
+	end
 end
 
 function onInit()
@@ -255,7 +265,8 @@ function onInit()
 		default = 'off',
 	})
 
-	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
+	local encManager = self.getEncumbranceManager();
+	encManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
 		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onLocationChanged)
