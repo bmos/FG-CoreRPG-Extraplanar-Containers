@@ -200,7 +200,7 @@ local function updateEncumbrance_new(node_char)
 
 	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
-	DB.setValue(node_char, 'encumbrance.load', 'number', number_rounded_total)
+	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_rounded_total)
 end
 
 -- called when items have their locations changed
