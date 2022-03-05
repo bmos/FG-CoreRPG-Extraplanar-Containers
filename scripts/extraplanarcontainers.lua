@@ -197,6 +197,8 @@ local function updateEncumbrance_new(node_char)
 	write_contents_to_containers(node_char, table_containers_mundane, "item_overfull")
 	write_contents_to_containers(node_char, table_containers_extraplanar, "item_self_destruct")
 
+	number_total = number_total + CharEncumbranceManager.calcDefaultCurrencyEncumbrance(node_char);
+	CharEncumbranceManager.setDefaultEncumbranceValue(node_char, number_total);
 
 	-- rounds total and writes to encumbrance field
 	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
