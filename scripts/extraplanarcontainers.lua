@@ -205,6 +205,12 @@ local function updateEncumbrance_new(node_char)
 	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_rounded_total)
 end
 
+-- called when items are deleted
+local function onItemDeleted(node)
+	local node_char = node.getChild('...')
+	CharEncumbranceManager.updateEncumbrance(node_char)
+end
+
 -- called when items have their details changed
 local function onItemUpdate(node)
 	local node_char = node.getChild('....')
@@ -228,6 +234,7 @@ function onInit()
 			local sItemList = 'charsheet.*.' .. sItemList
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
 			DB.addHandler(DB.getPath(sItemList .. '.*.weight'), 'onUpdate', onItemUpdate)
+			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
 
 			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
 				DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
