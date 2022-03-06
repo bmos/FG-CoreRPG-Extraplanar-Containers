@@ -225,13 +225,14 @@ function onInit()
 	if Session.IsHost then
 		local tItemLists = ItemManager.getInventoryPaths("charsheet");
 		for _,sItemList in pairs(tItemLists) do
-			DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.weight'), 'onUpdate', onItemUpdate)
+			local sItemList = 'charsheet.*.' .. sItemList
+			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
+			DB.addHandler(DB.getPath(sItemList .. '.*.weight'), 'onUpdate', onItemUpdate)
 
 			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-				DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
-				DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
-				DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
+				DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
+				DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
+				DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
 			end
 		end
 	end
