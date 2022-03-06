@@ -205,14 +205,8 @@ local function updateEncumbrance_new(node_char)
 	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_rounded_total)
 end
 
--- called when items have their locations changed
-local function onLocationChanged(node)
-	local node_char = node.getChild('....')
-	CharEncumbranceManager.updateEncumbrance(node_char)
-end
-
--- called when items have their dimensions changed
-local function onDimensionsChanged(node)
+-- called when items have their details changed
+local function onUpdate(node)
 	local node_char = node.getChild('....')
 	CharEncumbranceManager.updateEncumbrance(node_char)
 end
@@ -229,12 +223,13 @@ function onInit()
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
-		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onLocationChanged)
-		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.length'), 'onUpdate', onDimensionsChanged)
+		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onUpdate)
+		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.weight'), 'onUpdate', onUpdate)
 
 		if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.width'), 'onUpdate', onDimensionsChanged)
-			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.depth'), 'onUpdate', onDimensionsChanged)
+			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.length'), 'onUpdate', onUpdate)
+			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.width'), 'onUpdate', onUpdate)
+			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.depth'), 'onUpdate', onUpdate)
 		end
 	end
 end
