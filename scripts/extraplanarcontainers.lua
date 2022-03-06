@@ -207,8 +207,7 @@ local function updateContainers(node_inventory)
 end
 
 function updateEncumbrance_new(node_char)
-	local table_itemlists = ItemManager.getInventoryPaths('charsheet');
-	for _,string_itemlist in pairs(table_itemlists) do
+	for _,string_itemlist in pairs(ItemManager.getInventoryPaths('charsheet')) do
 		updateContainers(node_char.getChild(string_itemlist))
 	end
 end
@@ -235,8 +234,7 @@ function onInit()
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
-		local tItemLists = ItemManager.getInventoryPaths('charsheet');
-		for _,sItemList in pairs(tItemLists) do
+		for _,sItemList in pairs(ItemManager.getInventoryPaths('charsheet')) do
 			local sItemList = 'charsheet.*.' .. sItemList
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
 			DB.addHandler(DB.getPath(sItemList .. '.*.weight'), 'onUpdate', onItemUpdate)
