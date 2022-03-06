@@ -115,48 +115,25 @@
 			<number_columnh name="length" insertbefore="divider3" >
 				<delaykeyupdate />
 				<tooltip textres="item_tooltip_length" />
-				<script>
-					function onValueChanged()
-						window.volume.getVolume()
-					end
-				</script>
+				<script file="campaign/scripts/external_dimensions.lua" />
 			</number_columnh>
 			<basicnumber name="width" insertbefore="divider3" >
 				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_width" />
 				<delaykeyupdate />
-				<script>
-					function onValueChanged()
-						window.volume.getVolume()
-					end
-				</script>
+				<script file="campaign/scripts/external_dimensions.lua" />
 			</basicnumber>
 			<basicnumber name="depth" insertbefore="divider3" >
 				<anchored to="width" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_depth" />
 				<delaykeyupdate />
-				<script>
-					function onValueChanged()
-						window.volume.getVolume()
-					end
-				</script>
+				<script file="campaign/scripts/external_dimensions.lua" />
 			</basicnumber>
 			<basicnumber name="volume" insertbefore="divider3" >
 				<anchored to="depth" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_exterior_volume" />
 				<readonly />
-				<script>
-					function onInit()
-						getVolume()
-					end
-					function getVolume()
-						setValue(window.length.getValue() * window.width.getValue() * window.depth.getValue())
-						window.contentsvolume.onValueChanged()
-					end
-					function onValueChanged()
-						window.contentsvolume.onValueChanged()
-					end
-				</script>
+				<script file="campaign/scripts/external_volume.lua" />
 			</basicnumber>
 			
 			<label_column name="internal_dimensions_label" insertbefore="divider3" >
@@ -165,44 +142,25 @@
 			<number_columnh name="internal_length" insertbefore="divider3" >
 				<tooltip textres="item_tooltip_length" />
 				<delaykeyupdate />
-				<script>
-					function onValueChanged()
-						window.internal_volume.getVolume()
-					end
-				</script>
+				<script file="campaign/scripts/internal_dimensions.lua" />
 			</number_columnh>
 			<basicnumber name="internal_width" insertbefore="divider3" >
 				<anchored to="internal_length" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_width" />
 				<delaykeyupdate />
-				<script>
-					function onValueChanged()
-						window.internal_volume.getVolume()
-					end
-				</script>
+				<script file="campaign/scripts/internal_dimensions.lua" />
 			</basicnumber>
 			<basicnumber name="internal_depth" insertbefore="divider3" >
 				<anchored to="internal_width" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_depth" />
 				<delaykeyupdate />
-				<script>
-					function onValueChanged()
-						window.internal_volume.getVolume()
-					end
-				</script>
+				<script file="campaign/scripts/internal_dimensions.lua" />
 			</basicnumber>
 			<basicnumber name="internal_volume" insertbefore="divider3" >
 				<anchored to="internal_depth" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_interior_volume" />
 				<readonly />
-				<script>
-					function onInit()
-						getVolume()
-					end
-					function getVolume()
-						setValue(window.internal_length.getValue() * window.internal_width.getValue() * window.internal_depth.getValue())
-					end
-				</script>
+				<script file="campaign/scripts/internal_volume.lua" />
 			</basicnumber>
 		</sheetdata>
 	</windowclass>
