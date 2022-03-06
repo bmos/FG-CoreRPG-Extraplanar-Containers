@@ -18,6 +18,10 @@
 	<string name="item_tooltip_depth">Depth</string>
 	<string name="item_tooltip_exterior_volume">Total Exterior Volume</string>
 	<string name="item_tooltip_interior_volume">Total Interior Volume</string>
+	<!-- PFRPG2 strings-->
+	<string name="item_label_container_bulk">Container Bulk</string>
+	<string name="item_tooltip_capacityweight_bulk">Maximum Bulk Capacity</string> <!-- Total bulk the bag of holding can hold (as PF2 bulk) -->
+	<string name="item_tooltip_extraplanarcontents_bulk">Total Bulk of Contents</string> <!-- The weight of everything in the bag of holding (as PF2 bulk) -->
 	<!-- Chat Messages -->
 	<string name="item_self_destruct">"%s" is overfull (%s). Self destructing in 10.. 9.. 8.. 6.. just kidding!</string>
 	<string name="item_overfull">"%s" is overfull (%s).</string>

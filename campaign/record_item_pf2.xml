@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- Please see the LICENSE.md file included with this distribution for attribution and copyright information. -->
+
+<root>
+	<!-- this is the item sheet -->
+	<windowclass name="item_main" merge="join">
+		<sheetdata>
+			<label_column name="container_bulk_label" insertbefore="bulk_label" >
+				<static textres="item_label_container_bulk" />
+			</label_column>
+			<number_columnh name="capacityweight" insertbefore="bulk_label">
+				<tooltip textres="item_tooltip_capacityweight_bulk" />
+				<script>
+					function update(bReadOnly, bForceHide)
+						local bLocalShow;
+						if bForceHide then
+							bLocalShow = false;
+						else
+							--[[bmos fixing visibility of weight fields]]
+							local nohide = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'));
+							--[[end bmos fixing visibility of weight fields]]
+							bLocalShow = true;
+							if bReadOnly and not nohide and getValue() == 0 then
+								bLocalShow = false;
+							end
+						end
+
+						setReadOnly(bReadOnly);
+						setVisible(bLocalShow);
+						
+						local sLabel = getName() .. "_label";
+						if window[sLabel] then
+							window[sLabel].setVisible(bLocalShow);
+						end
+						
+						if self.onUpdate then
+							self.onUpdate(bLocalShow);
+						end
+						
+						return bLocalShow;
+					end
+					function onValueChanged()
+						window.extraplanarcontents.onValueChanged()
+					end
+				</script>
+			</number_columnh>
+			<basicnumber name="extraplanarcontents" insertbefore="bulk_label">
+				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_extraplanarcontents_bulk" />
+				<readonly />
+				<script>
+					function onInit()
+						local bVisible = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
+						window.container_bulk_label.setVisible(bVisible)
+						window.capacityweight.setVisible(bVisible or window.capacityweight.getValue() ~= 0)
+						window.extraplanarcontents.setVisible(bVisible or window.extraplanarcontents.getValue() ~= 0)
+						onValueChanged()
+					end
+					function onValueChanged()
+						if window.capacityweight.getValue() ~= 0 then
+							if getValue() &lt; window.capacityweight.getValue() then
+								setColor(ColorManager.COLOR_FULL)
+							elseif getValue() == window.capacityweight.getValue() then
+								setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
+							elseif getValue() &gt; window.capacityweight.getValue() then
+								setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
+							end
+						end
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="contentsvolume" insertbefore="bulk_label" >
+				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_contentsvolume" />
+				<readonly />
+				<script>
+					function onInit()
+						local bVisible = OptionsManager.isOption('ITEM_VOLUME', 'on')
+
+						window.external_dimensions_label.setVisible(bVisible)
+						window.length.setVisible(bVisible)
+						window.width.setVisible(bVisible)
+						window.depth.setVisible(bVisible)
+						window.volume.setVisible(bVisible)
+
+						bVisible = bVisible and ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
+
+						window.contentsvolume.setVisible(bVisible)
+						window.internal_dimensions_label.setVisible(bVisible)
+						window.internal_length.setVisible(bVisible)
+						window.internal_width.setVisible(bVisible)
+						window.internal_depth.setVisible(bVisible)
+						window.internal_volume.setVisible(bVisible)
+
+						onValueChanged()
+					end
+					function onValueChanged()
+						if window.internal_volume.getValue() ~= 0 then
+							if getValue() &lt; window.internal_volume.getValue() then
+								setColor(ColorManager.COLOR_FULL)
+							elseif getValue() == window.internal_volume.getValue() then
+								setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
+							elseif getValue() &gt; window.internal_volume.getValue() then
+								setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
+							end
+						end
+					end
+				</script>
+			</basicnumber>
+			
+			<label_column name="external_dimensions_label" insertbefore="divider3" >
+				<static textres="item_label_external_dimensions" />
+			</label_column>
+			<number_columnh name="length" insertbefore="divider3" >
+				<delaykeyupdate />
+				<tooltip textres="item_tooltip_length" />
+				<script>
+					function onValueChanged()
+						window.volume.getVolume()
+					end
+				</script>
+			</number_columnh>
+			<basicnumber name="width" insertbefore="divider3" >
+				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_width" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="depth" insertbefore="divider3" >
+				<anchored to="width" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_depth" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="volume" insertbefore="divider3" >
+				<anchored to="depth" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_exterior_volume" />
+				<readonly />
+				<script>
+					function onInit()
+						getVolume()
+					end
+					function getVolume()
+						setValue(window.length.getValue() * window.width.getValue() * window.depth.getValue())
+						window.contentsvolume.onValueChanged()
+					end
+					function onValueChanged()
+						window.contentsvolume.onValueChanged()
+					end
+				</script>
+			</basicnumber>
+			
+			<label_column name="internal_dimensions_label" insertbefore="divider3" >
+				<static textres="item_label_internal_dimensions" />
+			</label_column>
+			<number_columnh name="internal_length" insertbefore="divider3" >
+				<tooltip textres="item_tooltip_length" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.internal_volume.getVolume()
+					end
+				</script>
+			</number_columnh>
+			<basicnumber name="internal_width" insertbefore="divider3" >
+				<anchored to="internal_length" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_width" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.internal_volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="internal_depth" insertbefore="divider3" >
+				<anchored to="internal_width" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_depth" />
+				<delaykeyupdate />
+				<script>
+					function onValueChanged()
+						window.internal_volume.getVolume()
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="internal_volume" insertbefore="divider3" >
+				<anchored to="internal_depth" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_interior_volume" />
+				<readonly />
+				<script>
+					function onInit()
+						getVolume()
+					end
+					function getVolume()
+						setValue(window.internal_length.getValue() * window.internal_width.getValue() * window.internal_depth.getValue())
+					end
+				</script>
+			</basicnumber>
+		</sheetdata>
+	</windowclass>
+</root>
