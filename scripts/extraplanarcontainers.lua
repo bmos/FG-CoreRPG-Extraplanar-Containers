@@ -229,7 +229,7 @@ function onInit()
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
-		local tItemLists = ItemManager.getInventoryPaths("charsheet");
+		local tItemLists = ItemManager.getInventoryPaths('charsheet');
 		for _,sItemList in pairs(tItemLists) do
 			local sItemList = 'charsheet.*.' .. sItemList
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
