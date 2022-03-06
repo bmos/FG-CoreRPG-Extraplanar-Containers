@@ -206,7 +206,7 @@ local function updateEncumbrance_new(node_char)
 end
 
 -- called when items have their details changed
-local function onUpdate(node)
+local function onItemUpdate(node)
 	local node_char = node.getChild('....')
 	CharEncumbranceManager.updateEncumbrance(node_char)
 end
@@ -223,13 +223,16 @@ function onInit()
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
-		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.location'), 'onUpdate', onUpdate)
-		DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.weight'), 'onUpdate', onUpdate)
+		local tItemLists = ItemManager.getInventoryPaths("charsheet");
+		for _,sItemList in pairs(tItemLists) do
+			DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
+			DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.weight'), 'onUpdate', onItemUpdate)
 
-		if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.length'), 'onUpdate', onUpdate)
-			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.width'), 'onUpdate', onUpdate)
-			DB.addHandler(DB.getPath('charsheet.*.inventorylist.*.depth'), 'onUpdate', onUpdate)
+			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+				DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
+				DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
+				DB.addHandler(DB.getPath('charsheet.*.' .. sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
+			end
 		end
 	end
 end
