@@ -54,10 +54,10 @@ end
 
 --	looks through provided charsheet for inventory items that are containers
 --	if found, these are added to table_containers_extraplanar or table_containers_mundane as appropriate
-local function build_containers(node_pc)
+local function build_containers(node_inventory)
 	local table_containers_mundane = {}
 	local table_containers_extraplanar = {}
-	for _,node_item in pairs(DB.getChildren(node_pc, 'inventorylist')) do
+	for _,node_item in pairs(DB.getChildren(node_inventory)) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', ''))
 		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0);
 
@@ -97,9 +97,9 @@ end
 --	items in extraplanar containers will only have weight added to container subtotal
 --	items in mundane containers will have weight added to subtotal and encumbrance total
 --	items in neither will have weight added to encumbrance total
-local function measure_contents(node_pc, table_containers_mundane, table_containers_extraplanar)
+local function measure_contents(node_inventory, table_containers_mundane, table_containers_extraplanar)
 	local number_total_weight = 0
-	for _,node_item in pairs(DB.getChildren(node_pc, 'inventorylist')) do
+	for _,node_item in pairs(DB.getChildren(node_inventory)) do
 		local state_item_carried = DB.getValue(node_item, 'carried', 0)
 		if state_item_carried ~= 0 then
 			local number_item_count = DB.getValue(node_item, 'count', 0);
@@ -147,8 +147,8 @@ end
 
 --	writes container subtotals to the relevant container
 --	sends chat messages if containers are overfull
-local function write_contents_to_containers(node_pc, table_containers, string_error)
-	local rActor = ActorManager.resolveActor(node_pc)
+local function write_contents_to_containers(node_inventory, table_containers, string_error)
+	local rActor = ActorManager.resolveActor(node_inventory.getParent())
 	for _,table_container in pairs(table_containers) do
 		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
 		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
@@ -186,16 +186,17 @@ local function write_contents_to_containers(node_pc, table_containers, string_er
 	end
 end
 
-local function updateEncumbrance_new(node_char)
+local function updateContainers(node_inventory)
+	local node_char = node_inventory.getParent()
 	-- assemble a list of containers and their capacities
-	local table_containers_mundane, table_containers_extraplanar = build_containers(node_char)
+	local table_containers_mundane, table_containers_extraplanar = build_containers(node_inventory)
 
 	-- this will contain a running total of all items carried by the character
-	local number_total = measure_contents(node_char, table_containers_mundane, table_containers_extraplanar) or 0
+	local number_total = measure_contents(node_inventory, table_containers_mundane, table_containers_extraplanar) or 0
 
 	-- writes container subtotals to database and handles chat messages
-	write_contents_to_containers(node_char, table_containers_mundane, "item_overfull")
-	write_contents_to_containers(node_char, table_containers_extraplanar, "item_self_destruct")
+	write_contents_to_containers(node_inventory, table_containers_mundane, "item_overfull")
+	write_contents_to_containers(node_inventory, table_containers_extraplanar, "item_self_destruct")
 
 	number_total = number_total + CharEncumbranceManager.calcDefaultCurrencyEncumbrance(node_char);
 	CharEncumbranceManager.setDefaultEncumbranceValue(node_char, number_total);
@@ -205,16 +206,21 @@ local function updateEncumbrance_new(node_char)
 	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_rounded_total)
 end
 
+function updateEncumbrance_new(node_char)
+	local table_itemlists = ItemManager.getInventoryPaths('charsheet');
+	for _,string_itemlist in pairs(table_itemlists) do
+		updateContainers(node_char.getChild(string_itemlist))
+	end
+end
+
 -- called when items are deleted
 local function onItemDeleted(node)
-	local node_char = node.getChild('...')
-	CharEncumbranceManager.updateEncumbrance(node_char)
+	updateContainers(node.getParent())
 end
 
 -- called when items have their details changed
 local function onItemUpdate(node)
-	local node_char = node.getChild('....')
-	CharEncumbranceManager.updateEncumbrance(node_char)
+	updateContainers(node.getChild('...'))
 end
 
 function onInit()
