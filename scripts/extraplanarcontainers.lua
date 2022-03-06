@@ -61,9 +61,9 @@ local function build_containers(node_pc)
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', ''))
 		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0);
 
-		local bisExtraplanar = isContainer(string_item_name, tExtraplanarContainers)
-		local bisContainer = isContainer(string_item_name, tContainers)
-		if bisExtraplanar then -- this creates an array keyed to the names of any detected extraplanar storage containers
+		local bool_extraplanar = isContainer(string_item_name, tExtraplanarContainers)
+		local bool_container = isContainer(string_item_name, tContainers)
+		if bool_extraplanar then -- this creates an array keyed to the names of any detected extraplanar storage containers
 			table_containers_extraplanar[string_item_name] = {
 					['bTooBig'] = 0,
 					['nMaxDepth'] = DB.getValue(node_item, 'internal_depth', 0),
@@ -75,7 +75,7 @@ local function build_containers(node_pc)
 					['nTotalWeight'] = 0,
 					['nodeItem'] = node_item
 				};
-		elseif (bisContainer and not bisExtraplanar) then -- this creates an array keyed to the names of any detected mundane storage containers
+		elseif (bool_container and not bool_extraplanar) then -- this creates an array keyed to the names of any detected mundane storage containers
 			table_containers_mundane[string_item_name] = {
 					['bTooBig'] = 0,
 					['nMaxDepth'] = DB.getValue(node_item, 'internal_depth', 0),
