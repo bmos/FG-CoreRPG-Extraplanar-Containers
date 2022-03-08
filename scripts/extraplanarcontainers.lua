@@ -209,7 +209,10 @@ end
 
 function updateEncumbrance_new(node_char)
 	for _,string_itemlist in pairs(ItemManager.getInventoryPaths('charsheet')) do
-		updateContainers(node_char.getChild(string_itemlist))
+		local node_inventory = node_char.getChild(string_itemlist)
+		if node_inventory then
+			updateContainers(node_inventory)
+		end
 	end
 end
 
