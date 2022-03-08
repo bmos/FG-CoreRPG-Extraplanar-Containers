@@ -154,7 +154,6 @@
 				<readonly />
 				<script file="campaign/scripts/internal_volume.lua" />
 			</basicnumber>
-			</basicnumber>
 		</sheetdata>
 	</windowclass>
 
