@@ -207,14 +207,9 @@ local function updateContainers(node_inventory)
 	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_rounded_total)
 end
 
-function updateEncumbrance_new(node_char)
-	for _,string_itemlist in pairs(ItemManager.getInventoryPaths('charsheet')) do
-		local node_inventory = node_char.getChild(string_itemlist)
-		if node_inventory then
-			updateContainers(node_inventory)
-		end
-	end
-end
+--
+--	TRIGGERING
+--
 
 -- called when items are deleted
 local function onItemDeleted(node)
@@ -223,7 +218,20 @@ end
 
 -- called when items have their details changed
 local function onItemUpdate(node)
-	updateContainers(node.getChild('...'))
+	updateContainers(node.getChild('...'));
+end
+
+--
+--	FUNCTION REPLACEMENT
+--
+
+local function updateEncumbrance_new(node_char)
+	for _,string_itemlist in pairs(ItemManager.getInventoryPaths('charsheet')) do
+		local node_inventory = node_char.getChild(string_itemlist);
+		if node_inventory then
+			updateContainers(node_inventory);
+		end
+	end
 end
 
 function onInit()
