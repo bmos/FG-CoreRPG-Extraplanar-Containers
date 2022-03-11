@@ -218,7 +218,7 @@ end
 
 -- called when items are deleted
 local function onItemDeleted(node)
-	updateContainers(node.getParent())
+	updateContainers(node.getParent());
 end
 
 -- called when items have their details changed
@@ -233,21 +233,21 @@ function onInit()
 		baselabel = 'option_val_off',
 		baseval = 'off',
 		default = 'off',
-	})
+	});
 
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
 		for _,sItemList in pairs(ItemManager.getInventoryPaths('charsheet')) do
-			local sItemList = 'charsheet.*.' .. sItemList
-			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
+			local sItemList = 'charsheet.*.' .. sItemList;
+			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate);
+			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate);
+			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted);
 
 			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-				DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
-				DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
-				DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
+				DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate);
+				DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate);
+				DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate);
 			end
 		end
 	end
