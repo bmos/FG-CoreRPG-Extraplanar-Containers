@@ -241,7 +241,7 @@ function onInit()
 		for _,sItemList in pairs(ItemManager.getInventoryPaths('charsheet')) do
 			local sItemList = 'charsheet.*.' .. sItemList
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.weight'), 'onUpdate', onItemUpdate)
+			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
 			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
 
 			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
