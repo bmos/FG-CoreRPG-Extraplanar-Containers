@@ -248,15 +248,20 @@ function onInit()
 	if Session.IsHost then
 		for _,sItemList in pairs(ItemManager.getInventoryPaths('charsheet')) do
 			local sItemList = 'charsheet.*.' .. sItemList;
+			DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate);
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate);
 			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate);
 			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted);
 
-			if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-				DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate);
-				DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate);
-				DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate);
-			end
+			-- external size fields
+			DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate);
+			DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate);
+			DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate);
+
+			-- internal size fields
+			DB.addHandler(DB.getPath(sItemList .. '.*.internal_length'), 'onUpdate', onItemUpdate);
+			DB.addHandler(DB.getPath(sItemList .. '.*.internal_width'), 'onUpdate', onItemUpdate);
+			DB.addHandler(DB.getPath(sItemList .. '.*.internal_depth'), 'onUpdate', onItemUpdate);
 		end
 	end
 end
