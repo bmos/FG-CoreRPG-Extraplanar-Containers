@@ -23,7 +23,7 @@ jobs:
 
           # URL to a custom configuration (`.luacheckrc`) file that will be used as
           # the default configuration file.
-          config: ''
+          config: https://raw.githubusercontent.com/bmos/FG-luacheck/main/fg.luacheckrc
 
           # Emits annotations for source code at locations parsed from the output.
           # Must be set to "none", "warning" or "error".
