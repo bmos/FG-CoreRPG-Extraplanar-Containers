@@ -7,8 +7,9 @@ on:
     # Only run if pull request includes a change to a Lua (.lua) file.
     paths:
       - '**.lua'
+  workflow_dispatch:
 
-name: Run Luacheck on Push or PR
+name: Run Luacheck
 
 jobs:
   build:
@@ -25,7 +26,5 @@ jobs:
         with:
           files: '.'
           config: https://raw.githubusercontent.com/bmos/FG-luacheck/main/fg.luacheckrc
-
-          # Emits annotations for source code at locations parsed from the output.
-          # Must be set to "none", "warning" or "error".
-          annotate: 'none'
+          args: '--no-color'
+          annotate: 'warning'
