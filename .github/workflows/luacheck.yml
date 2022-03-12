@@ -18,7 +18,7 @@ jobs:
         with:
           # A list of files, rockspecs, or directories to be checked. Paths can be
           # absolute or relative to the `path` option.
-          files: '*.lua'
+          files: '.'
 
           # URL to a custom configuration (`.luacheckrc`) file that will be used as
           # the default configuration file.
