@@ -16,6 +16,7 @@ tExtraplanarContainers = {
 	'of holding',
 	'donkey',
 	'horse',
+	'cart',
 	'mule'
 	}
 --	search terms for finding mundane containers
