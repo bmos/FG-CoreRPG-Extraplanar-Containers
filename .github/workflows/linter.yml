@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - '**/*.lua'
+      - '**.lua'
 
 name: Run Linter
 
