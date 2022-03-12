@@ -3,6 +3,8 @@ on:
     paths:
       - '**/*.lua'
 
+name: Run Linter
+
 jobs:
   luacheck:
     runs-on: ubuntu-latest
