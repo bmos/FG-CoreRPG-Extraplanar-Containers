@@ -1,7 +1,4 @@
-on:
-  push:
-    paths:
-      - '**.lua'
+on: [push, pull_request]
 
 name: Run Luacheck on Push
 
@@ -9,9 +6,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: nebularg/actions-luacheck@v1
-      with:
-        # A list of files, rockspecs, or directories to be checked. Paths can be
+      - name: Install Lua/LuaJIT
+        uses: leafo/gh-actions-lua@v8.0.0
+        with:
+          # The version of Lua to install, must be available on https://www.lua.org/ftp/ or http://luajit.org/download.html
+          luaVersion: 5.1 # optional, default is 5.4
+      - name: luacheck
+        # You may pin to the exact commit or the version.
+        # uses: nebularg/actions-luacheck@86af42dcf465915896671903fcdec3e01a492e87
+        uses: nebularg/actions-luacheck@v1.1.0
+        with:        # A list of files, rockspecs, or directories to be checked. Paths can be
         # absolute or relative to the `path` option.
         files: ''
 
