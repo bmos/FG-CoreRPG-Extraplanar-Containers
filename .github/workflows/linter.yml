@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - '**.lua'
+      - '**/*.lua'
 
 jobs:
   luacheck:
@@ -11,5 +11,5 @@ jobs:
     - name: Luacheck Linter
       uses: judaew/luacheck-action@v0.2.1
       with:
-        targets: "*.lua"
-        args: ""
+        targets: "."
+        args: "--include-files **/*.lua"
