@@ -1,6 +1,8 @@
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
-name: Run Luacheck on Push
+name: Run Luacheck on Push or PR
 
 jobs:
   build:
