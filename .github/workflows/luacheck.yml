@@ -26,5 +26,5 @@ jobs:
         with:
           files: '.'
           config: https://raw.githubusercontent.com/bmos/FG-luacheck/main/fg.luacheckrc
-          args: '--no-color'
+          args: '--no-color --exclude-files .install/*'
           annotate: 'warning'
