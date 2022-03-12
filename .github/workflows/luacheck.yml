@@ -10,8 +10,7 @@ jobs:
       - name: Install Lua/LuaJIT
         uses: leafo/gh-actions-lua@v8.0.0
         with:
-          # The version of Lua to install, must be available on https://www.lua.org/ftp/ or http://luajit.org/download.html
-          luaVersion: 5.1 # optional, default is 5.4
+          luaVersion: 5.1
       - name: luacheck
         # You may pin to the exact commit or the version.
         # uses: nebularg/actions-luacheck@86af42dcf465915896671903fcdec3e01a492e87
