@@ -16,26 +16,26 @@ jobs:
         # uses: nebularg/actions-luacheck@86af42dcf465915896671903fcdec3e01a492e87
         uses: nebularg/actions-luacheck@v1.1.0
         with:        # A list of files, rockspecs, or directories to be checked. Paths can be
-        # absolute or relative to the `path` option.
-        files: ''
+          # absolute or relative to the `path` option.
+          files: ''
 
-        # The working directory for luacheck. The file list should be relative to
-        # this path and output filenames be displayed relative to this path.
-        # Default: ${{ github.workspace }}
-        path: ''
+          # The working directory for luacheck. The file list should be relative to
+          # this path and output filenames be displayed relative to this path.
+          # Default: ${{ github.workspace }}
+          path: ''
 
-        # Additional command-line arguments.
-        # See https://luacheck.readthedocs.io/en/stable/cli.html
-        args: ''
+          # Additional command-line arguments.
+          # See https://luacheck.readthedocs.io/en/stable/cli.html
+          args: ''
 
-        # URL to a custom configuration (`.luacheckrc`) file that will be used as
-        # the default configuration file.
-        config: ''
+          # URL to a custom configuration (`.luacheckrc`) file that will be used as
+          # the default configuration file.
+          config: ''
 
-        # Emits annotations for source code at locations parsed from the output.
-        # Must be set to "none", "warning" or "error".
-        #
-        # Requires that output of warnings not be suppressed through the -qq or -qqq arguments.
-        #
-        # Default: 'none'
-        annotate: 'none'
+          # Emits annotations for source code at locations parsed from the output.
+          # Must be set to "none", "warning" or "error".
+          #
+          # Requires that output of warnings not be suppressed through the -qq or -qqq arguments.
+          #
+          # Default: 'none'
+          annotate: 'none'
