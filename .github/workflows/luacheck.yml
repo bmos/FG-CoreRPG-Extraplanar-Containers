@@ -6,31 +6,32 @@ on:
 name: Run Luacheck on Push
 
 jobs:
-  luacheck:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: luacheck
-      # You may pin to the exact commit or the version.
-      # uses: nebularg/actions-luacheck@86af42dcf465915896671903fcdec3e01a492e87
-      uses: nebularg/actions-luacheck@v1.1.0
+    - uses: nebularg/actions-luacheck@v1
       with:
-        # A list of files, rockspecs, or directories to be checked.
-        Defaults to the workspace path as set by the `path` input.
+        # A list of files, rockspecs, or directories to be checked. Paths can be
+        # absolute or relative to the `path` option.
+        files: ''
 
-        files: # optional, default is .
-        # The working directory for luacheck.
-        The file list should be relative to this path and output filenames be displayed relative to this path.
-        Defaults to the workspace path.
+        # The working directory for luacheck. The file list should be relative to
+        # this path and output filenames be displayed relative to this path.
+        # Default: ${{ github.workspace }}
+        path: ''
 
-        path: # optional, default is ${{ github.workspace }}
         # Additional command-line arguments.
-        See https://luacheck.readthedocs.io/en/stable/cli.html
+        # See https://luacheck.readthedocs.io/en/stable/cli.html
+        args: ''
 
-        args: # optional
-        # URL to a custom configuration (`.luacheckrc`) file that will be used as the default configuration file.
+        # URL to a custom configuration (`.luacheckrc`) file that will be used as
+        # the default configuration file.
+        config: ''
 
-        config: # optional
-        # Emits annotations for source code at locations parsed from the output. Must be set to "none", "warning" or "error".
-        Requires that output of warnings not be suppressed through the -qq or -qqq arguments.
-
-        annotate: # optional, default is none
+        # Emits annotations for source code at locations parsed from the output.
+        # Must be set to "none", "warning" or "error".
+        #
+        # Requires that output of warnings not be suppressed through the -qq or -qqq arguments.
+        #
+        # Default: 'none'
+        annotate: 'none'
