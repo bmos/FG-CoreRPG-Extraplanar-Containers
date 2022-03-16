@@ -1,3 +1,5 @@
+[![Build FG-Usable File](https://github.com/bmos/FG-CoreRPG-Extraplanar-Containers/actions/workflows/create-ext.yml/badge.svg)](https://github.com/bmos/FG-CoreRPG-Extraplanar-Containers/actions/workflows/create-ext.yml) [![Luacheck](https://github.com/bmos/FG-CoreRPG-Extraplanar-Containers/actions/workflows/luacheck.yml/badge.svg)](https://github.com/bmos/FG-CoreRPG-Extraplanar-Containers/actions/workflows/luacheck.yml)
+
 # CoreRPG Extraplanar Containers
 This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers.
 
