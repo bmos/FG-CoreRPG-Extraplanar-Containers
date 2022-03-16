@@ -6,6 +6,7 @@ function onInit()
 	getVolume()
 end
 
+--	luacheck: globals getVolume
 function getVolume()
 	setValue(window.length.getValue() * window.width.getValue() * window.depth.getValue())
 	window.contentsvolume.onValueChanged()
