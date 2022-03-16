@@ -18,15 +18,15 @@ function update(bReadOnly, bForceHide)
 
 	setReadOnly(bReadOnly);
 	setVisible(bLocalShow);
-	
+
 	local sLabel = getName() .. "_label";
 	if window[sLabel] then
 		window[sLabel].setVisible(bLocalShow);
 	end
-	
+
 	if self.onUpdate then
 		self.onUpdate(bLocalShow);
 	end
-	
+
 	return bLocalShow;
 end
