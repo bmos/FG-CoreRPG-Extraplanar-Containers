@@ -5,6 +5,7 @@
 --	search terms for finding extraplanar containers
 --	these containers will have their subtotals calculated
 --	the weight of their contents will not be counted elsewhere
+--	luacheck: globals tExtraplanarContainers
 tExtraplanarContainers = {
 	'knapsack of halflingkind',
 	'quiver of ehlonna',
@@ -20,6 +21,7 @@ tExtraplanarContainers = {
 	}
 --	search terms for finding mundane containers
 --	these containers will have their subtotals calculated
+--	luacheck: globals tContainers
 tContainers = {
 	'container',
 	'backpack',
@@ -35,7 +37,7 @@ tContainers = {
 
 --	searches for provided sItemName in provided tTable.
 --	the name doesn't have to be an exact match.
-function isContainer(sItemName, tTable)
+local function isContainer(sItemName, tTable)
 	if not sItemName or not tTable then return nil; end
 	for _,v in pairs(tTable) do
 		if string.find(sItemName, v) then
@@ -46,10 +48,11 @@ end
 
 --	checks provided name against contents of two tables
 --	returns true if either is a match
+--	luacheck: globals isAnyContainer
 function isAnyContainer(sItemName)
 	if sItemName and sItemName ~= '' then
-		local sItemName = string.lower(sItemName)
-		return isContainer(sItemName, tExtraplanarContainers) or isContainer(sItemName, tContainers)
+		local sItemNameLower = string.lower(sItemName)
+		return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
 	end
 end
 
@@ -106,35 +109,69 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 			local number_item_count = DB.getValue(node_item, 'count', 0);
 			local number_item_weight = DB.getValue(node_item, 'weight', 0);
 			local string_item_location = string.lower(DB.getValue(node_item, 'location', ''))
-			
+
 			local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
 			local bIsInContainer = isContainer(string_item_location, tContainers)
 
 			-- add up subtotals of container contents and put them in the table
 			if state_item_carried ~= 2 and bIsInExtraplanar then
 				if table_containers_extraplanar[string_item_location] then
-					table_containers_extraplanar[string_item_location]['nTotalWeight'] = table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+					table_containers_extraplanar[string_item_location]['nTotalWeight'] = (
+					 table_containers_extraplanar[string_item_location]['nTotalWeight'] + (
+						number_item_count * number_item_weight
+						)
+					)
 					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-						table_containers_extraplanar[string_item_location]['nTotalVolume'] = table_containers_extraplanar[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0))
-						if table_containers_extraplanar[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
-						if table_containers_extraplanar[string_item_location]['nMaxWidth'] < DB.getValue(node_item, 'width', 0) then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
-						if table_containers_extraplanar[string_item_location]['nMaxDepth'] < DB.getValue(node_item, 'depth', 0) then table_containers_extraplanar[string_item_location]['bTooBig'] = 1 end
+						table_containers_extraplanar[string_item_location]['nTotalVolume'] = (
+						 table_containers_extraplanar[string_item_location]['nTotalVolume'] + (
+							number_item_count * DB.getValue(node_item, 'volume', 0)
+							)
+						)
+						if table_containers_extraplanar[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then
+							table_containers_extraplanar[string_item_location]['bTooBig'] = 1
+						end
+						if table_containers_extraplanar[string_item_location]['nMaxWidth'] < DB.getValue(node_item, 'width', 0) then
+							table_containers_extraplanar[string_item_location]['bTooBig'] = 1
+						end
+						if table_containers_extraplanar[string_item_location]['nMaxDepth'] < DB.getValue(node_item, 'depth', 0) then
+							table_containers_extraplanar[string_item_location]['bTooBig'] = 1
+						end
 					end
 				end
 			elseif state_item_carried ~= 2 and (bIsInContainer and not bIsInExtraplanar) then
 				if table_containers_mundane[string_item_location] then
-					table_containers_mundane[string_item_location]['nTotalWeight'] = table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+					table_containers_mundane[string_item_location]['nTotalWeight'] = (
+					 table_containers_mundane[string_item_location]['nTotalWeight'] + (
+						number_item_count * number_item_weight
+						)
+					)
 					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
-						table_containers_mundane[string_item_location]['nTotalVolume'] = table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0))
-						if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
-						if table_containers_mundane[string_item_location]['nMaxWidth'] < DB.getValue(node_item, 'width', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
-						if table_containers_mundane[string_item_location]['nMaxDepth'] < DB.getValue(node_item, 'depth', 0) then table_containers_mundane[string_item_location]['bTooBig'] = 1 end
+						table_containers_mundane[string_item_location]['nTotalVolume'] = (
+						 table_containers_mundane[string_item_location]['nTotalVolume'] + (
+							number_item_count * DB.getValue(node_item, 'volume', 0)
+							)
+						)
+						if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then
+							table_containers_mundane[string_item_location]['bTooBig'] = 1
+						end
+						if table_containers_mundane[string_item_location]['nMaxWidth'] < DB.getValue(node_item, 'width', 0) then
+							table_containers_mundane[string_item_location]['bTooBig'] = 1
+						end
+						if table_containers_mundane[string_item_location]['nMaxDepth'] < DB.getValue(node_item, 'depth', 0) then
+							table_containers_mundane[string_item_location]['bTooBig'] = 1
+						end
 					end
 					local string_item_location_location = string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
 					if not table_containers_extraplanar[string_item_location_location] then
-						number_total_weight = number_total_weight + (number_item_count * number_item_weight)
+						number_total_weight = number_total_weight + (
+							number_item_count * number_item_weight
+						)
 					else
-						table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+						table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = (
+							table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + (
+								number_item_count * number_item_weight
+							)
+						)
 					end
 				end
 			else
@@ -246,8 +283,8 @@ function onInit()
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	if Session.IsHost then
-		for _,sItemList in pairs(ItemManager.getInventoryPaths('charsheet')) do
-			local sItemList = 'charsheet.*.' .. sItemList;
+		for _,sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
+			local sItemList = 'charsheet.*.' .. sItemListNodeName;
 			DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate);
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate);
 			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate);
