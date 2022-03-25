@@ -1,7 +1,6 @@
 --
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
-
 function onInit()
 	local bVisible = OptionsManager.isOption('ITEM_VOLUME', 'on')
 
