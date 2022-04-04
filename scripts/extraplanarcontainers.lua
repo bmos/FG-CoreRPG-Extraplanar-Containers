@@ -42,7 +42,7 @@ local function updateContainers(node_inventory)
 		for _, node_item in pairs(DB.getChildren(node_inventory)) do
 			local string_item_name = string.lower(DB.getValue(node_item, 'name', ''))
 			local number_maxweight = DB.getValue(node_item, 'capacityweight', 0);
-	
+
 			local bool_extraplanar = isContainer(string_item_name, tExtraplanarContainers)
 			local bool_container = isContainer(string_item_name, tContainers)
 			if bool_extraplanar then -- this creates an array keyed to the names of any detected extraplanar storage containers
@@ -71,7 +71,7 @@ local function updateContainers(node_inventory)
 				};
 			end
 		end
-	
+
 		return table_containers_mundane, table_containers_extraplanar
 	end
 
@@ -90,10 +90,10 @@ local function updateContainers(node_inventory)
 				local number_item_count = DB.getValue(node_item, 'count', 0);
 				local number_item_weight = DB.getValue(node_item, 'weight', 0);
 				local string_item_location = string.lower(DB.getValue(node_item, 'location', ''))
-	
+
 				local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
 				local bIsInContainer = isContainer(string_item_location, tContainers)
-	
+
 				-- add up subtotals of container contents and put them in the table
 				if state_item_carried ~= 2 and bIsInExtraplanar then
 					if table_containers_extraplanar[string_item_location] then
@@ -149,7 +149,7 @@ local function updateContainers(node_inventory)
 				end
 			end
 		end
-	
+
 		return number_total_weight
 	end
 
@@ -164,11 +164,11 @@ local function updateContainers(node_inventory)
 			DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
 			DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
 			local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
-	
+
 			-- check weight of contents and announce if excessive
 			if table_container['nMaxWeight'] > 0 then
 				if (table_container['nTotalWeight'] > table_container['nMaxWeight']) then
-	
+
 					if not table_container['nodeItem'].getChild('announcedW') then
 						DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
 						ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'weight'), true, rActor)
@@ -177,7 +177,7 @@ local function updateContainers(node_inventory)
 					if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
 				end
 			end
-	
+
 			-- check volume of contents and announce if excessive
 			if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 				if table_container['bTooBig'] == 1 then
