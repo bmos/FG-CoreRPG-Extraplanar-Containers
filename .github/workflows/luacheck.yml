@@ -7,8 +7,8 @@ on:
     # Only run if pull request includes a change to a Lua (.lua) file.
     paths:
       - '**.lua'
-  schedule:
-    - cron: 0 0 * * *
+  #schedule:
+   # - cron: 0 0 * * *
   workflow_dispatch:
 
 name: Luacheck
@@ -105,5 +105,5 @@ jobs:
         with:
           files: '.'
           config: https://raw.githubusercontent.com/bmos/FG-luacheck/main/.luacheckrc
-          args: '--no-color --std +${{ steps.authorlowercase.outputs.lowercase }}${{ steps.namelowercase.outputs.lowercase }} --exclude-files .install/*'
+          args: '--no-color --std +${{ steps.namelowercase.outputs.lowercase }}${{ steps.authorlowercase.outputs.lowercase }} --exclude-files .install/*'
           annotate: 'warning'
