@@ -6,8 +6,8 @@
 --	the weight of their contents will not be counted elsewhere
 --	luacheck: globals tExtraplanarContainers
 tExtraplanarContainers = {
-	'knapsack of halflingkind', 'quiver of ehlonna', 'efficient quiver', 'handy haversack', 'portable hole', 'extraplanar',
- 'weightless', 'of holding', 'donkey', 'horse', 'mule',
+	'knapsack of halflingkind', 'quiver of ehlonna', 'efficient quiver', 'handy haversack', 'portable hole', 'extraplanar', 'weightless',
+ 'of holding', 'donkey', 'horse', 'mule',
 }
 --	search terms for finding mundane containers
 --	these containers will have their subtotals calculated
@@ -101,8 +101,7 @@ local function updateContainers(node_inventory)
 										(table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight))
 						if OptionsManager.isOption('ITEM_VOLUME', 'on') then
 							table_containers_extraplanar[string_item_location]['nTotalVolume'] =
-											(table_containers_extraplanar[string_item_location]['nTotalVolume'] +
-															(number_item_count * DB.getValue(node_item, 'volume', 0)))
+											(table_containers_extraplanar[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0)))
 							if table_containers_extraplanar[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then
 								table_containers_extraplanar[string_item_location]['bTooBig'] = 1
 							end
@@ -120,8 +119,7 @@ local function updateContainers(node_inventory)
 										(table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight))
 						if OptionsManager.isOption('ITEM_VOLUME', 'on') then
 							table_containers_mundane[string_item_location]['nTotalVolume'] =
-											(table_containers_mundane[string_item_location]['nTotalVolume'] +
-															(number_item_count * DB.getValue(node_item, 'volume', 0)))
+											(table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0)))
 							if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then
 								table_containers_mundane[string_item_location]['bTooBig'] = 1
 							end
@@ -133,10 +131,10 @@ local function updateContainers(node_inventory)
 							end
 						end
 						local string_item_location_location = string.lower(
-																			  DB.getValue(
-																							  table_containers_mundane[string_item_location]['nodeItem'], 'location', ''
-																			  )
-															  )
+										                                      DB.getValue(
+														                                      table_containers_mundane[string_item_location]['nodeItem'], 'location', ''
+										                                      )
+						                                      )
 						if not table_containers_extraplanar[string_item_location_location] then
 							number_total_weight = number_total_weight + (number_item_count * number_item_weight)
 						else
