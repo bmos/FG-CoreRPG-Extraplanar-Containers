@@ -6,7 +6,7 @@ This extension provides support for extraplanar containers by ignoring the weigh
 # Compatibility and Instructions
 This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.1.13 (2022-01-05).
 
-This works with CoreRPG, 2E, 3.5E, 5E, PFRPG, and possibly more, although the items it looks for are based on Pathfinder 1e.
+This works with CoreRPG, 2E, 3.5E, 5E, PFRPG, and possibly more, although the item names it looks for are based on Pathfinder 1e.
 
 If you have two containers with the same name (such as two backpacks) you may encounter unintended behavior. To work around this, give them a descriptive or functional name like "green backpack" or "backpack of food".
 
