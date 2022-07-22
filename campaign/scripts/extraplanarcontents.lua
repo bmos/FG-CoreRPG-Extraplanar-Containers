@@ -1,6 +1,7 @@
 --
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
+-- luacheck: globals onValueChanged getValue setColor
 function onInit()
 	local bVisible = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
 	window.weight.setVisible(bVisible or window.weight.getValue() ~= 0)
