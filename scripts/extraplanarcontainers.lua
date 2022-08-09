@@ -162,6 +162,7 @@ local function updateContainers(node_inventory)
 			DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
 			DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
 			local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
+			local messagedata = { text = '', sender = rActor.sName, font = "emotefont" }
 
 			-- check weight of contents and announce if excessive
 			if table_container['nMaxWeight'] > 0 then
@@ -169,7 +170,8 @@ local function updateContainers(node_inventory)
 
 					if not table_container['nodeItem'].getChild('announcedW') then
 						DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
-						ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'weight'), true, rActor)
+						messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'weight')
+						Comm.deliverChatMessage(messagedata)
 					end
 				else
 					if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
@@ -181,12 +183,14 @@ local function updateContainers(node_inventory)
 				if table_container['bTooBig'] == 1 then
 					if not table_container['nodeItem'].getChild('announcedV') then
 						DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-						ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'maximum dimension'), true, rActor)
+						messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'maximum dimension')
+						Comm.deliverChatMessage(messagedata)
 					end
 				elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
 					if not table_container['nodeItem'].getChild('announcedV') then
 						DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-						ChatManager.Message(string.format(Interface.getString(string_error), string_item_name, 'volume'), true, rActor)
+						messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'volume')
+						Comm.deliverChatMessage(messagedata)
 					end
 				else
 					if table_container['nodeItem'].getChild('announcedV') then table_container['nodeItem'].getChild('announcedV').delete() end
