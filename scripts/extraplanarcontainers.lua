@@ -94,6 +94,16 @@ local function updateContainers(node_inventory)
 				local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
 				local bIsInContainer = isContainer(string_item_location, tContainers)
 
+				if table_containers_extraplanar[string_item_location] then
+					if bIsInExtraplanar and table_containers_extraplanar[string_item_location]['nodeItem'] then
+						local sLocNode = table_containers_extraplanar[string_item_location]['nodeItem'].getPath();
+						DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode);
+					elseif bIsInContainer and table_containers_mundane[string_item_location]['nodeItem'] then
+						local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath();
+						DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode);
+					end
+				end
+
 				-- add up subtotals of container contents and put them in the table
 				if state_item_carried ~= 2 and bIsInExtraplanar then
 					if table_containers_extraplanar[string_item_location] then
@@ -130,11 +140,7 @@ local function updateContainers(node_inventory)
 								table_containers_mundane[string_item_location]['bTooBig'] = 1
 							end
 						end
-						local string_item_location_location = string.lower(
-										                                      DB.getValue(
-														                                      table_containers_mundane[string_item_location]['nodeItem'], 'location', ''
-										                                      )
-						                                      )
+						local string_item_location_location = string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
 						if not table_containers_extraplanar[string_item_location_location] then
 							number_total_weight = number_total_weight + (number_item_count * number_item_weight)
 						else
@@ -232,6 +238,12 @@ local function updateEncumbrance_new(node_char)
 	end
 end
 
+local onInventorySortUpdate_old;
+local function onInventorySortUpdate_new(cList, ...)
+	onInventorySortUpdate_old(cList, ...);
+	cList.applyFilter();
+end
+
 function onInit()
 	OptionsManager.registerOption2(
 					'ITEM_VOLUME', false, 'option_header_game', 'opt_lab_item_volume', 'option_entry_cycler',
@@ -239,6 +251,9 @@ function onInit()
 	);
 
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
+
+	onInventorySortUpdate_old = ItemManager.onInventorySortUpdate;
+	ItemManager.onInventorySortUpdate = onInventorySortUpdate_new;
 
 	if Session.IsHost then
 		for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do

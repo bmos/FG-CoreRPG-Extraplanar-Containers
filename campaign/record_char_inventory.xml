@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- 
+  Please see the license.html file included with this distribution for 
+  attribution and copyright information.
+-->
+
+<root>
+	<windowclass name="charsheet_inventory" merge="join">
+		<sheetdata>
+			<list_charinv name="inventorylist">
+				<script file="campaign/scripts/char_invlist.lua" />
+			</list_charinv>
+		</sheetdata>
+	</windowclass>
+
+	<template name="string_charinvname">
+		<string_textlistitem>
+			<nodrop />
+			<script file="campaign/scripts/char_invname.lua" />
+		</string_textlistitem>
+	</template>
+</root>
