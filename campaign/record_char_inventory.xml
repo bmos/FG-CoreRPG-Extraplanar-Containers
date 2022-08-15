@@ -6,7 +6,14 @@
 -->
 
 <root>
-	<windowclass name="charsheet_inventory" merge="join">
+	<template name="string_charinvname">
+		<string_textlistitem>
+			<nodrop />
+			<script file="campaign/scripts/char_invname.lua" />
+		</string_textlistitem>
+	</template>
+
+	<windowclass name="charsheet_inventory" merge="join" ruleset="PFRPG|3.5E">
 		<sheetdata>
 			<list_charinv name="inventorylist">
 				<script file="campaign/scripts/char_invlist.lua" />
@@ -14,10 +21,11 @@
 		</sheetdata>
 	</windowclass>
 
-	<template name="string_charinvname">
-		<string_textlistitem>
-			<nodrop />
-			<script file="campaign/scripts/char_invname.lua" />
-		</string_textlistitem>
-	</template>
+	<windowclass name="charsheet_inventory_contents" merge="join" ruleset="5E">
+		<sheetdata>
+			<list_charinv name="inventorylist">
+				<script file="campaign/scripts/char_invlist.lua" />
+			</list_charinv>
+		</sheetdata>
+	</windowclass>
 </root>
