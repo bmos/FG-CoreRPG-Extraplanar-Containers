@@ -9,7 +9,7 @@ function onFilter(w)
 	local _, sLocNode = DB.getValue(nodeItem, 'locationshortcut');
 	if sLocNode then
 		local nodeContainer = DB.findNode(sLocNode);
-		if DB.getValue(nodeContainer, 'collapsedcontainer') == 'false' then
+		if DB.getValue(nodeContainer, 'name', ''):match('%[%+%]%s+') then
 			return false;
 		end
 	end

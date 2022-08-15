@@ -5,17 +5,19 @@
 -- luacheck: globals onDoubleClick onLoseFocus
 
 function onDoubleClick()
-	local nodeItem = window.getDatabaseNode()
-	if DB.getValue(nodeItem, 'collapsedcontainer') == 'true' then
-		DB.setValue(nodeItem, 'collapsedcontainer', 'string', 'false');
-		DB.setValue(nodeItem, 'name', 'string', '[+] ' .. DB.getValue(nodeItem, 'name', ''));
-		DB.setValue(nodeItem, 'nonid_name', 'string', '[+] ' .. DB.getValue(nodeItem, 'name', ''));
-	else
-		DB.setValue(nodeItem, 'collapsedcontainer', 'string', 'true');
-		DB.setValue(nodeItem, 'name', 'string', DB.getValue(nodeItem, 'name', ''):gsub('%[%+%] ', ''));
-		DB.setValue(nodeItem, 'nonid_name', 'string', DB.getValue(nodeItem, 'name', ''):gsub('%[%+%] ', ''));
+	local nodeItem = window.getDatabaseNode();
+	local sName = DB.getValue(nodeItem, 'name', '');
+	if ExtraplanarContainers.isAnyContainer(sName) then
+		local sNonIDName = DB.getValue(nodeItem, 'nonid_name', '');
+		if not sName:match('%[%+%]%s+') then
+			DB.setValue(nodeItem, 'name', 'string', '[+] ' .. sName);
+			DB.setValue(nodeItem, 'nonid_name', 'string', '[+] ' .. sNonIDName);
+		else
+			DB.setValue(nodeItem, 'name', 'string', sName:gsub('%[%+%]%s+', ''));
+			DB.setValue(nodeItem, 'nonid_name', 'string', sNonIDName:gsub('%[%+%]%s+', ''));
+		end
+		return true
 	end
-	return true
 end
 
 function onLoseFocus()
