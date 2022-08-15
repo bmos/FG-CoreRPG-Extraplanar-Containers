@@ -2,6 +2,7 @@
 
 # Extraplanar Containers
 This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers.
+I also makes working with large inventories easier by allowing supported containers to be collapsed/expanded via double-click.
 
 # Compatibility and Instructions
 This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.2.2 (2022-06-07).
@@ -15,6 +16,7 @@ This extension provides support for extraplanar containers by ignoring the weigh
 It also provides subtotals in the item sheets of those containers, warns when the container is overfull, and checks that contents are small enough to fit inside the container.
 Supported mundane containers ('container', 'backpack', 'satchel', 'quiver', 'chest', 'purse', 'pouch', 'sack', 'bag', and 'box') will benefit from the subtotal and maximum size and capacity features, but not the weightless contents. To define additional item names that should be detected as mundane or extraplanar containers, edit the ext file attached to [this post](https://www.fantasygrounds.com/forums/showthread.php?67126-PFRPG-Extraplanar-Containers&p=587557&viewfull=1#post587557). Ask for help if you need it.
 There is also an option "Encumbrance: Container/Item Volume" that allows you to assign exterior dimensions to items and interior dimensions to containers. This can be used to detect edge cases like putting an enormous, but very light, object into a small container.
+Supported containers can have their contents hidden by right-clicking on the name of the container. They will remain collapsed until they are expanded again, either by double-clicking or by editing their name to remove the "[+] ".
 
 # Video Demonstration (click for video)
 [<img src="https://i.ytimg.com/vi_webp/6TBMCcs8QuY/hqdefault.webp">](https://www.youtube.com/watch?v=6TBMCcs8QuY)
