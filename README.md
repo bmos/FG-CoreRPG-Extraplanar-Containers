@@ -2,7 +2,7 @@
 
 # Extraplanar Containers
 This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers.
-I also makes working with large inventories easier by allowing supported containers to be collapsed/expanded via double-click.
+It also makes working with large inventories easier by allowing supported containers to be collapsed/expanded via double-click.
 
 # Compatibility and Instructions
 This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) 4.2.2 (2022-06-07).
