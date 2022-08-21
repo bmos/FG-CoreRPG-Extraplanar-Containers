@@ -94,7 +94,8 @@ local function updateContainers(node_inventory)
 				local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
 				local bIsInContainer = isContainer(string_item_location, tContainers)
 
-				if table_containers_extraplanar[string_item_location] then
+				-- add shortcut to location node
+				if table_containers_extraplanar[string_item_location] or table_containers_mundane[string_item_location] then
 					if bIsInExtraplanar and table_containers_extraplanar[string_item_location]['nodeItem'] then
 						local sLocNode = table_containers_extraplanar[string_item_location]['nodeItem'].getPath();
 						DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode);
