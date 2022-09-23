@@ -40,7 +40,7 @@ local function updateContainers(node_inventory)
 		local table_containers_mundane = {}
 		local table_containers_extraplanar = {}
 		for _, node_item in pairs(DB.getChildren(node_inventory)) do
-			local string_item_name = string.lower(DB.getValue(node_item, 'name', ''))
+			local string_item_name = string.lower(DB.getValue(node_item, 'name', '')):gsub('%[%+%]%s+', '');
 			local number_maxweight = DB.getValue(node_item, 'capacityweight', 0);
 
 			local bool_extraplanar = isContainer(string_item_name, tExtraplanarContainers)
@@ -89,7 +89,7 @@ local function updateContainers(node_inventory)
 			if state_item_carried ~= 0 then
 				local number_item_count = DB.getValue(node_item, 'count', 0);
 				local number_item_weight = DB.getValue(node_item, 'weight', 0);
-				local string_item_location = string.lower(DB.getValue(node_item, 'location', ''))
+				local string_item_location = string.lower(DB.getValue(node_item, 'location', '')):gsub('%[%+%]%s+', '');
 
 				local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
 				local bIsInContainer = isContainer(string_item_location, tContainers)
@@ -239,6 +239,7 @@ local function updateEncumbrance_new(node_char)
 	end
 end
 
+-- Enable onFilter function in for char_invlist.lua
 local onInventorySortUpdate_old;
 local function onInventorySortUpdate_new(cList, ...)
 	onInventorySortUpdate_old(cList, ...);
