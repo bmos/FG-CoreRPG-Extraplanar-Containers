@@ -14,6 +14,39 @@ tExtraplanarContainers = {
 --	luacheck: globals tContainers
 tContainers = { 'container', 'backpack', 'satchel', 'quiver', 'chest', 'purse', 'pouch', 'sack', 'bag', 'box' }
 
+--- This function figures out how many decimal places to round to.
+--	If the total weight is greater than or equal to 100, it recommends 0 (whole numbers).
+--	If it's greater than or equal to 10, it recommends 1.
+--	If it's greater than or equal to 1, it recommends 2.
+--	Otherwise, it recommends 3.
+--	This maximizes difficulty at low levels when it has the most impact.
+--	The intent is to keep the number visible on the inventory list without clipping.
+local function determineRounding(number)
+	if number >= 100 then
+		return 0
+	elseif number >= 10 then
+		return 1
+	elseif number >= 1 then
+		return 2
+	else
+		return 3
+	end
+end
+
+-- luacheck: globals round
+---	This function rounds to the specified number of decimals
+function round(number)
+
+	local n = 10 ^ (determineRounding(number) or 0)
+	number = number * n
+	if number >= 0 then
+		number = math.floor(number + 0.5)
+	else
+		number = math.ceil(number - 0.5)
+	end
+	return number / n
+end
+
 --	searches for provided sItemName in provided tTable.
 --	the name doesn't have to be an exact match.
 local function isContainer(sItemName, tTable)
@@ -166,8 +199,8 @@ local function updateContainers(node_inventory)
 	local function write_contents_to_containers(table_containers, string_error)
 		local rActor = ActorManager.resolveActor(node_inventory.getParent())
 		for _, table_container in pairs(table_containers) do
-			DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', table_container['nTotalWeight'])
-			DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', table_container['nTotalVolume'])
+			DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', round(table_container['nTotalWeight']))
+			DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', round(table_container['nTotalVolume']))
 			local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
 			local messagedata = { text = '', sender = rActor.sName, font = "emotefont" }
 
@@ -210,12 +243,11 @@ local function updateContainers(node_inventory)
 	write_contents_to_containers(table_containers_mundane, 'item_overfull')
 	write_contents_to_containers(table_containers_extraplanar, 'item_self_destruct')
 
-	number_total = number_total + CharEncumbranceManager.calcDefaultCurrencyEncumbrance(node_char);
-	CharEncumbranceManager.setDefaultEncumbranceValue(node_char, number_total);
+	number_total = round(number_total + CharEncumbranceManager.calcDefaultCurrencyEncumbrance(node_char))
+	CharEncumbranceManager.setDefaultEncumbranceValue(node_char, number_total)
 
 	-- rounds total and writes to encumbrance field
-	local number_rounded_total = number_total + 0.5 - (number_total + 0.5) % 1
-	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_rounded_total)
+	DB.setValue(node_char, CharEncumbranceManager.getEncumbranceField(), 'number', number_total)
 end
 
 --
