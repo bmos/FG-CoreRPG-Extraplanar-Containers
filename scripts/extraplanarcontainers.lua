@@ -284,6 +284,7 @@ function onInit()
 					{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
 	);
 
+	CharEncumbranceManager.calcDefaultEncumbrance = updateEncumbrance_new;
 	CharEncumbranceManager.updateEncumbrance = updateEncumbrance_new;
 
 	onInventorySortUpdate_old = ItemManager.onInventorySortUpdate;
