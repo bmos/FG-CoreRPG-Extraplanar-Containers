@@ -215,7 +215,8 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					)
 					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
 						table_containers_mundane[string_item_location]['nTotalVolume'] = (
-							table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0))
+							table_containers_mundane[string_item_location]['nTotalVolume']
+							+ (number_item_count * DB.getValue(node_item, 'volume', 0))
 						)
 						if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then
 							table_containers_mundane[string_item_location]['bTooBig'] = 1
@@ -233,7 +234,8 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 						number_total_weight = number_total_weight + (number_item_count * number_item_weight)
 					else
 						table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = (
-							table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+							table_containers_extraplanar[string_item_location_location]['nTotalWeight']
+							+ (number_item_count * number_item_weight)
 						)
 					end
 				end
