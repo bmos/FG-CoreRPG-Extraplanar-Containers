@@ -180,7 +180,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 				local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath()
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
 			elseif node_item.getChild('locationshortcut') then
-				node_item.getChild('locationshortcut').delete()
+				node_item.getChild('locationshortcut').delete() -- not sure if this ever runs
 			end
 		end
 
