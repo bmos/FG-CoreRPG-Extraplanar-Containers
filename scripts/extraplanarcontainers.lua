@@ -166,27 +166,29 @@ end
 local function measure_contents(node_inventory, table_containers_mundane, table_containers_extraplanar)
 	local number_total_weight = 0
 	for _, node_item in pairs(DB.getChildren(node_inventory)) do
+		local string_item_location = string.lower(DB.getValue(node_item, 'location', '')):gsub('%[%+%]%s+', '')
+
+		local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
+		local bIsInContainer = isContainer(string_item_location, tContainers)
+
+		-- add shortcut to location node
+		if table_containers_extraplanar[string_item_location] or table_containers_mundane[string_item_location] then
+			if bIsInExtraplanar and table_containers_extraplanar[string_item_location]['nodeItem'] then
+				local sLocNode = table_containers_extraplanar[string_item_location]['nodeItem'].getPath()
+				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
+			elseif bIsInContainer and table_containers_mundane[string_item_location]['nodeItem'] then
+				local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath()
+				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
+			elseif node_item.getChild('locationshortcut') then
+				node_item.getChild('locationshortcut').delete()
+			end
+		end
+
 		local state_item_carried = DB.getValue(node_item, 'carried', 0)
 		if state_item_carried ~= 0 then
-			local number_item_count = DB.getValue(node_item, 'count', 0)
 			local number_item_weight = DB.getValue(node_item, 'weight', 0)
-			local string_item_location = string.lower(DB.getValue(node_item, 'location', '')):gsub('%[%+%]%s+', '')
-
-			local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
-			local bIsInContainer = isContainer(string_item_location, tContainers)
-
-			-- add shortcut to location node
-			if table_containers_extraplanar[string_item_location] or table_containers_mundane[string_item_location] then
-				if bIsInExtraplanar and table_containers_extraplanar[string_item_location]['nodeItem'] then
-					local sLocNode = table_containers_extraplanar[string_item_location]['nodeItem'].getPath()
-					DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
-				elseif bIsInContainer and table_containers_mundane[string_item_location]['nodeItem'] then
-					local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath()
-					DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
-				end
-			end
-
-			-- add up subtotals of container contents and put them in the table
+			local number_item_count = DB.getValue(node_item, 'count', 0)
+				-- add up subtotals of container contents and put them in the table
 			if state_item_carried ~= 2 and bIsInExtraplanar then
 				if table_containers_extraplanar[string_item_location] then
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = (

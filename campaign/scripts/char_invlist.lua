@@ -6,9 +6,15 @@
 
 -- function is run on each inventory item. return true = visible, return false = hidden.
 function onFilter(w)
-	local nodeItem = w.getDatabaseNode()
-	local _, sLocNode = DB.getValue(nodeItem, 'locationshortcut')
+	local _, sLocNode = DB.getValue(w.getDatabaseNode(), 'locationshortcut')
 	if sLocNode then
+
+		-- kind of a hacked-up fix
+		if DB.getValue(w.getDatabaseNode(), 'location', '') == '' then
+			w.getDatabaseNode().getChild('locationshortcut').delete()
+			return true
+		end
+
 		local nodeContainer = DB.findNode(sLocNode)
 		local _, sContainerLocNode = DB.getValue(nodeContainer, 'locationshortcut')
 		if DB.getValue(nodeContainer, 'name', ''):match('%[%+%]%s+') then
