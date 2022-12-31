@@ -24,13 +24,13 @@ function onInit()
 end
 
 function onValueChanged()
-	if window.internal_volume.getValue() ~= 0 then
-		if getValue() < window.internal_volume.getValue() then
-			setColor(ColorManager.COLOR_FULL)
-		elseif getValue() == window.internal_volume.getValue() then
-			setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
-		elseif getValue() > window.internal_volume.getValue() then
-			setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
-		end
+	if window.internal_volume.getValue() == 0 then return end
+
+	if getValue() < window.internal_volume.getValue() then
+		setColor(ColorManager.COLOR_FULL)
+	elseif getValue() == window.internal_volume.getValue() then
+		setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
+	elseif getValue() > window.internal_volume.getValue() then
+		setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
 	end
 end

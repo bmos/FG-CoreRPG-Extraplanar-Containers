@@ -7,17 +7,17 @@
 function onDoubleClick()
 	local nodeItem = window.getDatabaseNode()
 	local sName = DB.getValue(nodeItem, 'name', '')
-	if ExtraplanarContainers.isAnyContainer(sName) then
-		local sNonIDName = DB.getValue(nodeItem, 'nonid_name', '')
-		if not sName:match('%[%+%]%s+') then
-			DB.setValue(nodeItem, 'name', 'string', '[+] ' .. sName)
-			DB.setValue(nodeItem, 'nonid_name', 'string', '[+] ' .. sNonIDName)
-		else
-			DB.setValue(nodeItem, 'name', 'string', sName:gsub('%[%+%]%s+', ''))
-			DB.setValue(nodeItem, 'nonid_name', 'string', sNonIDName:gsub('%[%+%]%s+', ''))
-		end
-		return true
+	if not ExtraplanarContainers.isAnyContainer(sName) then return false end
+
+	local sNonIDName = DB.getValue(nodeItem, 'nonid_name', '')
+	if not sName:match('%[%+%]%s+') then
+		DB.setValue(nodeItem, 'name', 'string', '[+] ' .. sName)
+		DB.setValue(nodeItem, 'nonid_name', 'string', '[+] ' .. sNonIDName)
+	else
+		DB.setValue(nodeItem, 'name', 'string', sName:gsub('%[%+%]%s+', ''))
+		DB.setValue(nodeItem, 'nonid_name', 'string', sNonIDName:gsub('%[%+%]%s+', ''))
 	end
+	return true
 end
 
 function onLoseFocus()

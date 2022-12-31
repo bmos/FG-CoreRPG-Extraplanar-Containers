@@ -11,13 +11,13 @@ function onInit()
 end
 
 function onValueChanged()
-	if window.capacityweight.getValue() ~= 0 then
-		if getValue() < window.capacityweight.getValue() then
-			setColor(ColorManager.COLOR_FULL)
-		elseif getValue() == window.capacityweight.getValue() then
-			setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
-		elseif getValue() > window.capacityweight.getValue() then
-			setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
-		end
+	if window.capacityweight.getValue() == 0 then return end
+
+	if getValue() < window.capacityweight.getValue() then
+		setColor(ColorManager.COLOR_FULL)
+	elseif getValue() == window.capacityweight.getValue() then
+		setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
+	elseif getValue() > window.capacityweight.getValue() then
+		setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
 	end
 end
