@@ -269,10 +269,10 @@ end
 --
 
 -- called when items are deleted
-local function onItemDeleted(node) updateContainers(node.getParent()) end
+local function onItemDeleted(node) updateContainers(DB.getParent(node)) end
 
 -- called when items have their details changed
-local function onItemUpdate(node) updateContainers(node.getChild('...')) end
+local function onItemUpdate(node) updateContainers(DB.getChild(node, '...')) end
 
 --
 --	FUNCTION REPLACEMENT
