@@ -118,7 +118,7 @@ end
 --	writes container subtotals to the relevant container
 --	sends chat messages if containers are overfull
 local function write_contents_to_containers(node_inventory, table_containers, string_error)
-	local rActor = ActorManager.resolveActor(node_inventory.getParent())
+	local rActor = ActorManager.resolveActor(DB.getParent(node_inventory))
 	for _, table_container in pairs(table_containers) do
 		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', round(table_container['nTotalWeight']))
 		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', round(table_container['nTotalVolume']))
@@ -128,13 +128,13 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 		-- check weight of contents and announce if excessive
 		if table_container['nMaxWeight'] > 0 then
 			if table_container['nTotalWeight'] > table_container['nMaxWeight'] then
-				if not table_container['nodeItem'].getChild('announcedW') then
+				if not DB.getChild(table_container['nodeItem'], 'announcedW') then
 					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
 					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'weight')
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
-				if table_container['nodeItem'].getChild('announcedW') then table_container['nodeItem'].getChild('announcedW').delete() end
+				if DB.getChild(table_container['nodeItem'], 'announcedW') then DB.deleteChild(table_container['nodeItem'], 'announcedW') end
 			end
 		end
 
@@ -153,7 +153,7 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
-				if table_container['nodeItem'].getChild('announcedV') then table_container['nodeItem'].getChild('announcedV').delete() end
+				if DB.getChild(table_container['nodeItem'], 'announcedV') then DB.deleteChild(table_container['nodeItem'], 'announcedV') end
 			end
 		end
 	end
@@ -180,7 +180,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 				local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath()
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
 			elseif node_item.getChild('locationshortcut') then
-				node_item.getChild('locationshortcut').delete() -- not sure if this ever runs
+				DB.deleteChild(node_item, 'locationshortcut') -- not sure if this ever runs
 			end
 		end
 
