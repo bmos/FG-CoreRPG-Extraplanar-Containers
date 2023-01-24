@@ -79,7 +79,7 @@ end
 local function build_containers(node_inventory)
 	local table_containers_mundane = {}
 	local table_containers_extraplanar = {}
-	for _, node_item in pairs(DB.getChildren(node_inventory)) do
+	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', '')):gsub('%[%+%]%s+', '')
 		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0)
 
@@ -165,7 +165,7 @@ end
 --	items in neither will have weight added to encumbrance total
 local function measure_contents(node_inventory, table_containers_mundane, table_containers_extraplanar)
 	local number_total_weight = 0
-	for _, node_item in pairs(DB.getChildren(node_inventory)) do
+	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_location = string.lower(DB.getValue(node_item, 'location', '')):gsub('%[%+%]%s+', '')
 
 		local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
