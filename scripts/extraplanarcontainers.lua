@@ -174,10 +174,10 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 		-- add shortcut to location node
 		if table_containers_extraplanar[string_item_location] or table_containers_mundane[string_item_location] then
 			if bIsInExtraplanar and table_containers_extraplanar[string_item_location]['nodeItem'] then
-				local sLocNode = table_containers_extraplanar[string_item_location]['nodeItem'].getPath()
+				local sLocNode = DB.getPath(table_containers_extraplanar[string_item_location]['nodeItem'])
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
 			elseif bIsInContainer and table_containers_mundane[string_item_location]['nodeItem'] then
-				local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath()
+				local sLocNode = DB.getPath(table_containers_mundane[string_item_location]['nodeItem'])
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
 			elseif node_item.getChild('locationshortcut') then
 				DB.deleteChild(node_item, 'locationshortcut') -- not sure if this ever runs
