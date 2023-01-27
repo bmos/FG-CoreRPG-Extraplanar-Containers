@@ -18,6 +18,8 @@
 	<string name="item_tooltip_depth">Depth</string>
 	<string name="item_tooltip_exterior_volume">Total Exterior Volume</string>
 	<string name="item_tooltip_interior_volume">Total Interior Volume</string>
+	<string name="item_tooltip_overfull">Maximum %s exceeded.</string>
+
 	<!-- PFRPG2 strings-->
 	<string name="item_label_container_bulk">Container Bulk</string>
 	<string name="item_tooltip_capacityweight_bulk">Maximum Bulk Capacity</string> <!-- Total bulk the bag of holding can hold (as PF2 bulk) -->
