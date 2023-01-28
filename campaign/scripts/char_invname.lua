@@ -28,30 +28,44 @@ end
 -- everything below here is responsible for setting the weight to red if the container is overfull
 
 local tTooltips = { ['announcedW'] = 'weight', ['announcedC'] = 'weight', ['announcedV'] = 'volume' }
+local bUsingII = false
 
-local function onAnnounced(_, child)
-	local sNodeName = DB.getName(child)
+local function setWindowcontrolColors(node, sColor, bTooltip)
+	local sTooltip = ''
+	local sNodeName = DB.getName(node)
+	if not tTooltips[sNodeName] then return end
+	if bTooltip then sTooltip = string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]) end
+
 	for sNode, _ in pairs(tTooltips) do
 		if sNodeName == sNode then
-			window.weight.setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
-			window.weight.setTooltipText(string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]))
+			if not bUsingII then -- only change name and location color + tooltip if not using Inventory Identified
+				window.name.setLine(false, 0)
+				window.name.setColor(sColor)
+				window.name.setTooltipText(sTooltip)
+				window.name.setLine(true, 0)
+
+				window.location.setLine(false, 0)
+				window.location.setColor(sColor)
+				window.location.setTooltipText(sTooltip)
+				window.location.setLine(true, 0)
+			end
+			window.weight.setColor(sColor)
+			window.weight.setTooltipText(sTooltip)
 			break
 		end
 	end
+end
+
+local function onAnnounced(_, child)
+	setWindowcontrolColors(child, ColorManager.COLOR_HEALTH_CRIT_WOUNDS, true)
 end
 
 local function onUnannounced(source)
-	local sNodeName = DB.getName(source)
-	for sNode, _ in pairs(tTooltips) do
-		if sNodeName == sNode then
-			window.weight.setColor(ColorManager.COLOR_FULL)
-			window.weight.setTooltipText('')
-			break
-		end
-	end
+	setWindowcontrolColors(source, ColorManager.COLOR_FULL)
 end
 
 function onInit()
+	bUsingII = StringManager.contains(Extension.getExtensions(), 'FG-CoreRPG-Inventory-Identified')
 	for sNodeName, _ in pairs(tTooltips) do
 		local nodeWeightAnnounced = DB.getChild(window.getDatabaseNode(), sNodeName)
 		if nodeWeightAnnounced then onAnnounced(nil, nodeWeightAnnounced) end
