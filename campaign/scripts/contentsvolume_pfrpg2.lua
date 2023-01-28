@@ -14,6 +14,7 @@ function onInit()
 
 	bVisible = bVisible and ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
 
+	if not bVisible then window.capacityweight.setAnchor('left', 'extraplanarcontents', 'right', 10) end
 	window.contentsvolume.setVisible(bVisible)
 	window.internal_dimensions_label.setVisible(bVisible)
 	window.internal_length.setVisible(bVisible)

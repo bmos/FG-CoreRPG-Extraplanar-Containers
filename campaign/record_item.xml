@@ -5,34 +5,68 @@
 <root>
 	<windowclass name="item_main" merge="join">
 		<sheetdata>
+			<label_column name="weight_label">
+				<anchored>
+					<top offset="20" /> 
+				</anchored>
+			</label_column>
+
 			<number_columnh name="weight">
+				<anchored>
+					<top offset="20" />
+				</anchored>
 				<tooltip textres="item_tooltip_itemweight" />
 				<script file="campaign/scripts/weight.lua" />
 			</number_columnh>
+			<label_fieldtop name="weight_labeltop">
+				<anchored to="weight" />
+				<static textres="item_labeltop_weight" />
+			</label_fieldtop>
+
 			<basicnumber name="extraplanarcontents">
 				<anchored to="weight" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_extraplanarcontents" />
 				<readonly />
 				<script file="campaign/scripts/extraplanarcontents.lua" />
 			</basicnumber>
-			<basicnumber name="capacityweight">
+			<label_fieldtop name="extraplanarcontents_label">
+				<anchored to="extraplanarcontents" />
+				<static textres="item_labeltop_contents" />
+			</label_fieldtop>
+			
+			<basicnumber name="contentsvolume">
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_contentsvolume" />
+				<readonly />
+				<script file="campaign/scripts/contentsvolume.lua" />
+			</basicnumber>
+			<label_fieldtop name="contentsvolume_label">
+				<anchored to="contentsvolume" />
+				<static textres="item_labeltop_max_volume" />
+			</label_fieldtop>
+
+			<basicnumber name="capacityweight">
+				<anchored to="contentsvolume" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_capacityweight" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/capacityweight.lua" />
 			</basicnumber>
+			<label_fieldtop name="capacityweight_label">
+				<anchored to="capacityweight" />
+				<static textres="item_labeltop_max_capacity" />
+			</label_fieldtop>
+			
 			<basicnumber name="capacitycount">
 				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_capacitycount" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/capacitycount.lua" />
 			</basicnumber>
-			<basicnumber name="contentsvolume">
-				<anchored to="capacitycount" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_contentsvolume" />
-				<readonly />
-				<script file="campaign/scripts/contentsvolume.lua" />
-			</basicnumber>
+			<label_fieldtop name="capacitycount_label">
+				<anchored to="capacitycount" />
+				<static textres="item_labeltop_max_count" />
+			</label_fieldtop>
+			
 			
 			<label_column name="external_dimensions_label" insertbefore="divider3" >
 				<static textres="item_label_external_dimensions" />

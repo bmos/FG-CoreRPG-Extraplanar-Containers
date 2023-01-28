@@ -9,21 +9,26 @@
 			<label_column name="container_bulk_label" insertbefore="bulk_label" >
 				<static textres="item_label_container_bulk" />
 			</label_column>
-			<number_columnh name="capacityweight" insertbefore="bulk_label">
-				<tooltip textres="item_tooltip_capacityweight_bulk" />
-				<script file="campaign/scripts/capacityweight_pfrpg2.lua" />
-			</number_columnh>
-			<basicnumber name="extraplanarcontents" insertbefore="bulk_label">
-				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+			<number_columnh name="extraplanarcontents" insertbefore="bulk_label">
 				<tooltip textres="item_tooltip_extraplanarcontents_bulk" />
 				<readonly />
 				<script file="campaign/scripts/extraplanarcontents_pfrpg2.lua" />
-			</basicnumber>
+			</number_columnh>
 			<basicnumber name="contentsvolume" insertbefore="bulk_label" >
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
 				<script file="campaign/scripts/contentsvolume_pfrpg2.lua" />
+			</basicnumber>
+			<basicnumber name="capacityweight" insertbefore="bulk_label">
+				<anchored to="contentsvolume" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_capacityweight_bulk" />
+				<script file="campaign/scripts/capacityweight_pfrpg2.lua" />
+			</basicnumber>
+			<basicnumber name="capacitycount" insertbefore="bulk_label">
+				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_capacitycount" />
+				<script file="campaign/scripts/extraplanarcount.lua" />
 			</basicnumber>
 			
 			<label_column name="external_dimensions_label" insertbefore="divider3" >

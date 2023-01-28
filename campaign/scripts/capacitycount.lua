@@ -8,6 +8,7 @@ function onInit()
 	bVisible = bVisible and ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
 
 	window.capacitycount.setVisible(bVisible)
+	window.capacitycount_label.setVisible(bVisible)
 end
 
 function onValueChanged() window.extraplanarcontents.onValueChanged() end
