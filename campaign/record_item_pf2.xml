@@ -11,102 +11,19 @@
 			</label_column>
 			<number_columnh name="capacityweight" insertbefore="bulk_label">
 				<tooltip textres="item_tooltip_capacityweight_bulk" />
-				<script>
-					function update(bReadOnly, bForceHide)
-						local bLocalShow;
-						if bForceHide then
-							bLocalShow = false;
-						else
-							--[[bmos fixing visibility of weight fields]]
-							local nohide = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'));
-							--[[end bmos fixing visibility of weight fields]]
-							bLocalShow = true;
-							if bReadOnly and not nohide and getValue() == 0 then
-								bLocalShow = false;
-							end
-						end
-
-						setReadOnly(bReadOnly);
-						setVisible(bLocalShow);
-						
-						local sLabel = getName() .. "_label";
-						if window[sLabel] then
-							window[sLabel].setVisible(bLocalShow);
-						end
-						
-						if self.onUpdate then
-							self.onUpdate(bLocalShow);
-						end
-						
-						return bLocalShow;
-					end
-					function onValueChanged()
-						window.extraplanarcontents.onValueChanged()
-					end
-				</script>
+				<script file="campaign/scripts/capacityweight_pfrpg2.lua" />
 			</number_columnh>
 			<basicnumber name="extraplanarcontents" insertbefore="bulk_label">
 				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_extraplanarcontents_bulk" />
 				<readonly />
-				<script>
-					function onInit()
-						local bVisible = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
-						window.container_bulk_label.setVisible(bVisible)
-						window.capacityweight.setVisible(bVisible or window.capacityweight.getValue() ~= 0)
-						window.extraplanarcontents.setVisible(bVisible or window.extraplanarcontents.getValue() ~= 0)
-						onValueChanged()
-					end
-					function onValueChanged()
-						if window.capacityweight.getValue() ~= 0 then
-							if getValue() &lt; window.capacityweight.getValue() then
-								setColor(ColorManager.COLOR_FULL)
-							elseif getValue() == window.capacityweight.getValue() then
-								setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
-							elseif getValue() &gt; window.capacityweight.getValue() then
-								setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
-							end
-						end
-					end
-				</script>
+				<script file="campaign/scripts/extraplanarcontents_pfrpg2.lua" />
 			</basicnumber>
 			<basicnumber name="contentsvolume" insertbefore="bulk_label" >
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
-				<script>
-					function onInit()
-						local bVisible = OptionsManager.isOption('ITEM_VOLUME', 'on')
-
-						window.external_dimensions_label.setVisible(bVisible)
-						window.length.setVisible(bVisible)
-						window.width.setVisible(bVisible)
-						window.depth.setVisible(bVisible)
-						window.volume.setVisible(bVisible)
-
-						bVisible = bVisible and ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
-
-						window.contentsvolume.setVisible(bVisible)
-						window.internal_dimensions_label.setVisible(bVisible)
-						window.internal_length.setVisible(bVisible)
-						window.internal_width.setVisible(bVisible)
-						window.internal_depth.setVisible(bVisible)
-						window.internal_volume.setVisible(bVisible)
-
-						onValueChanged()
-					end
-					function onValueChanged()
-						if window.internal_volume.getValue() ~= 0 then
-							if getValue() &lt; window.internal_volume.getValue() then
-								setColor(ColorManager.COLOR_FULL)
-							elseif getValue() == window.internal_volume.getValue() then
-								setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
-							elseif getValue() &gt; window.internal_volume.getValue() then
-								setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
-							end
-						end
-					end
-				</script>
+				<script file="campaign/scripts/contentsvolume_pfrpg2.lua" />
 			</basicnumber>
 			
 			<label_column name="external_dimensions_label" insertbefore="divider3" >
