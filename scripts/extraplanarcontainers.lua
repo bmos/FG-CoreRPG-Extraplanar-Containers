@@ -348,6 +348,14 @@ function onInit()
 		'option_entry_cycler',
 		{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
 	)
+	OptionsManager.registerOption2(
+		'EXTRAPLANAR_HIGHLIGHT',
+		false,
+		'option_header_game',
+		'opt_lab_extraplanar_count',
+		'option_entry_cycler',
+		{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
+	)
 
 	CharEncumbranceManager.calcDefaultInventoryEncumbrance = calcDefaultInventoryEncumbrance_new
 	CharEncumbranceManager.setDefaultEncumbranceValue = setDefaultEncumbranceValue_new

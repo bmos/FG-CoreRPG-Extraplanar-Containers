@@ -38,7 +38,7 @@ local function setWindowcontrolColors(node, sColor, bTooltip)
 
 	for sNode, _ in pairs(tTooltips) do
 		if sNodeName == sNode then
-			if not bUsingII then -- only change name and location color + tooltip if not using Inventory Identified
+			if OptionsManager.isOption('EXTRAPLANAR_HIGHLIGHT', 'on') and not bUsingII then -- only change name and location color + tooltip if not using Inventory Identified
 				window.name.setLine(false, 0)
 				window.name.setColor(sColor)
 				window.name.setTooltipText(sTooltip)
