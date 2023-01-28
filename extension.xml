@@ -14,9 +14,9 @@
 
 	<base>
 		<!-- Records -->
-		<includefile ruleset="CoreRPG|PFRPG|2E|3.5E|5E" source="campaign/record_item.xml" />
+		<includefile ruleset="CoreRPG|PFRPG|2E|3.5E|5E|4E" source="campaign/record_item.xml" />
 		<includefile ruleset="PFRPG2" source="campaign/record_item_pf2.xml" />
-		<includefile ruleset="4E" source="campaign/record_item_4e.xml" />
+		<!-- <includefile ruleset="4E" source="campaign/record_item_4e.xml" /> -->
 		<includefile source="campaign/record_char_inventory.xml" />
 		<!-- Strings -->
 		<includefile source="strings/strings_extraplanarcontainers.xml" />

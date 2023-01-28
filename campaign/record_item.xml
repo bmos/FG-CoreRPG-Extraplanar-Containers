@@ -9,20 +9,26 @@
 				<tooltip textres="item_tooltip_itemweight" />
 				<script file="campaign/scripts/weight.lua" />
 			</number_columnh>
-			<basicnumber name="capacityweight">
-				<anchored to="weight" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_capacityweight" />
-				<delaykeyupdate />
-				<script file="campaign/scripts/capacityweight.lua" />
-			</basicnumber>
 			<basicnumber name="extraplanarcontents">
-				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+				<anchored to="weight" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_extraplanarcontents" />
 				<readonly />
 				<script file="campaign/scripts/extraplanarcontents.lua" />
 			</basicnumber>
-			<basicnumber name="contentsvolume">
+			<basicnumber name="capacityweight">
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_capacityweight" />
+				<delaykeyupdate />
+				<script file="campaign/scripts/capacityweight.lua" />
+			</basicnumber>
+			<basicnumber name="capacitycount">
+				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_capacitycount" />
+				<delaykeyupdate />
+				<script file="campaign/scripts/capacitycount.lua" />
+			</basicnumber>
+			<basicnumber name="contentsvolume">
+				<anchored to="capacitycount" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
 				<script file="campaign/scripts/contentsvolume.lua" />

@@ -3,7 +3,7 @@
 --
 -- luacheck: globals onValueChanged getValue setColor
 function onInit()
-	local bVisible = OptionsManager.isOption('ITEM_VOLUME', 'on')
+	local bVisible = OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on')
 
 	window.external_dimensions_label.setVisible(bVisible)
 	window.length.setVisible(bVisible)

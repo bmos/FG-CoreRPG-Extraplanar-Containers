@@ -27,27 +27,35 @@ end
 
 -- everything below here is responsible for setting the weight to red if the container is overfull
 
-local tTooltips = { ['announcedW'] = 'weight', ['announcedV'] = 'volume' }
+local tTooltips = { ['announcedW'] = 'weight', ['announcedC'] = 'weight', ['announcedV'] = 'volume' }
 
 local function onAnnounced(_, child)
 	local sNodeName = DB.getName(child)
-	if sNodeName == 'announcedW' or sNodeName == 'announcedV' then
-		window.weight.setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
-		window.weight.setTooltipText(string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]))
+	for sNode, _ in pairs(tTooltips) do
+		if sNodeName == sNode then
+			window.weight.setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
+			window.weight.setTooltipText(string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]))
+			break
+		end
 	end
 end
 
 local function onUnannounced(source)
 	local sNodeName = DB.getName(source)
-	if sNodeName == 'announcedW' or sNodeName == 'announcedV' then
-		window.weight.setColor(ColorManager.COLOR_FULL)
-		window.weight.setTooltipText('')
+	for sNode, _ in pairs(tTooltips) do
+		if sNodeName == sNode then
+			window.weight.setColor(ColorManager.COLOR_FULL)
+			window.weight.setTooltipText('')
+			break
+		end
 	end
 end
 
 function onInit()
-	local nodeWeightAnnounced = DB.getChild(window.getDatabaseNode(), 'announcedW')
-	if nodeWeightAnnounced then onAnnounced(nil, nodeWeightAnnounced) end
+	for sNodeName, _ in pairs(tTooltips) do
+		local nodeWeightAnnounced = DB.getChild(window.getDatabaseNode(), sNodeName)
+		if nodeWeightAnnounced then onAnnounced(nil, nodeWeightAnnounced) end
+	end
 	if super and super.onInit then super.onInit() end
 	DB.addHandler(DB.getPath(window.getDatabaseNode()), 'onChildAdded', onAnnounced)
 	DB.addHandler(DB.getPath(window.getDatabaseNode()) .. '.*', 'onDelete', onUnannounced)

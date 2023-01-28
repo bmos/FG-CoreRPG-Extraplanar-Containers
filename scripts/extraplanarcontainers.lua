@@ -81,7 +81,6 @@ local function build_containers(node_inventory)
 	local table_containers_extraplanar = {}
 	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', '')):gsub('%[%+%]%s+', '')
-		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0)
 
 		local bool_extraplanar = isContainer(string_item_name, tExtraplanarContainers)
 		local bool_container = isContainer(string_item_name, tContainers)
@@ -90,11 +89,13 @@ local function build_containers(node_inventory)
 				['bTooBig'] = 0,
 				['nMaxDepth'] = DB.getValue(node_item, 'internal_depth', 0),
 				['nMaxLength'] = DB.getValue(node_item, 'internal_length', 0),
-				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
-				['nMaxWeight'] = number_maxweight,
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
+				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
+				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
+				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
 				['nTotalWeight'] = 0,
+				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
 		elseif bool_container and not bool_extraplanar then -- this creates an array keyed to the names of any detected mundane storage containers
@@ -102,11 +103,13 @@ local function build_containers(node_inventory)
 				['bTooBig'] = 0,
 				['nMaxDepth'] = DB.getValue(node_item, 'internal_depth', 0),
 				['nMaxLength'] = DB.getValue(node_item, 'internal_length', 0),
-				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
-				['nMaxWeight'] = number_maxweight,
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
+				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
+				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
+				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
 				['nTotalWeight'] = 0,
+				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
 		end
@@ -122,6 +125,7 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 	for _, table_container in pairs(table_containers) do
 		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', round(table_container['nTotalWeight']))
 		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', round(table_container['nTotalVolume']))
+		DB.setValue(table_container['nodeItem'], 'contentscount', 'number', round(table_container['nTotalItems']))
 		local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
 		local messagedata = { text = '', sender = rActor.sName, font = 'emotefont' }
 
@@ -130,7 +134,7 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 			if table_container['nTotalWeight'] > table_container['nMaxWeight'] then
 				if not DB.getChild(table_container['nodeItem'], 'announcedW') then
 					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'weight')
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much weight')
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
@@ -138,18 +142,31 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 			end
 		end
 
+		-- check number of items in contianer and announce if excessive
+		if table_container['nMaxCount'] > 0 then
+			if table_container['nTotalItems'] > table_container['nMaxCount'] then
+				if not DB.getChild(table_container['nodeItem'], 'announcedC') then
+					DB.setValue(table_container['nodeItem'], 'announcedC', 'number', 1)
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too many items')
+					Comm.deliverChatMessage(messagedata)
+				end
+			else
+				if DB.getChild(table_container['nodeItem'], 'announcedC') then DB.deleteChild(table_container['nodeItem'], 'announcedC') end
+			end
+		end
+
 		-- check volume of contents and announce if excessive
-		if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
+		if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 			if table_container['bTooBig'] == 1 then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'maximum dimension')
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'item too large - physical dimensions')
 					Comm.deliverChatMessage(messagedata)
 				end
 			elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'volume')
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much volume')
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
@@ -194,7 +211,12 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = (
 						table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 					)
-					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
+						table_containers_extraplanar[string_item_location]['nTotalItems'] = (
+						table_containers_extraplanar[string_item_location]['nTotalItems'] + number_item_count
+					)
+					end
+					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_extraplanar[string_item_location]['nTotalVolume'] = (
 							table_containers_extraplanar[string_item_location]['nTotalVolume']
 							+ (number_item_count * DB.getValue(node_item, 'volume', 0))
@@ -215,7 +237,12 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					table_containers_mundane[string_item_location]['nTotalWeight'] = (
 						table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 					)
-					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
+						table_containers_mundane[string_item_location]['nTotalItems'] = (
+						table_containers_mundane[string_item_location]['nTotalItems'] + number_item_count
+					)
+					end
+					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_mundane[string_item_location]['nTotalVolume'] = (
 							table_containers_mundane[string_item_location]['nTotalVolume']
 							+ (number_item_count * DB.getValue(node_item, 'volume', 0))
@@ -239,6 +266,12 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 							table_containers_extraplanar[string_item_location_location]['nTotalWeight']
 							+ (number_item_count * number_item_weight)
 						)
+						if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
+							table_containers_extraplanar[string_item_location_location]['nTotalVolume'] = (
+								table_containers_extraplanar[string_item_location_location]['nTotalVolume']
+								+ (number_item_count * DB.getValue(node_item, 'volume', 0))
+							)
+							end
 					end
 				end
 			else
@@ -302,10 +335,18 @@ end
 
 function onInit()
 	OptionsManager.registerOption2(
-		'ITEM_VOLUME',
+		'EXTRAPLANAR_VOLUME',
 		false,
 		'option_header_game',
-		'opt_lab_item_volume',
+		'opt_lab_extraplanar_volume',
+		'option_entry_cycler',
+		{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
+	)
+	OptionsManager.registerOption2(
+		'EXTRAPLANAR_COUNT',
+		false,
+		'option_header_game',
+		'opt_lab_extraplanar_count',
 		'option_entry_cycler',
 		{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
 	)
@@ -321,6 +362,7 @@ function onInit()
 			local sItemList = 'charsheet.*.' .. sItemListNodeName
 			DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)
 			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
+			DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
 			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
 			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
 

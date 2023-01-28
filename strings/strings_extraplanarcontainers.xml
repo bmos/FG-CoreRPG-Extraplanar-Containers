@@ -4,13 +4,17 @@
 
 <root>
 	<!-- options titles -->
-	<string name="opt_lab_item_volume">Encumbrance: Container/Item Volume</string>
+	<string name="opt_lab_extraplanar_volume">Encumbrance: Container/Item Volume</string>
+	<string name="opt_lab_extraplanar_count">Encumbrance: Container/Item Max Count</string>
+
 	<!-- Item Sheet -->
 	<string name="item_label_external_dimensions">Exterior Size</string>
 	<string name="item_label_internal_dimensions">Interior Space</string>
+
 	<!-- Tooltip -->
 	<string name="item_tooltip_itemweight">Weight of Item</string> <!-- Total weight the bag of holding can hold-->
 	<string name="item_tooltip_capacityweight">Maximum Weight Capacity</string> <!-- Total weight the bag of holding can hold-->
+	<string name="item_tooltip_capacitycount">Maximum Number of Items</string> <!-- Total number of items the bag of holding can hold-->
 	<string name="item_tooltip_extraplanarcontents">Weight of Contents</string> <!-- The weight of everything in the bag of holding -->
 	<string name="item_tooltip_contentsvolume">Volume of Contents</string> <!-- The volume of everything in the container -->
 	<string name="item_tooltip_length">Length</string>
@@ -24,6 +28,7 @@
 	<string name="item_label_container_bulk">Container Bulk</string>
 	<string name="item_tooltip_capacityweight_bulk">Maximum Bulk Capacity</string> <!-- Total bulk the bag of holding can hold (as PF2 bulk) -->
 	<string name="item_tooltip_extraplanarcontents_bulk">Total Bulk of Contents</string> <!-- The weight of everything in the bag of holding (as PF2 bulk) -->
+
 	<!-- Chat Messages -->
 	<string name="item_self_destruct">"%s" is overfull (%s). Self destructing in 10.. 9.. 8.. 6.. just kidding!</string>
 	<string name="item_overfull">"%s" is overfull (%s).</string>
