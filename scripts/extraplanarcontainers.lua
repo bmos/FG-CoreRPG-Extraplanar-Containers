@@ -47,12 +47,10 @@ end
 function round(number)
 	local n = 10 ^ (determineRounding(number) or 0)
 	number = number * n
-	if number >= 0 then
-		number = math.floor(number + 0.5)
-	else
-		number = math.ceil(number - 0.5)
+	if number < 0 then
+		return math.ceil(number - 0.5) / n
 	end
-	return number / n
+	return math.floor(number + 0.5) / n
 end
 
 --	searches for provided sItemName in provided tTable.
@@ -68,10 +66,10 @@ end
 --	returns true if either is a match
 --	luacheck: globals isAnyContainer
 function isAnyContainer(sItemName)
-	if sItemName and sItemName ~= '' then
-		local sItemNameLower = string.lower(sItemName)
-		return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
-	end
+	if not sItemName or sItemName == '' then return end
+
+	local sItemNameLower = string.lower(sItemName)
+	return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
 end
 
 --	looks through provided charsheet for inventory items that are containers
@@ -357,24 +355,23 @@ function onInit()
 	onInventorySortUpdate_old = ItemManager.onInventorySortUpdate
 	ItemManager.onInventorySortUpdate = onInventorySortUpdate_new
 
-	if Session.IsHost then
-		for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
-			local sItemList = 'charsheet.*.' .. sItemListNodeName
-			DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
+	if not Session.IsHost then return end
+	for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
+		local sItemList = 'charsheet.*.' .. sItemListNodeName
+		DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
 
-			-- external size fields
-			DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
+		-- external size fields
+		DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
 
-			-- internal size fields
-			DB.addHandler(DB.getPath(sItemList .. '.*.internal_length'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.internal_width'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.internal_depth'), 'onUpdate', onItemUpdate)
-		end
+		-- internal size fields
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_length'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_width'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_depth'), 'onUpdate', onItemUpdate)
 	end
 end
