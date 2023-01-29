@@ -11,10 +11,10 @@
 	<string name="item_label_external_dimensions">Exterior Size</string>
 	<string name="item_label_internal_dimensions">Interior Space</string>
 	<string name="item_labeltop_weight">Weight</string>
-	<string name="item_labeltop_contents">Contain</string>
-	<string name="item_labeltop_max_capacity">Cap</string>
-	<string name="item_labeltop_max_count">Count</string>
-	<string name="item_labeltop_max_volume">Vol</string>
+	<string name="item_labeltop_contents">Content</string>
+	<string name="item_labeltop_max_volume">Max Vol</string>
+	<string name="item_labeltop_max_capacity">Max Wt</string>
+	<string name="item_labeltop_max_count">Max Ct</string>
 
 	<!-- Tooltip -->
 	<string name="item_tooltip_itemweight">Weight of Item</string> <!-- Total weight the bag of holding can hold-->
