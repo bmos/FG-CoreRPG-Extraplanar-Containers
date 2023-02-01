@@ -47,9 +47,7 @@ end
 function round(number)
 	local n = 10 ^ (determineRounding(number) or 0)
 	number = number * n
-	if number < 0 then
-		return math.ceil(number - 0.5) / n
-	end
+	if number < 0 then return math.ceil(number - 0.5) / n end
 	return math.floor(number + 0.5) / n
 end
 
@@ -203,7 +201,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 		if state_item_carried ~= 0 then
 			local number_item_weight = DB.getValue(node_item, 'weight', 0)
 			local number_item_count = DB.getValue(node_item, 'count', 0)
-				-- add up subtotals of container contents and put them in the table
+			-- add up subtotals of container contents and put them in the table
 			if state_item_carried ~= 2 and bIsInExtraplanar then
 				if table_containers_extraplanar[string_item_location] then
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = (
@@ -211,8 +209,8 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					)
 					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
 						table_containers_extraplanar[string_item_location]['nTotalItems'] = (
-						table_containers_extraplanar[string_item_location]['nTotalItems'] + number_item_count
-					)
+							table_containers_extraplanar[string_item_location]['nTotalItems'] + number_item_count
+						)
 					end
 					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_extraplanar[string_item_location]['nTotalVolume'] = (
@@ -237,8 +235,8 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					)
 					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
 						table_containers_mundane[string_item_location]['nTotalItems'] = (
-						table_containers_mundane[string_item_location]['nTotalItems'] + number_item_count
-					)
+							table_containers_mundane[string_item_location]['nTotalItems'] + number_item_count
+						)
 					end
 					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_mundane[string_item_location]['nTotalVolume'] = (
@@ -269,7 +267,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 								table_containers_extraplanar[string_item_location_location]['nTotalVolume']
 								+ (number_item_count * DB.getValue(node_item, 'volume', 0))
 							)
-							end
+						end
 					end
 				end
 			else
