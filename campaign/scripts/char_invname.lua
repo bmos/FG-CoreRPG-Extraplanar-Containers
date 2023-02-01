@@ -27,14 +27,20 @@ end
 
 -- everything below here is responsible for setting the weight to red if the container is overfull
 
-local tTooltips = { ['announcedW'] = 'weight', ['announcedC'] = 'weight', ['announcedV'] = 'volume' }
+local tTooltips = {
+	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight' },
+	['announcedC'] = { ['sDesc'] = 'contents', ['sNodeName'] = 'contentscount', ['sMaxNodeName'] = 'capacitycount' },
+	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
+}
 
 local function setWindowcontrolColors(node, bHighlight)
 	local sTooltip = ''
 	local sNodeName = DB.getName(node)
 	if not tTooltips[sNodeName] then return end
 	if bHighlight then
-		sTooltip = string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName])
+		sTooltip = string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]['sDesc'])
+		sTooltip = sTooltip .. '\n' .. DB.getValue(node, '..' .. tTooltips[sNodeName]['sNodeName'], 'unknown')
+		sTooltip = sTooltip .. ' > ' .. DB.getValue(node, '..' .. tTooltips[sNodeName]['sMaxNodeName'], 'unknown')
 	end
 
 	for sNode, _ in pairs(tTooltips) do
