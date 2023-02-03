@@ -47,7 +47,7 @@
 			
 			<label_column name="limits_label" insertbefore="divider3" >
 				<anchored>
-					<top offset="15" /> 
+					<top offset="15" />
 				</anchored>
 				<static textres="item_column_label_limit" />
 			</label_column>
