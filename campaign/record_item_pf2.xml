@@ -18,7 +18,7 @@
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
-				<script file="campaign/scripts/contentsvolume_pfrpg2.lua" />
+				<script file="campaign/scripts/contentsvolume.lua" />
 			</basicnumber>
 			<basicnumber name="capacityweight" insertbefore="bulk_label">
 				<anchored to="contentsvolume" position="righthigh" offset="10,0" width="35" height="20" />
