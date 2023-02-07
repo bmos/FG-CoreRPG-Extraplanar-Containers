@@ -16,8 +16,6 @@
 	<string name="item_labeltop_count">Count</string>
 	<string name="item_labeltop_volume">Volume</string>
 	<string name="item_labeltop_max_capacity">Weight</string>
-	<string name="item_labeltop_max_count">Count</string>
-	<string name="item_labeltop_max_volume">Volume</string>
 
 	<!-- Tooltip -->
 	<string name="item_tooltip_itemweight">Weight of Item</string> <!-- Total weight the bag of holding can hold-->

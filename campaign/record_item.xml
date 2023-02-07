@@ -42,7 +42,7 @@
 			</basicnumber>
 			<label_fieldtop name="contentsvolume_label">
 				<anchored to="contentsvolume" />
-				<static textres="item_labeltop_max_volume" />
+				<static textres="item_labeltop_volume" />
 			</label_fieldtop>
 			
 			<label_column name="limits_label" insertbefore="divider3" >
@@ -73,7 +73,7 @@
 			</basicnumber>
 			<label_fieldtop name="capacitycount_label" insertbefore="divider3" >
 				<anchored to="capacitycount" />
-				<static textres="item_labeltop_max_count" />
+				<static textres="item_labeltop_count" />
 			</label_fieldtop>
 			
 			<label_column name="internal_dimensions_label" insertbefore="divider3" >
