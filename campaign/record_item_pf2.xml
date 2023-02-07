@@ -6,79 +6,116 @@
 	<!-- this is the item sheet -->
 	<windowclass name="item_main" merge="join">
 		<sheetdata>
-			<label_column name="container_bulk_label" insertbefore="bulk_label" >
+			<label_column name="container_bulk_label" insertbefore="hands_label">
+				<anchored>
+					<top offset="15" /> 
+				</anchored>
 				<static textres="item_label_container_bulk" />
 			</label_column>
-			<number_columnh name="extraplanarcontents" insertbefore="bulk_label">
+
+			<number_columnh name="extraplanarcontents" insertbefore="hands_label">
+				<anchored width="52">
+					<top offset="15" /> 
+				</anchored>
 				<tooltip textres="item_tooltip_extraplanarcontents_bulk" />
 				<readonly />
 				<script file="campaign/scripts/extraplanarcontents_pfrpg2.lua" />
 			</number_columnh>
-			<basicnumber name="contentsvolume" insertbefore="bulk_label" >
-				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
+			<label_fieldtop name="extraplanarcontents_label">
+				<anchored to="extraplanarcontents" />
+				<static textres="item_labeltop_weightcontents" />
+			</label_fieldtop>
+			
+			<basicnumber name="contentsvolume">
+				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
 				<script file="campaign/scripts/contentsvolume.lua" />
 			</basicnumber>
-			<basicnumber name="capacityweight" insertbefore="bulk_label">
-				<anchored to="contentsvolume" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_capacityweight_bulk" />
-				<script file="campaign/scripts/capacityweight_pfrpg2.lua" />
-			</basicnumber>
-			<basicnumber name="capacitycount" insertbefore="bulk_label">
-				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_capacitycount" />
-				<script file="campaign/scripts/extraplanarcount.lua" />
-			</basicnumber>
+			<label_fieldtop name="contentsvolume_label">
+				<anchored to="contentsvolume" />
+				<static textres="item_labeltop_volume" />
+			</label_fieldtop>
 			
-			<label_column name="external_dimensions_label" insertbefore="divider3" >
+			<label_column name="limits_label" insertbefore="hands_label">
+				<anchored>
+					<top offset="15" />
+				</anchored>
+				<static textres="item_column_label_limit" />
+			</label_column>
+
+			<number_columnh name="capacityweight" insertbefore="hands_label">
+				<anchored width="52">
+					<top offset="15" />
+				</anchored>
+				<tooltip textres="item_tooltip_capacityweight_bulk" />
+				<delaykeyupdate />
+				<script file="campaign/scripts/capacityweight_pfrpg2.lua" />
+			</number_columnh>
+			<label_fieldtop name="capacityweight_label">
+				<anchored to="capacityweight" />
+				<static textres="item_labeltop_max_capacity" />
+			</label_fieldtop>
+			
+			<basicnumber name="capacitycount">
+				<anchored to="capacityweight" position="righthigh" offset="10,0" width="52" height="20" />
+				<tooltip textres="item_tooltip_capacitycount" />
+				<delaykeyupdate />
+				<script file="campaign/scripts/capacitycount.lua" />
+			</basicnumber>
+			<label_fieldtop name="capacitycount_label">
+				<anchored to="capacitycount" />
+				<static textres="item_labeltop_count" />
+			</label_fieldtop>
+			
+			<label_column name="external_dimensions_label" insertbefore="divider3">
 				<static textres="item_label_external_dimensions" />
 			</label_column>
-			<number_columnh name="length" insertbefore="divider3" >
+			<number_columnh name="length" insertbefore="divider3">
 				<delaykeyupdate />
 				<tooltip textres="item_tooltip_length" />
 				<script file="campaign/scripts/external_dimensions.lua" />
 			</number_columnh>
-			<basicnumber name="width" insertbefore="divider3" >
+			<basicnumber name="width">
 				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_width" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/external_dimensions.lua" />
 			</basicnumber>
-			<basicnumber name="depth" insertbefore="divider3" >
+			<basicnumber name="depth">
 				<anchored to="width" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_depth" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/external_dimensions.lua" />
 			</basicnumber>
-			<basicnumber name="volume" insertbefore="divider3" >
+			<basicnumber name="volume">
 				<anchored to="depth" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_exterior_volume" />
 				<readonly />
 				<script file="campaign/scripts/external_volume.lua" />
 			</basicnumber>
 			
-			<label_column name="internal_dimensions_label" insertbefore="divider3" >
+			<label_column name="internal_dimensions_label" insertbefore="divider3">
 				<static textres="item_label_internal_dimensions" />
 			</label_column>
-			<number_columnh name="internal_length" insertbefore="divider3" >
+			<number_columnh name="internal_length" insertbefore="divider3">
 				<tooltip textres="item_tooltip_length" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/internal_dimensions.lua" />
 			</number_columnh>
-			<basicnumber name="internal_width" insertbefore="divider3" >
+			<basicnumber name="internal_width">
 				<anchored to="internal_length" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_width" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/internal_dimensions.lua" />
 			</basicnumber>
-			<basicnumber name="internal_depth" insertbefore="divider3" >
+			<basicnumber name="internal_depth">
 				<anchored to="internal_width" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_depth" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/internal_dimensions.lua" />
 			</basicnumber>
-			<basicnumber name="internal_volume" insertbefore="divider3" >
+			<basicnumber name="internal_volume">
 				<anchored to="internal_depth" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_interior_volume" />
 				<readonly />

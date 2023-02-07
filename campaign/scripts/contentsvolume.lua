@@ -15,6 +15,7 @@ function onInit()
 
 	window.contentsvolume.setVisible(bVisible)
 	window.contentsvolume_label.setVisible(bVisible)
+
 	window.internal_dimensions_label.setVisible(bVisible)
 	window.internal_length.setVisible(bVisible)
 	window.internal_width.setVisible(bVisible)
