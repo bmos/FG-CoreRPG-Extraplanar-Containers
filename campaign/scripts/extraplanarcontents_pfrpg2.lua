@@ -4,9 +4,9 @@
 -- luacheck: globals onValueChanged getValue setColor setReadOnly setVisible getName update
 
 function update(bReadOnly, bForceHide)
-	local bLocalShow;
+	local bLocalShow
 	if bForceHide then
-		bLocalShow = false;
+		bLocalShow = false
 	else
 		--[[bmos fixing visibility of weight fields]]
 		local nohide = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'));
@@ -17,19 +17,21 @@ function update(bReadOnly, bForceHide)
 		end
 	end
 
-	setReadOnly(bReadOnly);
-	setVisible(bLocalShow);
+	setReadOnly(bReadOnly)
+	setVisible(bLocalShow)
 
-	local sLabel = getName() .. "_label";
-	if window[sLabel] then
-		window[sLabel].setVisible(bLocalShow);
+	local sName = getName()
+	if window[sName .. '_label'] then
+		window[sName .. '_label'].setVisible(bLocalShow)
+	elseif window[sName .. '_header'] then
+		window[sName .. '_header'].setVisible(bLocalShow)
 	end
 
 	if self.onUpdate then
-		self.onUpdate(bLocalShow);
+		self.onUpdate(bLocalShow)
 	end
 
-	return bLocalShow;
+	return bLocalShow
 end
 
 function onInit()
