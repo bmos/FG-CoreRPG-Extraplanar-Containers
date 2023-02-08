@@ -9,12 +9,10 @@ function update(bReadOnly, bForceHide)
 		bLocalShow = false
 	else
 		--[[bmos fixing visibility of weight fields]]
-		local nohide = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'));
+		local nohide = ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
 		--[[end bmos fixing visibility of weight fields]]
-		bLocalShow = true;
-		if bReadOnly and not nohide and getValue() == 0 then
-			bLocalShow = false;
-		end
+		bLocalShow = true
+		if bReadOnly and not nohide and getValue() == 0 then bLocalShow = false end
 	end
 
 	setReadOnly(bReadOnly)
@@ -27,9 +25,7 @@ function update(bReadOnly, bForceHide)
 		window[sName .. '_header'].setVisible(bLocalShow)
 	end
 
-	if self.onUpdate then
-		self.onUpdate(bLocalShow)
-	end
+	if self.onUpdate then self.onUpdate(bLocalShow) end
 
 	return bLocalShow
 end

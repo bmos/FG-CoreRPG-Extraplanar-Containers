@@ -47,22 +47,18 @@ local function setWindowcontrolColors(node, bHighlight)
 		if sNodeName == sNode then
 			window.weight.setTooltipText(sTooltip)
 			if bHighlight then
-				window.weight.setFrame("required", 7,5,7,5)
+				window.weight.setFrame('required', 7, 5, 7, 5)
 				break
 			end
-			window.weight.setFrame("fielddark", 7,5,7,5)
+			window.weight.setFrame('fielddark', 7, 5, 7, 5)
 			break
 		end
 	end
 end
 
-local function onAnnounced(_, child)
-	setWindowcontrolColors(child, true)
-end
+local function onAnnounced(_, child) setWindowcontrolColors(child, true) end
 
-local function onUnannounced(source)
-	setWindowcontrolColors(source, false)
-end
+local function onUnannounced(source) setWindowcontrolColors(source, false) end
 
 function onInit()
 	for sNodeName, _ in pairs(tTooltips) do

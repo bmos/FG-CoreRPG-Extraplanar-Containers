@@ -4,6 +4,4 @@
 
 -- luacheck: globals update getValue onValueChanged
 
-function onValueChanged()
-	window.extraplanarcontents.onValueChanged()
-end
+function onValueChanged() window.extraplanarcontents.onValueChanged() end
