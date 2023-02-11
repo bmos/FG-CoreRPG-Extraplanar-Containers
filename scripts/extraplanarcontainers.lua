@@ -298,7 +298,7 @@ end
 --
 
 -- called when items are deleted
-local function onItemDeleted(node) updateContainers(DB.getParent(node)) end
+local function onItemDeleted(node) updateContainers(node) end
 
 -- called when items have their details changed
 local function onItemUpdate(node) updateContainers(DB.getChild(node, '...')) end
@@ -322,13 +322,6 @@ local function setDefaultEncumbranceValue_new(nodeChar, nEncumbrance)
 	DB.setValue(nodeChar, sField, 'number', round(nEncumbrance))
 end
 
--- Enable onFilter function in for char_invlist.lua
-local onInventorySortUpdate_old
-local function onInventorySortUpdate_new(cList, ...)
-	onInventorySortUpdate_old(cList, ...)
-	cList.applyFilter()
-end
-
 function onInit()
 	OptionsManager.registerOption2(
 		'EXTRAPLANAR_VOLUME',
@@ -350,9 +343,6 @@ function onInit()
 	CharEncumbranceManager.calcDefaultInventoryEncumbrance = calcDefaultInventoryEncumbrance_new
 	CharEncumbranceManager.setDefaultEncumbranceValue = setDefaultEncumbranceValue_new
 
-	onInventorySortUpdate_old = ItemManager.onInventorySortUpdate
-	ItemManager.onInventorySortUpdate = onInventorySortUpdate_new
-
 	if not Session.IsHost then return end
 	for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
 		local sItemList = 'charsheet.*.' .. sItemListNodeName
@@ -360,7 +350,7 @@ function onInit()
 		DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
 		DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
 		DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
+		DB.addHandler(sItemList, 'onChildDeleted', onItemDeleted)
 
 		-- external size fields
 		DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
