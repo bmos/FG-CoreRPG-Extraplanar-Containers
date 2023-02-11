@@ -132,4 +132,12 @@
 			</basicnumber>
 		</sheetdata>
 	</windowclass>
+
+	<template name="string_charinvloc">
+		<string_textlistitem>
+			<nodrop />
+			<delaykeyupdate merge="delete" />
+			<script file="campaign/scripts/char_invloc.lua" />
+		</string_textlistitem>
+	</template>
 </root>
