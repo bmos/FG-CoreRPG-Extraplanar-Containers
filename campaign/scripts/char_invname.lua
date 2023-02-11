@@ -17,6 +17,8 @@ function onDoubleClick()
 		DB.setValue(nodeItem, 'name', 'string', sName:gsub('%[%+%]%s+', ''))
 		DB.setValue(nodeItem, 'nonid_name', 'string', sNonIDName:gsub('%[%+%]%s+', ''))
 	end
+
+	window.windowlist.updateContainers()
 	return true
 end
 
