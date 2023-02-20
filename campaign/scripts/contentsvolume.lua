@@ -3,7 +3,7 @@
 --
 -- luacheck: globals onValueChanged getValue setColor
 function onInit()
-	local bVisible = OptionsManager.isOption('ITEM_VOLUME', 'on')
+	local bVisible = OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on')
 
 	window.external_dimensions_label.setVisible(bVisible)
 	window.length.setVisible(bVisible)
@@ -14,6 +14,8 @@ function onInit()
 	bVisible = bVisible and ExtraplanarContainers.isAnyContainer(DB.getValue(window.getDatabaseNode(), 'name'))
 
 	window.contentsvolume.setVisible(bVisible)
+	window.contentsvolume_label.setVisible(bVisible)
+
 	window.internal_dimensions_label.setVisible(bVisible)
 	window.internal_length.setVisible(bVisible)
 	window.internal_width.setVisible(bVisible)

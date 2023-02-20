@@ -47,12 +47,8 @@ end
 function round(number)
 	local n = 10 ^ (determineRounding(number) or 0)
 	number = number * n
-	if number >= 0 then
-		number = math.floor(number + 0.5)
-	else
-		number = math.ceil(number - 0.5)
-	end
-	return number / n
+	if number < 0 then return math.ceil(number - 0.5) / n end
+	return math.floor(number + 0.5) / n
 end
 
 --	searches for provided sItemName in provided tTable.
@@ -68,10 +64,10 @@ end
 --	returns true if either is a match
 --	luacheck: globals isAnyContainer
 function isAnyContainer(sItemName)
-	if sItemName and sItemName ~= '' then
-		local sItemNameLower = string.lower(sItemName)
-		return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
-	end
+	if not sItemName or sItemName == '' then return end
+
+	local sItemNameLower = string.lower(sItemName)
+	return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
 end
 
 --	looks through provided charsheet for inventory items that are containers
@@ -79,9 +75,8 @@ end
 local function build_containers(node_inventory)
 	local table_containers_mundane = {}
 	local table_containers_extraplanar = {}
-	for _, node_item in pairs(DB.getChildren(node_inventory)) do
+	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', '')):gsub('%[%+%]%s+', '')
-		local number_maxweight = DB.getValue(node_item, 'capacityweight', 0)
 
 		local bool_extraplanar = isContainer(string_item_name, tExtraplanarContainers)
 		local bool_container = isContainer(string_item_name, tContainers)
@@ -90,11 +85,13 @@ local function build_containers(node_inventory)
 				['bTooBig'] = 0,
 				['nMaxDepth'] = DB.getValue(node_item, 'internal_depth', 0),
 				['nMaxLength'] = DB.getValue(node_item, 'internal_length', 0),
-				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
-				['nMaxWeight'] = number_maxweight,
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
+				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
+				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
+				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
 				['nTotalWeight'] = 0,
+				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
 		elseif bool_container and not bool_extraplanar then -- this creates an array keyed to the names of any detected mundane storage containers
@@ -102,11 +99,13 @@ local function build_containers(node_inventory)
 				['bTooBig'] = 0,
 				['nMaxDepth'] = DB.getValue(node_item, 'internal_depth', 0),
 				['nMaxLength'] = DB.getValue(node_item, 'internal_length', 0),
-				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
-				['nMaxWeight'] = number_maxweight,
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
+				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
+				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
+				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
 				['nTotalWeight'] = 0,
+				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
 		end
@@ -122,6 +121,7 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 	for _, table_container in pairs(table_containers) do
 		DB.setValue(table_container['nodeItem'], 'extraplanarcontents', 'number', round(table_container['nTotalWeight']))
 		DB.setValue(table_container['nodeItem'], 'contentsvolume', 'number', round(table_container['nTotalVolume']))
+		DB.setValue(table_container['nodeItem'], 'contentscount', 'number', round(table_container['nTotalItems']))
 		local string_item_name = DB.getValue(table_container['nodeItem'], 'name', 'extraplanar container')
 		local messagedata = { text = '', sender = rActor.sName, font = 'emotefont' }
 
@@ -130,7 +130,7 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 			if table_container['nTotalWeight'] > table_container['nMaxWeight'] then
 				if not DB.getChild(table_container['nodeItem'], 'announcedW') then
 					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'weight')
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much weight')
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
@@ -138,18 +138,31 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 			end
 		end
 
+		-- check number of items in contianer and announce if excessive
+		if table_container['nMaxCount'] > 0 then
+			if table_container['nTotalItems'] > table_container['nMaxCount'] then
+				if not DB.getChild(table_container['nodeItem'], 'announcedC') then
+					DB.setValue(table_container['nodeItem'], 'announcedC', 'number', 1)
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too many items')
+					Comm.deliverChatMessage(messagedata)
+				end
+			else
+				if DB.getChild(table_container['nodeItem'], 'announcedC') then DB.deleteChild(table_container['nodeItem'], 'announcedC') end
+			end
+		end
+
 		-- check volume of contents and announce if excessive
-		if OptionsManager.isOption('ITEM_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
+		if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 			if table_container['bTooBig'] == 1 then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'maximum dimension')
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'item too large - physical dimensions')
 					Comm.deliverChatMessage(messagedata)
 				end
 			elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
 				if not table_container['nodeItem'].getChild('announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'volume')
+					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much volume')
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
@@ -165,7 +178,7 @@ end
 --	items in neither will have weight added to encumbrance total
 local function measure_contents(node_inventory, table_containers_mundane, table_containers_extraplanar)
 	local number_total_weight = 0
-	for _, node_item in pairs(DB.getChildren(node_inventory)) do
+	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_location = string.lower(DB.getValue(node_item, 'location', '')):gsub('%[%+%]%s+', '')
 
 		local bIsInExtraplanar = isContainer(string_item_location, tExtraplanarContainers)
@@ -174,10 +187,10 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 		-- add shortcut to location node
 		if table_containers_extraplanar[string_item_location] or table_containers_mundane[string_item_location] then
 			if bIsInExtraplanar and table_containers_extraplanar[string_item_location]['nodeItem'] then
-				local sLocNode = table_containers_extraplanar[string_item_location]['nodeItem'].getPath()
+				local sLocNode = DB.getPath(table_containers_extraplanar[string_item_location]['nodeItem'])
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
 			elseif bIsInContainer and table_containers_mundane[string_item_location]['nodeItem'] then
-				local sLocNode = table_containers_mundane[string_item_location]['nodeItem'].getPath()
+				local sLocNode = DB.getPath(table_containers_mundane[string_item_location]['nodeItem'])
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
 			elseif node_item.getChild('locationshortcut') then
 				DB.deleteChild(node_item, 'locationshortcut') -- not sure if this ever runs
@@ -194,7 +207,12 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = (
 						table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 					)
-					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
+						table_containers_extraplanar[string_item_location]['nTotalItems'] = (
+							table_containers_extraplanar[string_item_location]['nTotalItems'] + number_item_count
+						)
+					end
+					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_extraplanar[string_item_location]['nTotalVolume'] = (
 							table_containers_extraplanar[string_item_location]['nTotalVolume']
 							+ (number_item_count * DB.getValue(node_item, 'volume', 0))
@@ -215,7 +233,12 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					table_containers_mundane[string_item_location]['nTotalWeight'] = (
 						table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
 					)
-					if OptionsManager.isOption('ITEM_VOLUME', 'on') then
+					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
+						table_containers_mundane[string_item_location]['nTotalItems'] = (
+							table_containers_mundane[string_item_location]['nTotalItems'] + number_item_count
+						)
+					end
+					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_mundane[string_item_location]['nTotalVolume'] = (
 							table_containers_mundane[string_item_location]['nTotalVolume']
 							+ (number_item_count * DB.getValue(node_item, 'volume', 0))
@@ -239,6 +262,12 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 							table_containers_extraplanar[string_item_location_location]['nTotalWeight']
 							+ (number_item_count * number_item_weight)
 						)
+						if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
+							table_containers_extraplanar[string_item_location_location]['nTotalVolume'] = (
+								table_containers_extraplanar[string_item_location_location]['nTotalVolume']
+								+ (number_item_count * DB.getValue(node_item, 'volume', 0))
+							)
+						end
 					end
 				end
 			else
@@ -269,7 +298,7 @@ end
 --
 
 -- called when items are deleted
-local function onItemDeleted(node) updateContainers(DB.getParent(node)) end
+local function onItemDeleted(node) updateContainers(node) end
 
 -- called when items have their details changed
 local function onItemUpdate(node) updateContainers(DB.getChild(node, '...')) end
@@ -293,19 +322,20 @@ local function setDefaultEncumbranceValue_new(nodeChar, nEncumbrance)
 	DB.setValue(nodeChar, sField, 'number', round(nEncumbrance))
 end
 
--- Enable onFilter function in for char_invlist.lua
-local onInventorySortUpdate_old
-local function onInventorySortUpdate_new(cList, ...)
-	onInventorySortUpdate_old(cList, ...)
-	cList.applyFilter()
-end
-
 function onInit()
 	OptionsManager.registerOption2(
-		'ITEM_VOLUME',
+		'EXTRAPLANAR_VOLUME',
 		false,
 		'option_header_game',
-		'opt_lab_item_volume',
+		'opt_lab_extraplanar_volume',
+		'option_entry_cycler',
+		{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
+	)
+	OptionsManager.registerOption2(
+		'EXTRAPLANAR_COUNT',
+		false,
+		'option_header_game',
+		'opt_lab_extraplanar_count',
 		'option_entry_cycler',
 		{ labels = 'option_val_on', values = 'on', baselabel = 'option_val_off', baseval = 'off', default = 'off' }
 	)
@@ -313,26 +343,23 @@ function onInit()
 	CharEncumbranceManager.calcDefaultInventoryEncumbrance = calcDefaultInventoryEncumbrance_new
 	CharEncumbranceManager.setDefaultEncumbranceValue = setDefaultEncumbranceValue_new
 
-	onInventorySortUpdate_old = ItemManager.onInventorySortUpdate
-	ItemManager.onInventorySortUpdate = onInventorySortUpdate_new
+	if not Session.IsHost then return end
+	for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
+		local sItemList = 'charsheet.*.' .. sItemListNodeName
+		DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
+		DB.addHandler(sItemList, 'onChildDeleted', onItemDeleted)
 
-	if Session.IsHost then
-		for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
-			local sItemList = 'charsheet.*.' .. sItemListNodeName
-			DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*'), 'onChildDeleted', onItemDeleted)
+		-- external size fields
+		DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
 
-			-- external size fields
-			DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
-
-			-- internal size fields
-			DB.addHandler(DB.getPath(sItemList .. '.*.internal_length'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.internal_width'), 'onUpdate', onItemUpdate)
-			DB.addHandler(DB.getPath(sItemList .. '.*.internal_depth'), 'onUpdate', onItemUpdate)
-		end
+		-- internal size fields
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_length'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_width'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_depth'), 'onUpdate', onItemUpdate)
 	end
 end

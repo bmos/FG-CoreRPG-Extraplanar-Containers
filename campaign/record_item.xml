@@ -5,55 +5,76 @@
 <root>
 	<windowclass name="item_main" merge="join">
 		<sheetdata>
+			<label_column name="weight_label">
+				<anchored>
+					<top offset="15" /> 
+				</anchored>
+			</label_column>
+
 			<number_columnh name="weight">
+				<anchored width="52">
+					<top offset="15" />
+				</anchored>
 				<tooltip textres="item_tooltip_itemweight" />
 				<script file="campaign/scripts/weight.lua" />
 			</number_columnh>
-			<basicnumber name="capacityweight">
-				<anchored to="weight" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_capacityweight" />
-				<delaykeyupdate />
-				<script file="campaign/scripts/capacityweight.lua" />
-			</basicnumber>
+			<label_fieldtop name="weight_labeltop">
+				<anchored to="weight" />
+				<static textres="item_labeltop_weight" />
+			</label_fieldtop>
+
 			<basicnumber name="extraplanarcontents">
-				<anchored to="capacityweight" position="righthigh" offset="10,0" width="35" height="20" />
+				<anchored to="weight" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_extraplanarcontents" />
 				<readonly />
 				<script file="campaign/scripts/extraplanarcontents.lua" />
 			</basicnumber>
+			<label_fieldtop name="extraplanarcontents_label">
+				<anchored to="extraplanarcontents" />
+				<static textres="item_labeltop_weightcontents" />
+			</label_fieldtop>
+			
 			<basicnumber name="contentsvolume">
-				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="35" height="20" />
+				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
 				<script file="campaign/scripts/contentsvolume.lua" />
 			</basicnumber>
+			<label_fieldtop name="contentsvolume_label">
+				<anchored to="contentsvolume" />
+				<static textres="item_labeltop_volume" />
+			</label_fieldtop>
 			
-			<label_column name="external_dimensions_label" insertbefore="divider3" >
-				<static textres="item_label_external_dimensions" />
+			<label_column name="limits_label" insertbefore="divider3" >
+				<anchored>
+					<top offset="15" />
+				</anchored>
+				<static textres="item_column_label_limit" />
 			</label_column>
-			<number_columnh name="length" insertbefore="divider3" >
+
+			<number_columnh name="capacityweight" insertbefore="divider3" >
+				<anchored width="52">
+					<top offset="15" />
+				</anchored>
+				<tooltip textres="item_tooltip_capacityweight" />
 				<delaykeyupdate />
-				<tooltip textres="item_tooltip_length" />
-				<script file="campaign/scripts/external_dimensions.lua" />
+				<script file="campaign/scripts/capacityweight.lua" />
 			</number_columnh>
-			<basicnumber name="width" insertbefore="divider3" >
-				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_width" />
+			<label_fieldtop name="capacityweight_label" insertbefore="divider3" >
+				<anchored to="capacityweight" />
+				<static textres="item_labeltop_max_capacity" />
+			</label_fieldtop>
+			
+			<basicnumber name="capacitycount" insertbefore="divider3" >
+				<anchored to="capacityweight" position="righthigh" offset="10,0" width="52" height="20" />
+				<tooltip textres="item_tooltip_capacitycount" />
 				<delaykeyupdate />
-				<script file="campaign/scripts/external_dimensions.lua" />
+				<script file="campaign/scripts/capacitycount.lua" />
 			</basicnumber>
-			<basicnumber name="depth" insertbefore="divider3" >
-				<anchored to="width" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_depth" />
-				<delaykeyupdate />
-				<script file="campaign/scripts/external_dimensions.lua" />
-			</basicnumber>
-			<basicnumber name="volume" insertbefore="divider3" >
-				<anchored to="depth" position="righthigh" offset="10,0" width="35" height="20" />
-				<tooltip textres="item_tooltip_exterior_volume" />
-				<readonly />
-				<script file="campaign/scripts/external_volume.lua" />
-			</basicnumber>
+			<label_fieldtop name="capacitycount_label" insertbefore="divider3" >
+				<anchored to="capacitycount" />
+				<static textres="item_labeltop_count" />
+			</label_fieldtop>
 			
 			<label_column name="internal_dimensions_label" insertbefore="divider3" >
 				<static textres="item_label_internal_dimensions" />
@@ -81,6 +102,42 @@
 				<readonly />
 				<script file="campaign/scripts/internal_volume.lua" />
 			</basicnumber>
+			
+			
+			<label_column name="external_dimensions_label" insertbefore="divider3" >
+				<static textres="item_label_external_dimensions" />
+			</label_column>
+			<number_columnh name="length" insertbefore="divider3" >
+				<delaykeyupdate />
+				<tooltip textres="item_tooltip_length" />
+				<script file="campaign/scripts/external_dimensions.lua" />
+			</number_columnh>
+			<basicnumber name="width" insertbefore="divider3" >
+				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_width" />
+				<delaykeyupdate />
+				<script file="campaign/scripts/external_dimensions.lua" />
+			</basicnumber>
+			<basicnumber name="depth" insertbefore="divider3" >
+				<anchored to="width" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_depth" />
+				<delaykeyupdate />
+				<script file="campaign/scripts/external_dimensions.lua" />
+			</basicnumber>
+			<basicnumber name="volume" insertbefore="divider3" >
+				<anchored to="depth" position="righthigh" offset="10,0" width="35" height="20" />
+				<tooltip textres="item_tooltip_exterior_volume" />
+				<readonly />
+				<script file="campaign/scripts/external_volume.lua" />
+			</basicnumber>
 		</sheetdata>
 	</windowclass>
+
+	<template name="string_charinvloc">
+		<string_textlistitem>
+			<nodrop />
+			<delaykeyupdate merge="delete" />
+			<script file="campaign/scripts/char_invloc.lua" />
+		</string_textlistitem>
+	</template>
 </root>
