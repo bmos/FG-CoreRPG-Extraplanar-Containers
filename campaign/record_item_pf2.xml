@@ -5,6 +5,7 @@
 <root>
 	<!-- this is the item sheet -->
 	<windowclass name="item_main" merge="join">
+		<script file="campaign/scripts/item_main_ExtraplanarContainers.lua" />
 		<sheetdata>
 			<label_column name="container_bulk_label" insertbefore="hands_label">
 				<anchored>
@@ -19,7 +20,7 @@
 				</anchored>
 				<tooltip textres="item_tooltip_extraplanarcontents_bulk" />
 				<readonly />
-				<script file="campaign/scripts/extraplanarcontents_pfrpg2.lua" />
+				<script file="campaign/scripts/extraplanarcontents.lua" />
 			</number_columnh>
 			<label_fieldtop name="extraplanarcontents_label">
 				<anchored to="extraplanarcontents" />
@@ -50,7 +51,7 @@
 				</anchored>
 				<tooltip textres="item_tooltip_capacityweight_bulk" />
 				<delaykeyupdate />
-				<script file="campaign/scripts/capacityweight_pfrpg2.lua" />
+				<script file="campaign/scripts/extraplanarcontentsonValueChanged.lua" />
 			</number_columnh>
 			<label_fieldtop name="capacityweight_label" insertbefore="hands_label">
 				<anchored to="capacityweight" />
@@ -61,7 +62,7 @@
 				<anchored to="capacityweight" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_capacitycount" />
 				<delaykeyupdate />
-				<script file="campaign/scripts/capacitycount.lua" />
+				<script file="campaign/scripts/extraplanarcontentsonValueChanged.lua" />
 			</basicnumber>
 			<label_fieldtop name="capacitycount_label" insertbefore="hands_label">
 				<anchored to="capacitycount" />

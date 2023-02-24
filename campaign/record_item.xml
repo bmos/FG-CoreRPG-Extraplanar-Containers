@@ -4,6 +4,7 @@
 
 <root>
 	<windowclass name="item_main" merge="join">
+		<script file="campaign/scripts/item_main_ExtraplanarContainers.lua" />
 		<sheetdata>
 			<label_column name="weight_label">
 				<anchored>
@@ -16,7 +17,6 @@
 					<top offset="15" />
 				</anchored>
 				<tooltip textres="item_tooltip_itemweight" />
-				<script file="campaign/scripts/weight.lua" />
 			</number_columnh>
 			<label_fieldtop name="weight_labeltop">
 				<anchored to="weight" />
@@ -27,7 +27,8 @@
 				<anchored to="weight" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_extraplanarcontents" />
 				<readonly />
-				<script file="campaign/scripts/extraplanarcontents.lua" />
+				<fieldname>capacityweight</fieldname>
+				<script file="campaign/scripts/colorcoding.lua" />
 			</basicnumber>
 			<label_fieldtop name="extraplanarcontents_label">
 				<anchored to="extraplanarcontents" />
@@ -38,7 +39,8 @@
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
-				<script file="campaign/scripts/contentsvolume.lua" />
+				<fieldname>internal_volume</fieldname>
+				<script file="campaign/scripts/colorcoding.lua" />
 			</basicnumber>
 			<label_fieldtop name="contentsvolume_label">
 				<anchored to="contentsvolume" />
@@ -58,7 +60,7 @@
 				</anchored>
 				<tooltip textres="item_tooltip_capacityweight" />
 				<delaykeyupdate />
-				<script file="campaign/scripts/capacityweight.lua" />
+				<script file="campaign/scripts/extraplanarcontentsonValueChanged.lua" />
 			</number_columnh>
 			<label_fieldtop name="capacityweight_label" insertbefore="divider3" >
 				<anchored to="capacityweight" />
@@ -69,7 +71,7 @@
 				<anchored to="capacityweight" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_capacitycount" />
 				<delaykeyupdate />
-				<script file="campaign/scripts/capacitycount.lua" />
+				<script file="campaign/scripts/extraplanarcontentsonValueChanged.lua" />
 			</basicnumber>
 			<label_fieldtop name="capacitycount_label" insertbefore="divider3" >
 				<anchored to="capacitycount" />
