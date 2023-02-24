@@ -154,13 +154,13 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 		-- check volume of contents and announce if excessive
 		if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') and table_container['nMaxVolume'] > 0 then
 			if table_container['bTooBig'] == 1 then
-				if not table_container['nodeItem'].getChild('announcedV') then
+				if not DB.getChild(table_container['nodeItem'], 'announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
 					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'item too large - physical dimensions')
 					Comm.deliverChatMessage(messagedata)
 				end
 			elseif table_container['nTotalVolume'] > table_container['nMaxVolume'] then
-				if not table_container['nodeItem'].getChild('announcedV') then
+				if not DB.getChild(table_container['nodeItem'], 'announcedV') then
 					DB.setValue(table_container['nodeItem'], 'announcedV', 'number', 1)
 					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much volume')
 					Comm.deliverChatMessage(messagedata)
