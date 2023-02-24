@@ -39,22 +39,18 @@ local function setWindowcontrolColors(node, bHighlight)
 	local sTooltip = ''
 	local sNodeName = DB.getName(node)
 	if not tTooltips[sNodeName] then return end
+
 	if bHighlight then
 		sTooltip = string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]['sDesc'])
 		sTooltip = sTooltip .. '\n' .. DB.getValue(node, '..' .. tTooltips[sNodeName]['sNodeName'], 'unknown')
 		sTooltip = sTooltip .. ' > ' .. DB.getValue(node, '..' .. tTooltips[sNodeName]['sMaxNodeName'], 'unknown')
 	end
+	window.weight.setTooltipText(sTooltip)
 
-	for sNode, _ in pairs(tTooltips) do
-		if sNodeName == sNode then
-			window.weight.setTooltipText(sTooltip)
-			if bHighlight then
-				window.weight.setFrame('required', 7, 5, 7, 5)
-				break
-			end
-			window.weight.setFrame('fielddark', 7, 5, 7, 5)
-			break
-		end
+	if bHighlight then
+		window.weight.setFrame('required', 7, 5, 7, 5)
+	else
+		window.weight.setFrame('fielddark', 7, 5, 7, 5)
 	end
 end
 

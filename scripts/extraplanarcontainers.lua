@@ -126,20 +126,18 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 		local messagedata = { text = '', sender = rActor.sName, font = 'emotefont' }
 
 		-- check weight of contents and announce if excessive
-		if table_container['nMaxWeight'] > 0 then
-			if table_container['nTotalWeight'] > table_container['nMaxWeight'] then
-				if not DB.getChild(table_container['nodeItem'], 'announcedW') then
-					DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
-					messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much weight')
-					Comm.deliverChatMessage(messagedata)
-				end
-			else
-				if DB.getChild(table_container['nodeItem'], 'announcedW') then DB.deleteChild(table_container['nodeItem'], 'announcedW') end
+		if table_container['nMaxWeight'] > 0 and table_container['nTotalWeight'] > table_container['nMaxWeight'] then
+			if not DB.getChild(table_container['nodeItem'], 'announcedW') then
+				DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
+				messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much weight')
+				Comm.deliverChatMessage(messagedata)
 			end
+		else
+			if DB.getChild(table_container['nodeItem'], 'announcedW') then DB.deleteChild(table_container['nodeItem'], 'announcedW') end
 		end
 
 		-- check number of items in contianer and announce if excessive
-		if table_container['nMaxCount'] > 0 then
+		if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') and table_container['nMaxCount'] > 0 then
 			if table_container['nTotalItems'] > table_container['nMaxCount'] then
 				if not DB.getChild(table_container['nodeItem'], 'announcedC') then
 					DB.setValue(table_container['nodeItem'], 'announcedC', 'number', 1)
@@ -149,6 +147,8 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 			else
 				if DB.getChild(table_container['nodeItem'], 'announcedC') then DB.deleteChild(table_container['nodeItem'], 'announcedC') end
 			end
+		else
+			if DB.getChild(table_container['nodeItem'], 'announcedC') then DB.deleteChild(table_container['nodeItem'], 'announcedC') end
 		end
 
 		-- check volume of contents and announce if excessive
@@ -168,6 +168,8 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 			else
 				if DB.getChild(table_container['nodeItem'], 'announcedV') then DB.deleteChild(table_container['nodeItem'], 'announcedV') end
 			end
+		else
+			if DB.getChild(table_container['nodeItem'], 'announcedV') then DB.deleteChild(table_container['nodeItem'], 'announcedV') end
 		end
 	end
 end
