@@ -349,19 +349,13 @@ function onInit()
 	for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
 		local sItemList = 'charsheet.*.' .. sItemListNodeName
 		DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.capacitycount'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.internal_volume'), 'onUpdate', onItemUpdate)
+		DB.addHandler(DB.getPath(sItemList .. '.*.volume'), 'onUpdate', onItemUpdate)
+
 		DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
 		DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
 		DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
 		DB.addHandler(sItemList, 'onChildDeleted', onItemDeleted)
-
-		-- external size fields
-		DB.addHandler(DB.getPath(sItemList .. '.*.length'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*.width'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*.depth'), 'onUpdate', onItemUpdate)
-
-		-- internal size fields
-		DB.addHandler(DB.getPath(sItemList .. '.*.internal_length'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*.internal_width'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*.internal_depth'), 'onUpdate', onItemUpdate)
 	end
 end
