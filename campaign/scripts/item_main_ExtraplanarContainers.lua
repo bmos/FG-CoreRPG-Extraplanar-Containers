@@ -10,14 +10,17 @@ local function updateWeight()
 	local bVisWt = not WindowManager.getReadOnlyState(nodeRecord) or bIsContainer
 
 	local function updateWeightGeneral()
+		bVisWt = bVisWt or (weight.getValue() ~= 0)
+		weight_label.setVisible(bVisWt)
 		weight.setVisible(bVisWt)
 		weight_labeltop.setVisible(bVisWt)
 	end
 
 	local function updateWeightPFRPG2()
 		-- luacheck: globals bulk
-		bulk.setVisible(bVisWt)
+		bVisWt = bVisWt or (bulk.getValue() ~= '')
 		bulk_label.setVisible(bVisWt)
+		bulk.setVisible(bVisWt)
 		container_bulk_label.setVisible(bVisWt and bIsContainer)
 	end
 
