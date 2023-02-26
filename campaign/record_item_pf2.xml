@@ -20,7 +20,8 @@
 				</anchored>
 				<tooltip textres="item_tooltip_extraplanarcontents_bulk" />
 				<readonly />
-				<script file="campaign/scripts/extraplanarcontents.lua" />
+				<fieldname>capacityweight</fieldname>
+				<script file="campaign/scripts/colorcoding.lua" />
 			</number_columnh>
 			<label_fieldtop name="extraplanarcontents_label">
 				<anchored to="extraplanarcontents" />
@@ -31,7 +32,8 @@
 				<anchored to="extraplanarcontents" position="righthigh" offset="10,0" width="52" height="20" />
 				<tooltip textres="item_tooltip_contentsvolume" />
 				<readonly />
-				<script file="campaign/scripts/contentsvolume.lua" />
+				<fieldname>internal_volume</fieldname>
+				<script file="campaign/scripts/colorcoding.lua" />
 			</basicnumber>
 			<label_fieldtop name="contentsvolume_label">
 				<anchored to="contentsvolume" />
