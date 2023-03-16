@@ -24,7 +24,11 @@ local function updateWeight()
 		container_bulk_label.setVisible(bVisWt and bIsContainer)
 	end
 
-	if bulk then updateWeightPFRPG2() else updateWeightGeneral() end
+	if bulk then
+		updateWeightPFRPG2()
+	else
+		updateWeightGeneral()
+	end
 
 	local bVisCW = bIsContainer or capacityweight.getValue() ~= 0
 	capacityweight.setVisible(bVisCW)
