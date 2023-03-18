@@ -194,7 +194,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 			elseif bIsInContainer and table_containers_mundane[string_item_location]['nodeItem'] then
 				local sLocNode = DB.getPath(table_containers_mundane[string_item_location]['nodeItem'])
 				DB.setValue(node_item, 'locationshortcut', 'windowreference', 'item', sLocNode)
-			elseif node_item.getChild('locationshortcut') then
+			elseif DB.getChild(node_item, 'locationshortcut') then
 				DB.deleteChild(node_item, 'locationshortcut') -- not sure if this ever runs
 			end
 		end
@@ -312,7 +312,7 @@ local function onItemUpdate(node) updateContainers(DB.getChild(node, '...')) end
 local function calcDefaultInventoryEncumbrance_new(node_char)
 	local totalweight = 0
 	for _, string_itemlist in pairs(ItemManager.getInventoryPaths('charsheet')) do
-		local node_inventory = node_char.getChild(string_itemlist)
+		local node_inventory = DB.getChild(node_char, string_itemlist)
 		if node_inventory then totalweight = totalweight + updateContainers(node_inventory) end
 	end
 	return totalweight
