@@ -25,7 +25,7 @@ tContainers = { 'container', 'backpack', 'satchel', 'quiver', 'chest', 'purse', 
 
 --	luacheck: globals tAnnounce
 tAnnounce = {
-	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight', ['sIgnoreFn'] = getIgnoreWeight },
+	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight' },
 	['announcedC'] = { ['sDesc'] = 'contents', ['sNodeName'] = 'contentscount', ['sMaxNodeName'] = 'capacitycount' },
 	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
 }
@@ -104,10 +104,10 @@ local function build_containers(node_inventory)
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
 				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
 				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
-				['nIgnoreWeight'] = 0,
+				['nIgnoreWeight'] = getIgnoreWeight(node_item),
 				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
-				['nTotalWeight'] = getIgnoreWeight(node_item),
+				['nTotalWeight'] = 0,
 				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
@@ -119,10 +119,10 @@ local function build_containers(node_inventory)
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
 				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
 				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
-				['nIgnoreWeight'] = 0,
+				['nIgnoreWeight'] = getIgnoreWeight(node_item),
 				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
-				['nTotalWeight'] = getIgnoreWeight(node_item),
+				['nTotalWeight'] = 0,
 				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
