@@ -23,6 +23,13 @@ tExtraplanarContainers = {
 --	luacheck: globals tContainers
 tContainers = { 'container', 'backpack', 'satchel', 'quiver', 'chest', 'purse', 'pouch', 'sack', 'bag', 'box' }
 
+--	luacheck: globals tAnnounce
+tAnnounce = {
+	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight', ['sIgnoreFn'] = getIgnoreWeight },
+	['announcedC'] = { ['sDesc'] = 'contents', ['sNodeName'] = 'contentscount', ['sMaxNodeName'] = 'capacitycount' },
+	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
+}
+
 --- This function figures out how many decimal places to round to.
 --	If the total weight is greater than or equal to 100, it recommends 0 (whole numbers).
 --	If it's greater than or equal to 10, it recommends 1.

@@ -29,20 +29,14 @@ end
 
 -- everything below here is responsible for setting the weight to red if the container is overfull
 
-local tTooltips = {
-	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight' },
-	['announcedC'] = { ['sDesc'] = 'contents', ['sNodeName'] = 'contentscount', ['sMaxNodeName'] = 'capacitycount' },
-	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
-}
-
 local function tooltip(node)
 	local sNodeName = DB.getName(node)
-	if not sNodeName or not tTooltips[sNodeName] then return end
-	return string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]['sDesc'])
+	if not sNodeName or not AmmunitionManager.tAnnounce[sNodeName] then return end
+	return string.format(Interface.getString('item_tooltip_overfull'), AmmunitionManager.tAnnounce[sNodeName]['sDesc'])
 		.. '\n'
-		.. DB.getValue(node, '..' .. tTooltips[sNodeName]['sNodeName'], 'unknown')
+		.. DB.getValue(node, '..' .. AmmunitionManager.tAnnounce[sNodeName]['sNodeName'], 'unknown')
 		.. ' > '
-		.. DB.getValue(node, '..' .. tTooltips[sNodeName]['sMaxNodeName'], 'unknown')
+		.. DB.getValue(node, '..' .. AmmunitionManager.tAnnounce[sNodeName]['sMaxNodeName'], 'unknown')
 end
 
 local function setWindowcontrolColors(node, sFrame)
@@ -62,7 +56,7 @@ function onInit()
 	if super and super.onInit then super.onInit() end
 	local nodeItem = window.getDatabaseNode()
 	local sItemPath = DB.getPath(nodeItem)
-	for sNodeName, _ in pairs(tTooltips) do
+	for sNodeName, _ in pairs(AmmunitionManager.tAnnounce) do
 		local sEncumbranceAnnouncePath = sItemPath .. '.' .. sNodeName
 		setWindowcontrolColors(DB.findNode(sEncumbranceAnnouncePath))
 		DB.addHandler(sEncumbranceAnnouncePath, 'onUpdate', onUnannounced)
@@ -75,7 +69,7 @@ function onClose()
 	if super and super.onClose then super.onClose() end
 	local nodeItem = window.getDatabaseNode()
 	local sItemPath = DB.getPath(nodeItem)
-	for sNodeName, _ in pairs(tTooltips) do
+	for sNodeName, _ in pairs(AmmunitionManager.tAnnounce) do
 		local sEncumbranceAnnouncePath = sItemPath .. '.' .. sNodeName
 		DB.removeHandler(sEncumbranceAnnouncePath, 'onUpdate', onUnannounced)
 	end
