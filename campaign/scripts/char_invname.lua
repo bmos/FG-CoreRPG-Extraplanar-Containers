@@ -2,7 +2,7 @@
 --	Please see the LICENSE.md file included with this distribution for attribution and copyright information.
 --
 
--- luacheck: globals onDoubleClick onLoseFocus
+-- luacheck: globals onDoubleClick onLoseFocus ExtraplanarContainers.tAnnounce
 
 function onDoubleClick()
 	local nodeItem = window.getDatabaseNode()
