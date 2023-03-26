@@ -35,41 +35,50 @@ local tTooltips = {
 	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
 }
 
-local function setWindowcontrolColors(node, bHighlight)
-	local sTooltip = ''
+local function tooltip(node)
 	local sNodeName = DB.getName(node)
-	if not tTooltips[sNodeName] then return end
-
-	if bHighlight then
-		sTooltip = string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]['sDesc'])
-		sTooltip = sTooltip .. '\n' .. DB.getValue(node, '..' .. tTooltips[sNodeName]['sNodeName'], 'unknown')
-		sTooltip = sTooltip .. ' > ' .. DB.getValue(node, '..' .. tTooltips[sNodeName]['sMaxNodeName'], 'unknown')
-	end
-	window.weight.setTooltipText(sTooltip)
-
-	if bHighlight then
-		window.weight.setFrame('required', 7, 5, 7, 5)
-	else
-		window.weight.setFrame('fielddark', 7, 5, 7, 5)
-	end
+	if not sNodeName or not tTooltips[sNodeName] then return end
+	return string.format(Interface.getString('item_tooltip_overfull'), tTooltips[sNodeName]['sDesc'])
+		.. '\n'
+		.. DB.getValue(node, '..' .. tTooltips[sNodeName]['sNodeName'], 'unknown')
+		.. ' > '
+		.. DB.getValue(node, '..' .. tTooltips[sNodeName]['sMaxNodeName'], 'unknown')
 end
 
-local function onAnnounced(_, child) setWindowcontrolColors(child, true) end
+local function setWindowcontrolColors(node, sFrame)
+	local sTooltip = tooltip(node)
+	if not sTooltip then return end
 
-local function onUnannounced(source) setWindowcontrolColors(source, false) end
+	window.weight.setTooltipText(sTooltip)
+
+	if sFrame then window.weight.setFrame(sFrame, 7, 5, 7, 5) end
+end
+
+local function onAnnounced(_, child) setWindowcontrolColors(child, 'required') end
+
+local function onUnannounced(source) setWindowcontrolColors(source, 'fielddark') end
 
 function onInit()
-	for sNodeName, _ in pairs(tTooltips) do
-		local nodeWeightAnnounced = DB.getChild(window.getDatabaseNode(), sNodeName)
-		if nodeWeightAnnounced then onAnnounced(nil, nodeWeightAnnounced) end
-	end
 	if super and super.onInit then super.onInit() end
-	DB.addHandler(DB.getPath(window.getDatabaseNode()), 'onChildAdded', onAnnounced)
-	DB.addHandler(DB.getPath(window.getDatabaseNode()) .. '.*', 'onDelete', onUnannounced)
+	local nodeItem = window.getDatabaseNode()
+	local sItemPath = DB.getPath(nodeItem)
+	for sNodeName, _ in pairs(tTooltips) do
+		local sEncumbranceAnnouncePath = sItemPath .. '.' .. sNodeName
+		setWindowcontrolColors(DB.findNode(sEncumbranceAnnouncePath))
+		DB.addHandler(sEncumbranceAnnouncePath, 'onUpdate', onUnannounced)
+	end
+	DB.addHandler(sItemPath, 'onChildAdded', onAnnounced)
+	DB.addHandler(sItemPath .. '.*', 'onDelete', onUnannounced)
 end
 
 function onClose()
 	if super and super.onClose then super.onClose() end
-	DB.removeHandler(DB.getPath(window.getDatabaseNode()), 'onChildAdded', onAnnounced)
-	DB.removeHandler(DB.getPath(window.getDatabaseNode()) .. '.*', 'onDelete', onUnannounced)
+	local nodeItem = window.getDatabaseNode()
+	local sItemPath = DB.getPath(nodeItem)
+	for sNodeName, _ in pairs(tTooltips) do
+		local sEncumbranceAnnouncePath = sItemPath .. '.' .. sNodeName
+		DB.removeHandler(sEncumbranceAnnouncePath, 'onUpdate', onUnannounced)
+	end
+	DB.removeHandler(sItemPath, 'onChildAdded', onAnnounced)
+	DB.removeHandler(sItemPath .. '.*', 'onDelete', onUnannounced)
 end
