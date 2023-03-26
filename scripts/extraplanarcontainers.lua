@@ -30,6 +30,9 @@ tAnnounce = {
 	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
 }
 
+--	luacheck: globals sRuleset
+local sRuleset
+
 --- This function figures out how many decimal places to round to.
 --	If the total weight is greater than or equal to 100, it recommends 0 (whole numbers).
 --	If it's greater than or equal to 10, it recommends 1.
@@ -72,9 +75,15 @@ end
 --	luacheck: globals isAnyContainer
 function isAnyContainer(sItemName)
 	if not sItemName or sItemName == '' then return end
-
 	local sItemNameLower = string.lower(sItemName)
 	return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
+end
+
+-- luacheck: globals getIgnoreWeight
+function getIgnoreWeight(node_item)
+	if sRuleset ~= 'PFRPG2' then return 0 end
+	local sBulkSearch = "the first (%d+) bulk of these items don't count against your bulk limits"
+	return tonumber(string.match(DB.getValue(node_item, 'description', ''), sBulkSearch) or 0) * -1
 end
 
 --	looks through provided charsheet for inventory items that are containers
@@ -95,9 +104,10 @@ local function build_containers(node_inventory)
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
 				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
 				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
+				['nIgnoreWeight'] = 0,
 				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
-				['nTotalWeight'] = 0,
+				['nTotalWeight'] = getIgnoreWeight(node_item),
 				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
@@ -109,9 +119,10 @@ local function build_containers(node_inventory)
 				['nMaxWidth'] = DB.getValue(node_item, 'internal_width', 0),
 				['nMaxVolume'] = DB.getValue(node_item, 'internal_volume', 0),
 				['nMaxWeight'] = DB.getValue(node_item, 'capacityweight', 0),
+				['nIgnoreWeight'] = 0,
 				['nMaxCount'] = DB.getValue(node_item, 'capacitycount', 0),
 				['nTotalVolume'] = 0,
-				['nTotalWeight'] = 0,
+				['nTotalWeight'] = getIgnoreWeight(node_item),
 				['nTotalItems'] = 0,
 				['nodeItem'] = node_item,
 			}
@@ -133,7 +144,8 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 		local messagedata = { text = '', sender = rActor.sName, font = 'emotefont' }
 
 		-- check weight of contents and announce if excessive
-		if table_container['nMaxWeight'] > 0 and table_container['nTotalWeight'] > table_container['nMaxWeight'] then
+		local nWeightMinusIgnored = table_container['nTotalWeight'] - table_container['nIgnoreWeight']
+		if table_container['nMaxWeight'] > 0 and nWeightMinusIgnored > table_container['nMaxWeight'] then
 			if not DB.getChild(table_container['nodeItem'], 'announcedW') then
 				DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
 				messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much weight')
@@ -210,6 +222,8 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 		if state_item_carried ~= 0 then
 			local number_item_weight = DB.getValue(node_item, 'weight', 0)
 			local number_item_count = DB.getValue(node_item, 'count', 0)
+			local number_item_total_weight = number_item_count * number_item_weight
+
 			-- add up subtotals of container contents and put them in the table
 			if state_item_carried ~= 2 and bIsInExtraplanar then
 				if table_containers_extraplanar[string_item_location] then
@@ -240,7 +254,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 			elseif state_item_carried ~= 2 and (bIsInContainer and not bIsInExtraplanar) then
 				if table_containers_mundane[string_item_location] then
 					table_containers_mundane[string_item_location]['nTotalWeight'] = (
-						table_containers_mundane[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
+						table_containers_mundane[string_item_location]['nTotalWeight'] + number_item_total_weight
 					)
 					if OptionsManager.isOption('EXTRAPLANAR_COUNT', 'on') then
 						table_containers_mundane[string_item_location]['nTotalItems'] = (
@@ -265,11 +279,10 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					local string_item_location_location =
 						string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
 					if not table_containers_extraplanar[string_item_location_location] then
-						number_total_weight = number_total_weight + (number_item_count * number_item_weight)
+						number_total_weight = number_total_weight + number_item_total_weight
 					else
 						table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = (
-							table_containers_extraplanar[string_item_location_location]['nTotalWeight']
-							+ (number_item_count * number_item_weight)
+							table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + number_item_total_weight
 						)
 						if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 							table_containers_extraplanar[string_item_location_location]['nTotalVolume'] = (
@@ -280,7 +293,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					end
 				end
 			else
-				number_total_weight = number_total_weight + (number_item_count * number_item_weight)
+				number_total_weight = number_total_weight + number_item_total_weight
 			end
 		end
 	end
@@ -332,6 +345,8 @@ local function setDefaultEncumbranceValue_new(nodeChar, nEncumbrance)
 end
 
 function onInit()
+	sRuleset = User.getRulesetName()
+
 	OptionsManager.registerOption2(
 		'EXTRAPLANAR_VOLUME',
 		false,
