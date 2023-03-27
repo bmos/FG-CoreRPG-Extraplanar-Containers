@@ -80,10 +80,12 @@ function isAnyContainer(sItemName)
 end
 
 -- luacheck: globals getIgnoreWeight
-function getIgnoreWeight(node_item)
-	if sRuleset ~= 'PFRPG2' then return 0 end
-	local sBulkSearch = "the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits"
-	return tonumber(string.match(DB.getValue(node_item, 'description', ''), sBulkSearch) or 0)
+function getIgnoreWeight(nodeItem)
+	local sDescription = string.lower(DB.getValue(nodeItem, 'description', ''))
+	if sRuleset ~= 'PFRPG2' or sDescription == '<p />' then return 0 end
+	local sBulkSearch = ".*the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits.*"
+	local nIgnore = tonumber(string.match(sDescription, sBulkSearch) or 0)
+	return nIgnore
 end
 
 --	looks through provided charsheet for inventory items that are containers
