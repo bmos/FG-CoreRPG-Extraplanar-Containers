@@ -29,9 +29,9 @@ tContainers = { 'container', 'backpack', 'satchel', 'quiver', 'chest', 'purse', 
 --	luacheck: globals tIgnoreWeight
 tIgnoreWeight = {
 	PFRPG2 = {
-		sFieldName = "description",
+		sFieldName = 'description',
 		sFieldSearch = ".*the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits.*",
-	}
+	},
 }
 
 --	luacheck: globals tAnnounce
