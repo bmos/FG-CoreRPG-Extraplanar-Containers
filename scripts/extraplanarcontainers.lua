@@ -82,7 +82,7 @@ end
 -- luacheck: globals getIgnoreWeight
 function getIgnoreWeight(node_item)
 	if sRuleset ~= 'PFRPG2' then return 0 end
-	local sBulkSearch = "the first (%d+) bulk of these items don't count against your bulk limits"
+	local sBulkSearch = "the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits"
 	return tonumber(string.match(DB.getValue(node_item, 'description', ''), sBulkSearch) or 0)
 end
 
