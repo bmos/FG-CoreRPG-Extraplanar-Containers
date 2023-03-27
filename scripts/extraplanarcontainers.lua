@@ -83,7 +83,7 @@ end
 function getIgnoreWeight(node_item)
 	if sRuleset ~= 'PFRPG2' then return 0 end
 	local sBulkSearch = "the first (%d+) bulk of these items don't count against your bulk limits"
-	return tonumber(string.match(DB.getValue(node_item, 'description', ''), sBulkSearch) or 0) * -1
+	return tonumber(string.match(DB.getValue(node_item, 'description', ''), sBulkSearch) or 0)
 end
 
 --	looks through provided charsheet for inventory items that are containers
@@ -144,8 +144,7 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 		local messagedata = { text = '', sender = rActor.sName, font = 'emotefont' }
 
 		-- check weight of contents and announce if excessive
-		local nWeightMinusIgnored = table_container['nTotalWeight'] - table_container['nIgnoreWeight']
-		if table_container['nMaxWeight'] > 0 and nWeightMinusIgnored > table_container['nMaxWeight'] then
+		if table_container['nMaxWeight'] > 0 and table_container['nTotalWeight'] > table_container['nMaxWeight'] then
 			if not DB.getChild(table_container['nodeItem'], 'announcedW') then
 				DB.setValue(table_container['nodeItem'], 'announcedW', 'number', 1)
 				messagedata.text = string.format(Interface.getString(string_error), string_item_name, 'too much weight')
@@ -278,9 +277,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					end
 					local string_item_location_location =
 						string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
-					if not table_containers_extraplanar[string_item_location_location] then
-						number_total_weight = number_total_weight + number_item_total_weight
-					else
+					if table_containers_extraplanar[string_item_location_location] then
 						table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = (
 							table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + number_item_total_weight
 						)
@@ -296,6 +293,13 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 				number_total_weight = number_total_weight + number_item_total_weight
 			end
 		end
+	end
+	for k, v in pairs(table_containers_mundane) do -- add up mundane container weight subtotals and remove ignore value
+		table_containers_mundane[k]['nTotalWeight'] = math.max(v['nTotalWeight'] - v['nIgnoreWeight'], 0)
+		number_total_weight = number_total_weight + table_containers_mundane[k]['nTotalWeight']
+	end
+	for k, v in pairs(table_containers_extraplanar) do -- remove ignore value from extraplanar containers
+		table_containers_extraplanar[k]['nTotalWeight'] = math.max(v['nTotalWeight'] - v['nIgnoreWeight'], 0)
 	end
 
 	return number_total_weight
