@@ -23,6 +23,17 @@ tExtraplanarContainers = {
 --	luacheck: globals tContainers
 tContainers = { 'container', 'backpack', 'satchel', 'quiver', 'chest', 'purse', 'pouch', 'sack', 'bag', 'box' }
 
+--	some rulesets allow the first x weight in a container to be ignored
+--	sFieldName is the name of the DB subnode to look in
+--	sFieldSearch is the search string that allows string.match to find the right value
+--	luacheck: globals tIgnoreWeight
+tIgnoreWeight = {
+	PFRPG2 = {
+		sFieldName = "description",
+		sFieldSearch = ".*the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits.*",
+	}
+}
+
 --	luacheck: globals tAnnounce
 tAnnounce = {
 	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight' },
@@ -81,11 +92,12 @@ end
 
 -- luacheck: globals getIgnoreWeight
 function getIgnoreWeight(nodeItem)
-	local sDescription = string.lower(DB.getValue(nodeItem, 'description', ''))
-	if sRuleset ~= 'PFRPG2' or sDescription == '<p />' then return 0 end
-	local sBulkSearch = ".*the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits.*"
-	local nIgnore = tonumber(string.match(sDescription, sBulkSearch) or 0)
-	return nIgnore
+	if not tIgnoreWeight[sRuleset] then return 0 end
+
+	local sFieldString = string.lower(DB.getValue(nodeItem, tIgnoreWeight[sRuleset].sFieldName, ''))
+	if sFieldString == '' or sFieldString == '<p />' then return 0 end
+
+	return tonumber(string.match(sFieldString, tIgnoreWeight[sRuleset].sFieldSearch or '') or 0)
 end
 
 --	looks through provided charsheet for inventory items that are containers
