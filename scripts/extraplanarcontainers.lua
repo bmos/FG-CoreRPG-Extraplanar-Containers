@@ -7,6 +7,7 @@
 --	luacheck: globals tExtraplanarContainers
 tExtraplanarContainers = {
 	'knapsack of halflingkind',
+	'null-space chamber',
 	'quiver of ehlonna',
 	'efficient quiver',
 	'handy haversack',
