@@ -48,7 +48,7 @@ local function setWindowcontrolColors(node, sFrame)
 	if sFrame then window.weight.setFrame(sFrame, 7, 5, 7, 5) end
 end
 
-local function onAnnounced(_, child) setWindowcontrolColors(child, 'required') end
+local function onAnnounced(_, child) setWindowcontrolColors(child, 'fieldrequired') end
 
 local function onUnannounced(source) setWindowcontrolColors(source, 'fielddark') end
 
