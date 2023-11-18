@@ -5,7 +5,7 @@ This extension provides support for extraplanar containers by ignoring the weigh
 It also makes working with large inventories easier by allowing supported containers to be collapsed/expanded via double-click.
 
 # Compatibility and Instructions
-This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) v4.3.8 (2023-04-25).
+This extension has been tested with [FantasyGrounds Unity](https://www.fantasygrounds.com/home/FantasyGroundsUnity.php) v4.4.6 (2023-11-07).
 
 This works with CoreRPG, 2E, 3.5E, 5E, PFRPG, and possibly more, although the item names it looks for are based on Pathfinder 1e.
 
