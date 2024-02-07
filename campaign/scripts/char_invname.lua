@@ -7,7 +7,9 @@
 function onDoubleClick()
 	local nodeItem = window.getDatabaseNode()
 	local sName = DB.getValue(nodeItem, 'name', '')
-	if not ExtraplanarContainers.isAnyContainer(sName) then return false end
+	if not ExtraplanarContainers.isAnyContainer(sName) then
+		return false
+	end
 
 	local sNonIDName = DB.getValue(nodeItem, 'nonid_name', '')
 	if not sName:match('%[%+%]%s+') then
@@ -31,7 +33,9 @@ end
 
 local function tooltip(node)
 	local sNodeName = DB.getName(node)
-	if not sNodeName or not ExtraplanarContainers.tAnnounce[sNodeName] then return end
+	if not sNodeName or not ExtraplanarContainers.tAnnounce[sNodeName] then
+		return
+	end
 	return string.format(Interface.getString('item_tooltip_overfull'), ExtraplanarContainers.tAnnounce[sNodeName]['sDesc'])
 		.. '\n'
 		.. DB.getValue(node, '..' .. ExtraplanarContainers.tAnnounce[sNodeName]['sNodeName'], 'unknown')
@@ -41,19 +45,29 @@ end
 
 local function setWindowcontrolColors(node, sFrame)
 	local sTooltip = tooltip(node)
-	if not sTooltip then return end
+	if not sTooltip then
+		return
+	end
 
 	window.weight.setTooltipText(sTooltip)
 
-	if sFrame then window.weight.setFrame(sFrame, 7, 5, 7, 5) end
+	if sFrame then
+		window.weight.setFrame(sFrame, 7, 5, 7, 5)
+	end
 end
 
-local function onAnnounced(_, child) setWindowcontrolColors(child, 'fieldrequired') end
+local function onAnnounced(_, child)
+	setWindowcontrolColors(child, 'fieldrequired')
+end
 
-local function onUnannounced(source) setWindowcontrolColors(source, 'fielddark') end
+local function onUnannounced(source)
+	setWindowcontrolColors(source, 'fielddark')
+end
 
 function onInit()
-	if super and super.onInit then super.onInit() end
+	if super and super.onInit then
+		super.onInit()
+	end
 	local nodeItem = window.getDatabaseNode()
 	local sItemPath = DB.getPath(nodeItem)
 	for sNodeName, _ in pairs(ExtraplanarContainers.tAnnounce) do
@@ -66,7 +80,9 @@ function onInit()
 end
 
 function onClose()
-	if super and super.onClose then super.onClose() end
+	if super and super.onClose then
+		super.onClose()
+	end
 	local nodeItem = window.getDatabaseNode()
 	local sItemPath = DB.getPath(nodeItem)
 	for sNodeName, _ in pairs(ExtraplanarContainers.tAnnounce) do

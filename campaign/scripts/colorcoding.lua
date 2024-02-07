@@ -5,7 +5,9 @@
 
 function onValueChanged()
 	local sFieldName = fieldname[1]
-	if not sFieldName then return end
+	if not sFieldName then
+		return
+	end
 
 	local nCompare = window[sFieldName].getValue()
 	if (nCompare == 0) or (getValue() < nCompare) then

@@ -37,7 +37,11 @@ tIgnoreWeight = {
 
 --	luacheck: globals tAnnounce
 tAnnounce = {
-	['announcedW'] = { ['sDesc'] = 'weight', ['sNodeName'] = 'extraplanarcontents', ['sMaxNodeName'] = 'capacityweight' },
+	['announcedW'] = {
+		['sDesc'] = 'weight',
+		['sNodeName'] = 'extraplanarcontents',
+		['sMaxNodeName'] = 'capacityweight',
+	},
 	['announcedC'] = { ['sDesc'] = 'contents', ['sNodeName'] = 'contentscount', ['sMaxNodeName'] = 'capacitycount' },
 	['announcedV'] = { ['sDesc'] = 'volume', ['sNodeName'] = 'contentsvolume', ['sMaxNodeName'] = 'internal_volume' },
 }
@@ -69,16 +73,22 @@ end
 function round(number)
 	local n = 10 ^ (determineRounding(number) or 0)
 	number = number * n
-	if number < 0 then return math.ceil(number - 0.5) / n end
+	if number < 0 then
+		return math.ceil(number - 0.5) / n
+	end
 	return math.floor(number + 0.5) / n
 end
 
 --	searches for provided sItemName in provided tTable.
 --	the name doesn't have to be an exact match.
 local function isContainer(sItemName, tTable)
-	if not sItemName or not tTable then return nil end
+	if not sItemName or not tTable then
+		return nil
+	end
 	for _, v in pairs(tTable) do
-		if string.find(sItemName, v) then return true end
+		if string.find(sItemName, v) then
+			return true
+		end
 	end
 end
 
@@ -86,17 +96,23 @@ end
 --	returns true if either is a match
 --	luacheck: globals isAnyContainer
 function isAnyContainer(sItemName)
-	if not sItemName or sItemName == '' then return end
+	if not sItemName or sItemName == '' then
+		return
+	end
 	local sItemNameLower = string.lower(sItemName)
 	return isContainer(sItemNameLower, tExtraplanarContainers) or isContainer(sItemNameLower, tContainers)
 end
 
 -- luacheck: globals getIgnoreWeight
 function getIgnoreWeight(nodeItem)
-	if not tIgnoreWeight[sRuleset] then return 0 end
+	if not tIgnoreWeight[sRuleset] then
+		return 0
+	end
 
 	local sFieldString = string.lower(DB.getValue(nodeItem, tIgnoreWeight[sRuleset].sFieldName, ''))
-	if sFieldString == '' or sFieldString == '<p />' then return 0 end
+	if sFieldString == '' or sFieldString == '<p />' then
+		return 0
+	end
 
 	return tonumber(string.match(sFieldString, tIgnoreWeight[sRuleset].sFieldSearch or '') or 0)
 end
@@ -166,7 +182,9 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 				Comm.deliverChatMessage(messagedata)
 			end
 		else
-			if DB.getChild(table_container['nodeItem'], 'announcedW') then DB.deleteChild(table_container['nodeItem'], 'announcedW') end
+			if DB.getChild(table_container['nodeItem'], 'announcedW') then
+				DB.deleteChild(table_container['nodeItem'], 'announcedW')
+			end
 		end
 
 		-- check number of items in contianer and announce if excessive
@@ -178,10 +196,14 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
-				if DB.getChild(table_container['nodeItem'], 'announcedC') then DB.deleteChild(table_container['nodeItem'], 'announcedC') end
+				if DB.getChild(table_container['nodeItem'], 'announcedC') then
+					DB.deleteChild(table_container['nodeItem'], 'announcedC')
+				end
 			end
 		else
-			if DB.getChild(table_container['nodeItem'], 'announcedC') then DB.deleteChild(table_container['nodeItem'], 'announcedC') end
+			if DB.getChild(table_container['nodeItem'], 'announcedC') then
+				DB.deleteChild(table_container['nodeItem'], 'announcedC')
+			end
 		end
 
 		-- check volume of contents and announce if excessive
@@ -199,10 +221,14 @@ local function write_contents_to_containers(node_inventory, table_containers, st
 					Comm.deliverChatMessage(messagedata)
 				end
 			else
-				if DB.getChild(table_container['nodeItem'], 'announcedV') then DB.deleteChild(table_container['nodeItem'], 'announcedV') end
+				if DB.getChild(table_container['nodeItem'], 'announcedV') then
+					DB.deleteChild(table_container['nodeItem'], 'announcedV')
+				end
 			end
 		else
-			if DB.getChild(table_container['nodeItem'], 'announcedV') then DB.deleteChild(table_container['nodeItem'], 'announcedV') end
+			if DB.getChild(table_container['nodeItem'], 'announcedV') then
+				DB.deleteChild(table_container['nodeItem'], 'announcedV')
+			end
 		end
 	end
 end
@@ -277,8 +303,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 					end
 					if OptionsManager.isOption('EXTRAPLANAR_VOLUME', 'on') then
 						table_containers_mundane[string_item_location]['nTotalVolume'] = (
-							table_containers_mundane[string_item_location]['nTotalVolume']
-							+ (number_item_count * DB.getValue(node_item, 'volume', 0))
+							table_containers_mundane[string_item_location]['nTotalVolume'] + (number_item_count * DB.getValue(node_item, 'volume', 0))
 						)
 						if table_containers_mundane[string_item_location]['nMaxLength'] < DB.getValue(node_item, 'length', 0) then
 							table_containers_mundane[string_item_location]['bTooBig'] = 1
@@ -290,8 +315,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 							table_containers_mundane[string_item_location]['bTooBig'] = 1
 						end
 					end
-					local string_item_location_location =
-						string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
+					local string_item_location_location = string.lower(DB.getValue(table_containers_mundane[string_item_location]['nodeItem'], 'location', ''))
 					if table_containers_extraplanar[string_item_location_location] then
 						table_containers_extraplanar[string_item_location_location]['nTotalWeight'] = (
 							table_containers_extraplanar[string_item_location_location]['nTotalWeight'] + number_item_total_weight
@@ -339,10 +363,14 @@ end
 --
 
 -- called when items are deleted
-local function onItemDeleted(node) updateContainers(node) end
+local function onItemDeleted(node)
+	updateContainers(node)
+end
 
 -- called when items have their details changed
-local function onItemUpdate(node) updateContainers(DB.getChild(node, '...')) end
+local function onItemUpdate(node)
+	updateContainers(DB.getChild(node, '...'))
+end
 
 --
 --	FUNCTION REPLACEMENT
@@ -352,7 +380,9 @@ local function calcDefaultInventoryEncumbrance_new(node_char)
 	local totalweight = 0
 	for _, string_itemlist in pairs(ItemManager.getInventoryPaths('charsheet')) do
 		local node_inventory = DB.getChild(node_char, string_itemlist)
-		if node_inventory then totalweight = totalweight + updateContainers(node_inventory) end
+		if node_inventory then
+			totalweight = totalweight + updateContainers(node_inventory)
+		end
 	end
 	return totalweight
 end
@@ -386,7 +416,9 @@ function onInit()
 	CharEncumbranceManager.calcDefaultInventoryEncumbrance = calcDefaultInventoryEncumbrance_new
 	CharEncumbranceManager.setDefaultEncumbranceValue = setDefaultEncumbranceValue_new
 
-	if not Session.IsHost then return end
+	if not Session.IsHost then
+		return
+	end
 	for _, sItemListNodeName in pairs(ItemManager.getInventoryPaths('charsheet')) do
 		local sItemList = 'charsheet.*.' .. sItemListNodeName
 		DB.addHandler(DB.getPath(sItemList .. '.*.capacityweight'), 'onUpdate', onItemUpdate)

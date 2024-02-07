@@ -9,7 +9,9 @@ function onFilter(w)
 	local nodeWindow = w.getDatabaseNode()
 	local _, sLocNode = DB.getValue(nodeWindow, 'locationshortcut')
 	local nodeContainer = DB.findNode(sLocNode or '')
-	if not nodeContainer then return true end
+	if not nodeContainer then
+		return true
+	end
 
 	-- kind of a hacked-up fix
 	if DB.getValue(nodeWindow, 'location', '') == '' then
@@ -22,7 +24,9 @@ function onFilter(w)
 		return false
 	elseif sContainerLocNode then -- if container is inside another container (max one level deep).
 		local nodeContainerContainer = DB.findNode(sContainerLocNode)
-		if DB.getValue(nodeContainerContainer, 'name', ''):match('%[%+%]%s+') then return false end
+		if DB.getValue(nodeContainerContainer, 'name', ''):match('%[%+%]%s+') then
+			return false
+		end
 	end
 	return true
 end

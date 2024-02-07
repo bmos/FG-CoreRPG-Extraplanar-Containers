@@ -74,7 +74,9 @@ local function updateVolume()
 end
 
 function update(...)
-	if super and super.update then super.update(...) end
+	if super and super.update then
+		super.update(...)
+	end
 
 	bIsContainer = ExtraplanarContainers.isAnyContainer(DB.getValue(getDatabaseNode(), 'name'))
 
@@ -86,6 +88,8 @@ function update(...)
 end
 
 function onInit()
-	if super and super.onInit then super.onInit() end
+	if super and super.onInit then
+		super.onInit()
+	end
 	update()
 end

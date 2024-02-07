@@ -7,4 +7,6 @@ function getVolume()
 	window.contentsvolume.onValueChanged()
 end
 
-function onValueChanged() window.contentsvolume.onValueChanged() end
+function onValueChanged()
+	window.contentsvolume.onValueChanged()
+end

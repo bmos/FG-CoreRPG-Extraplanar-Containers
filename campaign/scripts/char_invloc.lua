@@ -28,7 +28,9 @@ function onGainFocus()
 		local bID = LibraryData.getIDState('item', w.getDatabaseNode())
 		if bID then
 			local s = string.gsub(w.name.getValue(), '%[%+%]%s+', '')
-			if s ~= '' then table.insert(aAutoFill, s) end
+			if s ~= '' then
+				table.insert(aAutoFill, s)
+			end
 		end
 	end
 
