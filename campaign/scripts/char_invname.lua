@@ -74,6 +74,10 @@ function onInit()
 		local sEncumbranceAnnouncePath = sItemPath .. '.' .. sNodeName
 		setWindowcontrolColors(DB.findNode(sEncumbranceAnnouncePath))
 		DB.addHandler(sEncumbranceAnnouncePath, 'onUpdate', onUnannounced)
+		local nodeAnnounce = DB.findNode(sEncumbranceAnnouncePath)
+		if nodeAnnounce then
+			onAnnounced(_, nodeAnnounce)
+		end
 	end
 	DB.addHandler(sItemPath, 'onChildAdded', onAnnounced)
 	DB.addHandler(sItemPath .. '.*', 'onDelete', onUnannounced)
