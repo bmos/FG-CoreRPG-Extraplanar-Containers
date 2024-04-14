@@ -265,7 +265,9 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 			local number_item_total_weight = number_item_count * number_item_weight
 
 			-- add up subtotals of container contents and put them in the table
-			if state_item_carried ~= 2 and bIsInExtraplanar then
+			if state_item_carried == 2 then
+				number_total_weight = number_total_weight + number_item_total_weight
+			elseif bIsInExtraplanar then
 				if table_containers_extraplanar[string_item_location] then
 					table_containers_extraplanar[string_item_location]['nTotalWeight'] = (
 						table_containers_extraplanar[string_item_location]['nTotalWeight'] + (number_item_count * number_item_weight)
@@ -291,7 +293,7 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 						end
 					end
 				end
-			elseif state_item_carried ~= 2 and (bIsInContainer and not bIsInExtraplanar) then
+			elseif bIsInContainer and not bIsInExtraplanar then
 				if table_containers_mundane[string_item_location] then
 					table_containers_mundane[string_item_location]['nTotalWeight'] = (
 						table_containers_mundane[string_item_location]['nTotalWeight'] + number_item_total_weight
