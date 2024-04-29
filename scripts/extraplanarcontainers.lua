@@ -34,6 +34,7 @@ tIgnoreWeight = {
 		sFieldSearch = ".*the first (%d+) bulk o?f? ?t?h?e?s?e? ?i?t?e?m?s? ?don't count against your bulk limits.*",
 	},
 }
+tIgnoreWeight["PFRPG2-Legacy"] = tIgnoreWeight["PFRPG2"]
 
 --	luacheck: globals tAnnounce
 tAnnounce = {
