@@ -64,9 +64,8 @@ local function determineRounding(number)
 		return 1
 	elseif number >= 1 then
 		return 2
-	else
-		return 3
 	end
+	return 3
 end
 
 -- luacheck: globals round
