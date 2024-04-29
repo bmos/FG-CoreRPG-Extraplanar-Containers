@@ -325,7 +325,10 @@ local function measure_contents(node_inventory, table_containers_mundane, table_
 	end
 	for k, v in pairs(table_containers_mundane) do -- add up mundane container weight subtotals and remove ignore value
 		table_containers_mundane[k]['nTotalWeight'] = math.max(v['nTotalWeight'] - v['nIgnoreWeight'], 0)
-		number_total_weight = number_total_weight + table_containers_mundane[k]['nTotalWeight']
+		local string_item_location = string.lower(DB.getValue(table_containers_mundane[k]['nodeItem'], 'location', '')):gsub('%[%+%]%s+', '')
+		if not table_containers_extraplanar[string_item_location] then
+			number_total_weight = number_total_weight + table_containers_mundane[k]['nTotalWeight']
+		end
 	end
 	for k, v in pairs(table_containers_extraplanar) do -- remove ignore value from extraplanar containers
 		table_containers_extraplanar[k]['nTotalWeight'] = math.max(v['nTotalWeight'] - v['nIgnoreWeight'], 0)
