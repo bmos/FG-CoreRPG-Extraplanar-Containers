@@ -118,6 +118,23 @@ function getIgnoreWeight(nodeItem)
 	return tonumber(string.match(sFieldString, tIgnoreWeight[sRuleset].sFieldSearch or '') or 0)
 end
 
+local function build_container(table, item_name, node_item)
+	table[item_name] = {
+		bTooBig = 0,
+		nMaxDepth = DB.getValue(node_item, 'internal_depth', 0),
+		nMaxLength = DB.getValue(node_item, 'internal_length', 0),
+		nMaxWidth = DB.getValue(node_item, 'internal_width', 0),
+		nMaxVolume = DB.getValue(node_item, 'internal_volume', 0),
+		nMaxWeight = DB.getValue(node_item, 'capacityweight', 0),
+		nIgnoreWeight = getIgnoreWeight(node_item),
+		nMaxCount = DB.getValue(node_item, 'capacitycount', 0),
+		nTotalVolume = 0,
+		nTotalWeight = 0,
+		nTotalItems = 0,
+		nodeItem = node_item
+	}
+end
+
 --	looks through provided charsheet for inventory items that are containers
 --	if found, these are added to table_containers_extraplanar or table_containers_mundane as appropriate
 local function build_containers(node_inventory)
@@ -125,39 +142,10 @@ local function build_containers(node_inventory)
 	local table_containers_extraplanar = {}
 	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', '')):gsub('%[%+%]%s+', '')
-
-		local bool_extraplanar = isContainer(string_item_name, tExtraplanarContainers)
-		local bool_container = isContainer(string_item_name, tContainers)
-		if bool_extraplanar then -- this creates an array keyed to the names of any detected extraplanar storage containers
-			table_containers_extraplanar[string_item_name] = {
-				bTooBig = 0,
-				nMaxDepth = DB.getValue(node_item, 'internal_depth', 0),
-				nMaxLength = DB.getValue(node_item, 'internal_length', 0),
-				nMaxWidth = DB.getValue(node_item, 'internal_width', 0),
-				nMaxVolume = DB.getValue(node_item, 'internal_volume', 0),
-				nMaxWeight = DB.getValue(node_item, 'capacityweight', 0),
-				nIgnoreWeight = getIgnoreWeight(node_item),
-				nMaxCount = DB.getValue(node_item, 'capacitycount', 0),
-				nTotalVolume = 0,
-				nTotalWeight = 0,
-				nTotalItems = 0,
-				nodeItem = node_item,
-			}
-		elseif bool_container and not bool_extraplanar then -- this creates an array keyed to the names of any detected mundane storage containers
-			table_containers_mundane[string_item_name] = {
-				bTooBig = 0,
-				nMaxDepth = DB.getValue(node_item, 'internal_depth', 0),
-				nMaxLength = DB.getValue(node_item, 'internal_length', 0),
-				nMaxWidth = DB.getValue(node_item, 'internal_width', 0),
-				nMaxVolume = DB.getValue(node_item, 'internal_volume', 0),
-				nMaxWeight = DB.getValue(node_item, 'capacityweight', 0),
-				nIgnoreWeight = getIgnoreWeight(node_item),
-				nMaxCount = DB.getValue(node_item, 'capacitycount', 0),
-				nTotalVolume = 0,
-				nTotalWeight = 0,
-				nTotalItems = 0,
-				nodeItem = node_item,
-			}
+		if isContainer(string_item_name, tExtraplanarContainers) then -- this creates an array keyed to the names of any detected extraplanar storage containers
+			build_container(table_containers_extraplanar, string_item_name, node_item)
+		elseif isContainer(string_item_name, tContainers) then -- this creates an array keyed to the names of any detected mundane storage containers
+			build_container(table_containers_mundane, string_item_name, node_item)
 		end
 	end
 
