@@ -355,14 +355,9 @@ end
 --	TRIGGERING
 --
 
--- called when items are deleted
-local function onItemDeleted(node)
-	updateContainers(node)
-end
-
 -- called when items have their details changed
 local function onItemUpdate(node)
-	updateContainers(DB.getChild(node, '...'))
+	CharEncumbranceManager.calcDefaultEncumbrance(DB.getChild(node, '....'))
 end
 
 --
@@ -420,8 +415,5 @@ function onInit()
 		DB.addHandler(DB.getPath(sItemList .. '.*.volume'), 'onUpdate', onItemUpdate)
 
 		DB.addHandler(DB.getPath(sItemList .. '.*.location'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*.count'), 'onUpdate', onItemUpdate)
-		DB.addHandler(DB.getPath(sItemList .. '.*.name'), 'onUpdate', onItemUpdate)
-		DB.addHandler(sItemList, 'onChildDeleted', onItemDeleted)
 	end
 end
