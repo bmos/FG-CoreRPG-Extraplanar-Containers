@@ -141,9 +141,11 @@ local function build_containers(node_inventory)
 	local table_containers_extraplanar = {}
 	for _, node_item in ipairs(DB.getChildList(node_inventory)) do
 		local string_item_name = string.lower(DB.getValue(node_item, 'name', '')):gsub('%[%+%]%s+', '')
-		if isContainer(string_item_name, tExtraplanarContainers) then -- this creates an array keyed to the names of any detected extraplanar storage containers
+		-- create an array keyed to the names of any detected extraplanar storage containers
+		if isContainer(string_item_name, tExtraplanarContainers) then
 			build_container(table_containers_extraplanar, string_item_name, node_item)
-		elseif isContainer(string_item_name, tContainers) then -- this creates an array keyed to the names of any detected mundane storage containers
+		-- create an array keyed to the names of any detected mundane storage containers
+		elseif isContainer(string_item_name, tContainers) then
 			build_container(table_containers_mundane, string_item_name, node_item)
 		end
 	end
