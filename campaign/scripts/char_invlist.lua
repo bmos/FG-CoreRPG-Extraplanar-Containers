@@ -8,24 +8,28 @@
 function onFilter(w)
 	local nodeWindow = w.getDatabaseNode()
 
-	-- Not a total fix, but need to make sure outdated shortcuts are not present
-	if DB.getValue(nodeWindow, 'location', '') == '' then
+	local _, sLocNode = DB.getValue(nodeWindow, 'locationshortcut')
+	local nodeContainer = DB.findNode(sLocNode or '')
+	if not nodeContainer then
 		DB.deleteChild(nodeWindow, 'locationshortcut')
 		return true
 	end
 
-	local _, sLocNode = DB.getValue(nodeWindow, 'locationshortcut')
-	local nodeContainer = DB.findNode(sLocNode or '')
-	if not nodeContainer then
+	-- Make sure shortcuts go to the right item
+	local sContainerName = DB.getValue(nodeContainer, 'name', ''):gsub('%[%+%]%s', '')
+	local sItemLoc = DB.getValue(nodeWindow, 'location', '')
+	if string.lower(sContainerName) ~= string.lower(sItemLoc) then
+		Debug.chat("Removing broken location shortcut from ".. DB.getValue(nodeWindow, 'name', ''))
+		DB.deleteChild(nodeWindow, 'locationshortcut')
 		return true
 	end
 
 	local _, sContainerLocNode = DB.getValue(nodeContainer, 'locationshortcut')
-	if DB.getValue(nodeContainer, 'name', ''):match('%[%+%]%s+') then
+	if DB.getValue(nodeContainer, 'name', ''):match('%[%+%]%s') then
 		return false
 	elseif sContainerLocNode then -- if container is inside another container (max one level deep).
 		local nodeContainerContainer = DB.findNode(sContainerLocNode)
-		if DB.getValue(nodeContainerContainer, 'name', ''):match('%[%+%]%s+') then
+		if DB.getValue(nodeContainerContainer, 'name', ''):match('%[%+%]%s') then
 			return false
 		end
 	end
