@@ -19,7 +19,6 @@ function onFilter(w)
 	local sContainerName = DB.getValue(nodeContainer, 'name', ''):gsub('%[%+%]%s', '')
 	local sItemLoc = DB.getValue(nodeWindow, 'location', '')
 	if string.lower(sContainerName) ~= string.lower(sItemLoc) then
-		Debug.chat("Removing broken location shortcut from ".. DB.getValue(nodeWindow, 'name', ''))
 		DB.deleteChild(nodeWindow, 'locationshortcut')
 		return true
 	end
