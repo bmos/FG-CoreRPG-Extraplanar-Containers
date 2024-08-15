@@ -6,18 +6,18 @@
 	<windowclass name="item_main" merge="join">
 		<script file="campaign/scripts/item_main_ExtraplanarContainers.lua" />
 		<sheetdata>
-			<label_column name="weight_label">
+			<label_content_column name="weight_label">
 				<anchored>
 					<top offset="15" /> 
 				</anchored>
-			</label_column>
+			</label_content_column>
 
-			<number_columnh name="weight">
+			<number_content_columnh name="weight">
 				<anchored width="52">
 					<top offset="15" />
 				</anchored>
 				<tooltip textres="item_tooltip_itemweight" />
-			</number_columnh>
+			</number_content_columnh>
 			<label_fieldtop name="weight_labeltop">
 				<anchored to="weight" />
 				<static textres="item_labeltop_weight" />
@@ -47,21 +47,21 @@
 				<static textres="item_labeltop_volume" />
 			</label_fieldtop>
 			
-			<label_column name="limits_label" insertbefore="divider3" >
+			<label_content_column name="limits_label" insertbefore="divider3" >
 				<anchored>
 					<top offset="15" />
 				</anchored>
 				<static textres="item_column_label_limit" />
-			</label_column>
+			</label_content_column>
 
-			<number_columnh name="capacityweight" insertbefore="divider3" >
+			<number_content_columnh name="capacityweight" insertbefore="divider3" >
 				<anchored width="52">
 					<top offset="15" />
 				</anchored>
 				<tooltip textres="item_tooltip_capacityweight" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/extraplanarcontentsonValueChanged.lua" />
-			</number_columnh>
+			</number_content_columnh>
 			<label_fieldtop name="capacityweight_label" insertbefore="divider3" >
 				<anchored to="capacityweight" />
 				<static textres="item_labeltop_max_capacity" />
@@ -78,14 +78,14 @@
 				<static textres="item_labeltop_count" />
 			</label_fieldtop>
 			
-			<label_column name="internal_dimensions_label" insertbefore="divider3" >
+			<label_content_column name="internal_dimensions_label" insertbefore="divider3" >
 				<static textres="item_label_internal_dimensions" />
-			</label_column>
-			<number_columnh name="internal_length" insertbefore="divider3" >
+			</label_content_column>
+			<number_content_columnh name="internal_length" insertbefore="divider3" >
 				<tooltip textres="item_tooltip_length" />
 				<delaykeyupdate />
 				<script file="campaign/scripts/internal_dimensions.lua" />
-			</number_columnh>
+			</number_content_columnh>
 			<basicnumber name="internal_width" insertbefore="divider3" >
 				<anchored to="internal_length" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_width" />
@@ -106,14 +106,14 @@
 			</basicnumber>
 			
 			
-			<label_column name="external_dimensions_label" insertbefore="divider3" >
+			<label_content_column name="external_dimensions_label" insertbefore="divider3" >
 				<static textres="item_label_external_dimensions" />
-			</label_column>
-			<number_columnh name="length" insertbefore="divider3" >
+			</label_content_column>
+			<number_content_columnh name="length" insertbefore="divider3" >
 				<delaykeyupdate />
 				<tooltip textres="item_tooltip_length" />
 				<script file="campaign/scripts/external_dimensions.lua" />
-			</number_columnh>
+			</number_content_columnh>
 			<basicnumber name="width" insertbefore="divider3" >
 				<anchored to="length" position="righthigh" offset="10,0" width="35" height="20" />
 				<tooltip textres="item_tooltip_width" />
