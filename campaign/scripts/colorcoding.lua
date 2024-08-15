@@ -11,10 +11,10 @@ function onValueChanged()
 
 	local nCompare = window[sFieldName].getValue()
 	if (nCompare == 0) or (getValue() < nCompare) then
-		setColor(ColorManager.COLOR_FULL)
+		setColor(ColorManager.getUIColor("usage_full"))
 	elseif getValue() == nCompare then
-		setColor(ColorManager.COLOR_HEALTH_HVY_WOUNDS)
+		setColor(ColorManager.getUIColor("health_wounds_heavy"))
 	elseif getValue() > nCompare then
-		setColor(ColorManager.COLOR_HEALTH_CRIT_WOUNDS)
+		setColor(ColorManager.getUIColor("health_wounds_critical"))
 	end
 end
