@@ -10,18 +10,19 @@
 		<description>This extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported containers ('of holding', 'portable hole', 'handy haversack', 'efficient quiver'.</description>
 	</properties>
 
-	<announcement text="https://fantasygrounds.com/forums/showthread.php?58641-Coin-Weight-for-Pathfinder\rExtraplanar Containers v1.20:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners." font="emotefont" icon="extraplanarcontainers"/>
+	<announcement text="https://fantasygrounds.com/forums/showthread.php?58641-Coin-Weight-for-Pathfinder\rExtraplanar Containers v1.20-hotfix.1:\rThis extension provides support for extraplanar containers by ignoring the weight of carried (but not equipped) items in supported contaners." font="emotefont" icon="extraplanarcontainers"/>
 
 	<base>
 		<!-- Records -->
-		<includefile ruleset="CoreRPG|PFRPG|2E|3.5E|5E|4E" source="campaign/record_item.xml" />
-		<includefile ruleset="PFRPG2|PFRPG2-Legacy" source="campaign/record_item_pf2.xml" />
-		<includefile source="campaign/record_char_inventory.xml" />
+		<includefile ruleset="CoreRPG|PFRPG|2E|3.5E|4E" source="campaign/record_item.xml"/>
+		<includefile ruleset="PFRPG2|PFRPG2-Legacy" source="campaign/record_item_pf2.xml"/>
+		<includefile ruleset="5E" source="campaign/record_item_5e.xml"/>
+		<includefile source="campaign/record_char_inventory.xml"/>
 		<!-- Strings -->
-		<includefile source="strings/strings_extraplanarcontainers.xml" />
+		<includefile source="strings/strings_extraplanarcontainers.xml"/>
 		<!-- Scripts -->
-		<script name="ExtraplanarContainers" file="scripts/extraplanarcontainers.lua" />
+		<script name="ExtraplanarContainers" file="scripts/extraplanarcontainers.lua"/>
 		<!-- Chat Graphics -->
-		<icon name="extraplanarcontainers" file="graphics/bag.png" />
+		<icon name="extraplanarcontainers" file="graphics/bag.png"/>
 	</base>
 </root>
