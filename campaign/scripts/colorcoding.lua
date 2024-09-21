@@ -5,7 +5,7 @@
 
 function onValueChanged()
 	local sFieldName = fieldname[1]
-	if not sFieldName then
+	if not sFieldName or  User.getRulesetName() == '5E' then
 		return
 	end
 
